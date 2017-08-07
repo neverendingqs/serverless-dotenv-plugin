@@ -1,0 +1,29 @@
+{
+  "name": "serverless-dotenv-plugin",
+  "version": "1.0.0",
+  "description": "Preload Environment Variables with Dotenv into Serverless Edit",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/infrontlabs/serverless-dotenv-plugin.git"
+  },
+  "keywords": [
+    "serverless",
+    "dotenv",
+    "serverless-plugin"
+  ],
+  "author": "Colyn Brown <colyn.brown@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/infrontlabs/serverless-dotenv-plugin/issues"
+  },
+  "homepage": "https://github.com/infrontlabs/serverless-dotenv-plugin#readme",
+  "dependencies": {
+    "chalk": "^2.1.0",
+    "dotenv": "^4.0.0",
+    "dotenv-expand": "^4.0.1"
+  }
+}
