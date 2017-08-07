@@ -20,6 +20,8 @@ plugins:
 
 ### Plugin options
 
+By default, the dotenv package will look for your .env file in the same folder where you run the command, but this can be customized. Also, be default, ALL env vars found in your file will be loaded into your lambda functions. This can also be customized.
+
 With the `custom` section in your serverless config, you can set the path to your .env file and you can tell the plugin to only inject whitelisted variables. 
 ```
 custom:
