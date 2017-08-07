@@ -37,8 +37,6 @@ custom:
   dotenv:
     path: ../../.env
     include:
-      - DYNAMODB_TABLE
-      - AWS_REGION
       - AUTH0_CLIENT_ID
       - AUTH0_CLIENT_SECRET
 ```
