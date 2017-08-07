@@ -30,7 +30,7 @@ AUTH0_CLIENT_SECRET=12345xyz
 
 ### Plugin options
 
-By default, the dotenv package will look for your .env file in the same folder where you run the command, but this can be customized by setting the `path` option. Also, be default, ALL env vars found in your file will be loaded into your lambda functions. If you do not want all of your env vars to be injected into your lambda functions, you can whitelist them with the `include` option.
+By default, the dotenv package will look for your .env file in the same folder where you run the command, but this can be customized by setting the `path` option. Also, be default, ALL env vars found in your file will be injected into your lambda functions. If you do not want all of them to be injected into your lambda functions, you can whitelist them with the `include` option.
 
 ```
 custom:
@@ -56,4 +56,4 @@ provider:
 
 ### Lambda Environment Variables
 
-Note that when you deploy your service, the plugin with inject these environment vars into any lambda functions you may have.
+Again, remember that when you deploy your service, the plugin with inject these environment vars into any lambda functions you have and will therefore allow you to reference them as `process.env.AUTH0_CLIENT_ID` (Nodejs example).
