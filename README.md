@@ -19,11 +19,19 @@ plugins:
 ...
 ```
 
+Now, just like you would using [dotenv](https://www.npmjs.com/package/dotenv) in any other JS application, create your `.env` file in the root of your app:
+
+```
+DYANMODB_TABLE=myTable
+AWS_REGION=us-west-1
+AUTH0_CLIENT_ID=abc12345
+AUTH0_CLIENT_SECRET=12345xyz
+```
+
 ### Plugin options
 
-By default, the dotenv package will look for your .env file in the same folder where you run the command, but this can be customized. Also, be default, ALL env vars found in your file will be loaded into your lambda functions. This can also be customized.
+By default, the dotenv package will look for your .env file in the same folder where you run the command, but this can be customized by setting the `path` option. Also, be default, ALL env vars found in your file will be loaded into your lambda functions. If you do not want all of your env vars to be injected into your lambda functions, you can whitelist them with the `include` option.
 
-With the `custom` section in your serverless config, you can set the path to your .env file and you can tell the plugin to only inject whitelisted variables. 
 ```
 custom:
   dotenv:
