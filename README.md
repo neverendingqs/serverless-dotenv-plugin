@@ -44,3 +44,7 @@ provider:
   region: ${env:AWS_REGION}
 ...
 ```
+
+### Lambda Environment Variables
+
+Note that when you deploy your service, the plugin with inject these environment vars into any lambda functions you may have.
