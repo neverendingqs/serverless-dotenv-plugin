@@ -10,13 +10,14 @@ class ServerlessPlugin {
     this.serverless = serverless;
     this.env = {};
     this.serverless.service.provider.environment = this.serverless.service.provider.environment || {};
-    this.loadEnv();    
+    this.loadEnv();
   }
 
   loadEnv() {
     try {
       this.serverless.cli.log('DOTENV: Loading environment variables:');
-      var envPath = this.serverless.service.custom['dotenv'].path || '.env';
+      var config = this.serverless.service.custom['dotenv'];
+      var envPath = (config && config.path) || '.env';
       this.env = dotenvExpand(dotenv.config({path: envPath})).parsed;
       if (!this.env) {
         throw new this.serverless.classes.Error('[serverless-dotenv-plugin] Could not find .env file.');
@@ -24,8 +25,8 @@ class ServerlessPlugin {
       }
 
       var include = false;
-      if (this.serverless.service.custom['dotenv'] && this.serverless.service.custom['dotenv'].include) {
-        include = this.serverless.service.custom['dotenv'].include;
+      if (config && config.include) {
+        include = config.include;
       }
       if (include) {
         Object.keys(this.env)
@@ -43,7 +44,7 @@ class ServerlessPlugin {
         console.error(chalk.red('\n Serverless Plugin Error --------------------------------------\n'))
         console.error(chalk.red('  ' + e.message));
     }
-    
+
   }
 
 }
