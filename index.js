@@ -16,7 +16,7 @@ class ServerlessPlugin {
   loadEnv() {
     try {
       this.serverless.cli.log('DOTENV: Loading environment variables:');
-      var config = this.serverless.service.custom['dotenv'];
+      var config = this.serverless.service.custom && this.serverless.service.custom['dotenv'];
       var envPath = (config && config.path) || '.env';
       this.env = dotenvExpand(dotenv.config({path: envPath})).parsed;
       if (!this.env) {
