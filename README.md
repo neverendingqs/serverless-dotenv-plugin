@@ -41,6 +41,14 @@ custom:
       - AUTH0_CLIENT_SECRET
 ```
 
+The `path` option can also be used in combination with serverless variables.
+
+```
+custom:
+  dotenv:
+    path: .env-${self:provider.stage}
+```
+
 ### Usage
 
 Once loaded, you can now access the vars using the standard method for accessing ENV vars in serverless:

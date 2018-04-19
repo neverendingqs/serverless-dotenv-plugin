@@ -10,7 +10,13 @@ class ServerlessPlugin {
     this.serverless = serverless;
     this.env = {};
     this.serverless.service.provider.environment = this.serverless.service.provider.environment || {};
-    this.loadEnv();
+    this.hooks = {
+      "before:offline:start:init": this.loadEnv.bind(this),
+      "before:offline:start": this.loadEnv.bind(this),
+      "before:invoke:local:invoke": this.loadEnv.bind(this),
+      "before:deploy:resources": this.loadEnv.bind(this),
+      "before:deploy:functions": this.loadEnv.bind(this),
+    }
   }
 
   loadEnv() {
