@@ -30,15 +30,45 @@ AUTH0_CLIENT_SECRET=12345xyz
 
 ### Plugin options
 
-By default, the dotenv package will look for your .env file in the same folder where you run the command, but this can be customized by setting the `path` option. Also, be default, ALL env vars found in your file will be injected into your lambda functions. If you do not want all of them to be injected into your lambda functions, you can whitelist them with the `include` option.
+#### Defaults
+By default, the dotenv package will look for your .env file in the same folder where you run the command, but this can be customized by setting the `path` option. Also, by default, ALL env vars found in your file will be injected into your lambda functions. If you do not want all of them to be injected into your lambda functions, you can whitelist them with the `include` option or blacklist them with the `exclude` option.
+
+#### Customization
+You can decide whether to add your ENV vars to your lambda function or just to the serverless process. (Useful if you don't want or can't have your ENV vars injected into your lambda function).
+Add the `process` object to your config, to pass the vars to `process.env`. It is possible to use both config objects at the same time, each with individual black or whitelists. For example to use your AWS credentials only in your config file and pass some other to the lambda function.
 
 ```
 custom:
   dotenv:
     path: ../../.env
-    include:
+    exclude:
       - AUTH0_CLIENT_ID
       - AUTH0_CLIENT_SECRET
+```
+
+```
+custom:
+  dotenv:
+    process: true
+```
+
+```
+custom:
+  dotenv:
+    process:
+        path: ../../.env
+        exclude:
+          - AUTH0_CLIENT_ID
+          - AUTH0_CLIENT_SECRET
+          
+```
+
+```
+    lambda:
+        path: ../../.env
+            include:
+              - AUTH0_CLIENT_ID
+              - AUTH0_CLIENT_SECRET
 ```
 
 The `path` option can also be used in combination with serverless variables.
