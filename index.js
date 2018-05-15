@@ -16,6 +16,7 @@ class ServerlessPlugin {
       "before:invoke:local:invoke": this.loadEnv.bind(this),
       "before:deploy:resources": this.loadEnv.bind(this),
       "before:deploy:functions": this.loadEnv.bind(this),
+      "before:package:initialize": this.loadEnv.bind(this),
     }
   }
 
