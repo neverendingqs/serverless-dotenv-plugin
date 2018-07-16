@@ -26,10 +26,6 @@ class ServerlessPlugin {
       var config = this.serverless.service.custom['dotenv'];
       var envPath = (config && config.path) || '.env';
       this.env = dotenvExpand(dotenv.config({path: envPath})).parsed;
-      if (!this.env) {
-        throw new this.serverless.classes.Error('[serverless-dotenv-plugin] Could not find .env file.');
-        return false;
-      }
 
       var include = false;
       if (config && config.include) {
