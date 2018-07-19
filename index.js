@@ -22,10 +22,13 @@ class ServerlessPlugin {
 
   loadEnv() {
     try {
-      this.serverless.cli.log('DOTENV: Loading environment variables:');
       var config = this.serverless.service.custom && this.serverless.service.custom['dotenv'];
       var envPath = (config && config.path) || '.env';
       this.env = dotenvExpand(dotenv.config({path: envPath})).parsed;
+
+      if (!this.env) {
+        return;
+      }
 
       var include = false;
       if (config && config.include) {
@@ -38,6 +41,9 @@ class ServerlessPlugin {
             delete this.env[key]
           })
       }
+
+      this.serverless.cli.log('DOTENV: Loading environment variables:');
+
       Object.keys(this.env)
         .forEach((key) => {
           this.serverless.cli.log("\t - " + key);
