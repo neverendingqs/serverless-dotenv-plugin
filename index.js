@@ -31,20 +31,22 @@ class ServerlessPlugin {
       if (config && config.include) {
         include = config.include;
       }
-      if (include) {
-        Object.keys(this.env)
-          .filter((key) => !include.includes(key))
-          .forEach((key) => {
-            delete this.env[key]
-          })
-      }
-      Object.keys(this.env)
-        .forEach((key) => {
-          this.serverless.cli.log("\t - " + key);
-          this.serverless.service.provider.environment[key] = this.env[key];
-        })
+        if (this.env) {
+          if (include) {
+            Object.keys(this.env)
+              .filter((key) => !include.includes(key))
+              .forEach((key) => {
+                delete this.env[key]
+              })
+          }
+          Object.keys(this.env)
+            .forEach((key) => {
+              this.serverless.cli.log("\t - " + key);
+              this.serverless.service.provider.environment[key] = this.env[key];
+            });
+        }
     } catch (e) {
-        console.error(chalk.red('\n Serverless Plugin Error --------------------------------------\n'))
+        console.error(chalk.red('\n Serverless Plugin Error --------------------------------------\n'));
         console.error(chalk.red('  ' + e.message));
     }
 
