@@ -3,41 +3,63 @@
 const dotenv = require('dotenv')
 const dotenvExpand = require('dotenv-expand')
 const chalk = require('chalk')
+const fs = require('fs')
 
 class ServerlessPlugin {
   constructor(serverless, options) {
     this.serverless = serverless
-    this.env = {}
     this.serverless.service.provider.environment =
       this.serverless.service.provider.environment || {}
-    this.loadEnv()
+    this.config =
+      this.serverless.service.custom && this.serverless.service.custom['dotenv']
+
+    this.loadEnv(this.getEnvironment(options))
   }
 
-  loadEnv() {
+  getEnvironment(options) {
+    if (process.env.NODE_ENV) {
+      return process.env.NODE_ENV
+    }
+
+    if (options.env) {
+      return options.env
+    }
+
+    return 'development'
+  }
+
+  resolveEnvFileName(env) {
+    if (this.config && this.config.path) {
+      return this.config.path
+    }
+
+    return fs.existsSync('.env.' + env) ? '.env.' + env : '.env'
+  }
+
+  loadEnv(env) {
+    var envFileName = this.resolveEnvFileName(env)
     try {
-      var config =
-        this.serverless.service.custom &&
-        this.serverless.service.custom['dotenv']
-      var envPath = (config && config.path) || '.env'
-      this.env = dotenvExpand(dotenv.config({ path: envPath })).parsed
+      let envVars = dotenvExpand(dotenv.config({ path: envFileName })).parsed
 
       var include = false
-      if (config && config.include) {
-        include = config.include
+      if (this.config && this.config.include) {
+        include = this.config.include
       }
 
-      if (this.env) {
-        this.serverless.cli.log('DOTENV: Loading environment variables:')
+      if (envVars) {
+        this.serverless.cli.log(
+          'DOTENV: Loading environment variables from ' + envFileName + ':'
+        )
         if (include) {
-          Object.keys(this.env)
+          Object.keys(envVars)
             .filter(key => !include.includes(key))
             .forEach(key => {
-              delete this.env[key]
+              delete envVars[key]
             })
         }
-        Object.keys(this.env).forEach(key => {
+        Object.keys(envVars).forEach(key => {
           this.serverless.cli.log('\t - ' + key)
-          this.serverless.service.provider.environment[key] = this.env[key]
+          this.serverless.service.provider.environment[key] = envVars[key]
         })
       } else {
         this.serverless.cli.log('DOTENV: Could no find .env file.')
