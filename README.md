@@ -41,6 +41,12 @@ By default, the plugin looks for the file: `.env`. In most use cases this is all
 
 When you deploy with `NODE_ENV` set: `NODE_ENV=production sls deploy` the plugin will look for a file named `.env.production`. If it doesn't exist it will default to `.env`. If for some reason you can't set NODE_ENV, you could always just pass it in as an option: `sls deploy --env production`. If `NODE_ENV` or `--env` is not set, it will default to `development`.
 
+| Valid .env file names | Description                                                                                         |
+| --------------------- | --------------------------------------------------------------------------------------------------- |
+| .env                  | Default file name when no other files are specified or found.                                       |
+| .env.development      | If NODE_ENV or --env **is not set**, will try to load `.env.development`. If not found, load `.env` |
+| .env.{ENV}            | If NODE_ENV or --env **is set**, will try to load `.env.{env}`. If not found, load `.env`           |
+
 ### Plugin options
 
 By default, the dotenv package will look for your .env file in the same folder where you run the command, but this can be customized by setting the `path` option. Also, be default, ALL env vars found in your file will be injected into your lambda functions. If you do not want all of them to be injected into your lambda functions, you can whitelist them with the `include` option.
