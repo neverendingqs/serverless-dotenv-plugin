@@ -2,16 +2,18 @@
 
 Preload Environment Variables Into Serverless
 
-Use this plugin if you have variables stored in a `.env` file that you want loaded into your serverless yaml config. This will allow you to reference them as `${env:VAR_NAME}` inside your config *and* it will load them into your lambdas.
+Use this plugin if you have variables stored in a `.env` file that you want loaded into your serverless yaml config. This will allow you to reference them as `${env:VAR_NAME}` inside your config _and_ it will load them into your lambdas.
 
 ### Install and Setup
 
 First, install the plugin:
+
 ```
 > npm i -D serverless-dotenv-plugin
 ```
 
 Next, add the plugin to your serverless config file:
+
 ```
 service: myService
 plugins:
@@ -41,17 +43,10 @@ custom:
       - AUTH0_CLIENT_SECRET
 ```
 
-The `path` option can also be used in combination with serverless variables.
-
-```
-custom:
-  dotenv:
-    path: .env-${self:provider.stage}
-```
-
 ### Usage
 
 Once loaded, you can now access the vars using the standard method for accessing ENV vars in serverless:
+
 ```
 ...
 provider:
@@ -65,3 +60,7 @@ provider:
 ### Lambda Environment Variables
 
 Again, remember that when you deploy your service, the plugin with inject these environment vars into any lambda functions you have and will therefore allow you to reference them as `process.env.AUTH0_CLIENT_ID` (Nodejs example).
+
+### Examples
+
+You can find example usage in the `examples` folder.
