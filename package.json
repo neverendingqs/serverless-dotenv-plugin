@@ -1,7 +1,7 @@
 {
   "name": "serverless-dotenv-plugin",
   "version": "2.0.1",
-  "description": "Preload Environment Variables with Dotenv into Serverless Edit",
+  "description": "Preload environment variables with dotenv into serverless.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

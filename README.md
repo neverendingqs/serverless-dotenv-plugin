@@ -49,18 +49,24 @@ When you deploy with `NODE_ENV` set: `NODE_ENV=production sls deploy` the plugin
 
 ### Plugin options
 
-By default, the dotenv package will look for your .env file in the same folder where you run the command, but this can be customized by setting the `path` option. Also, be default, ALL env vars found in your file will be injected into your lambda functions. If you do not want all of them to be injected into your lambda functions, you can whitelist them with the `include` option.
+> path: path/to/my/.env
+
+The plugin will look for your .env file in the same folder where you run the command using the file resolution rules as described above, but these rules can be overridden by setting the `path` option.
+
+> include: ...
+
+All env vars found in your file will be injected into your lambda functions. If you do not want all of them to be injected into your lambda functions, you can whitelist them with the `include` option. (Note that there is currently no "blacklist" option)
+
+Complete example:
 
 ```
 custom:
   dotenv:
-    path: ../../.env
+    path: path/to/my/.env
     include:
       - AUTH0_CLIENT_ID
       - AUTH0_CLIENT_SECRET
 ```
-
-Note, it is not recommended you use a custom path. Doing so overrides the automatic file resolution as described above.
 
 ### Usage
 
