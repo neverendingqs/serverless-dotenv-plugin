@@ -39,7 +39,7 @@ By default, the plugin looks for the file: `.env`. In most use cases this is all
 .env.production
 ```
 
-Just add `--stage (or -s) production` (as your normally would do) and the plugin will look for a file named `.env.production`. It's also possible to provide a `NODE_ENV=production` parameter. If it doesn't exist it will default to `.env`.
+Just add `--stage (or -s) production` (as your normally would do) and the plugin will look for a file named `.env.production`. It's also possible to provide a `NODE_ENV=production` parameter. If it doesn't exist it will default to `development`.
 
 | Valid .env file names | Description                                                                                         |
 | --------------------- | --------------------------------------------------------------------------------------------------- |
