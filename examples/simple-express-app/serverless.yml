@@ -9,7 +9,7 @@ provider:
   name: aws
   runtime: nodejs6.10
   region: ${env:REGION}
-  stage: ${env:STAGE}
+  stage: ${opt:stage, 'test'}
 
 functions:
   app:
