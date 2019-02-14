@@ -17,7 +17,7 @@ class ServerlessPlugin {
   }
 
   getEnvironment(options) {
-    let environment = 'env';
+    let environment = 'development';
 
     if (process.env.NODE_ENV) {
       environment = process.env.NODE_ENV
@@ -42,6 +42,7 @@ class ServerlessPlugin {
 
   loadEnv(env) {
     var envFileName = this.resolveEnvFileName(env)
+
     try {
       let envVars = dotenvExpand(dotenv.config({ path: envFileName })).parsed
 
