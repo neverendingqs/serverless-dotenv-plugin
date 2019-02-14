@@ -17,15 +17,19 @@ class ServerlessPlugin {
   }
 
   getEnvironment(options) {
+    let environment = 'env';
+
     if (process.env.NODE_ENV) {
-      return process.env.NODE_ENV
+      environment = process.env.NODE_ENV
     }
 
-    if (options.env) {
-      return options.env
+    if (options.stage) {
+      environment = options.stage;
     }
 
-    return 'development'
+    this.serverless.cli.log(`DOTENV: Using environment: ${environment}`)
+
+    return environment;
   }
 
   resolveEnvFileName(env) {
