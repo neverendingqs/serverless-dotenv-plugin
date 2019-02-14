@@ -9,5 +9,5 @@ Development
 
 Production
 ```
-> sls deploy --env production
+> sls deploy --stage production
 ```
