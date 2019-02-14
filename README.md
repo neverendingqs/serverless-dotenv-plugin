@@ -39,13 +39,13 @@ By default, the plugin looks for the file: `.env`. In most use cases this is all
 .env.production
 ```
 
-When you deploy with `NODE_ENV` set: `NODE_ENV=production sls deploy` the plugin will look for a file named `.env.production`. If it doesn't exist it will default to `.env`. If for some reason you can't set NODE_ENV, you could always just pass it in as an option: `sls deploy --env production`. If `NODE_ENV` or `--env` is not set, it will default to `development`.
+Just add `--stage (or -s) production` (as your normally would do) and the plugin will look for a file named `.env.production`. It's also possible to provide a `NODE_ENV=production` parameter. If it doesn't exist it will default to `.env`.
 
 | Valid .env file names | Description                                                                                         |
 | --------------------- | --------------------------------------------------------------------------------------------------- |
 | .env                  | Default file name when no other files are specified or found.                                       |
-| .env.development      | If NODE_ENV or --env **is not set**, will try to load `.env.development`. If not found, load `.env` |
-| .env.{ENV}            | If NODE_ENV or --env **is set**, will try to load `.env.{env}`. If not found, load `.env`           |
+| .env.development      | If NODE_ENV or --stage **is not set**, will try to load `.env.development`. If not found, load `.env` |
+| .env.{ENV}            | If NODE_ENV or --stage **is set**, will try to load `.env.{env}`. If not found, load `.env`           |
 
 ### Plugin options
 
@@ -76,7 +76,7 @@ Once loaded, you can now access the vars using the standard method for accessing
 ...
 provider:
   name: aws
-  runtime: nodejs6.10
+  runtime: nodejs8.10
   stage: ${env:STAGE}
   region: ${env:AWS_REGION}
 ...
