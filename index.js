@@ -38,39 +38,30 @@ class ServerlessPlugin {
 
   loadEnv(env) {
     var envFileName = this.resolveEnvFileName(env)
-    try {
-      let envVars = dotenvExpand(dotenv.config({ path: envFileName })).parsed
+    let envVars = dotenvExpand(dotenv.config({ path: envFileName })).parsed
 
-      var include = false
-      if (this.config && this.config.include) {
-        include = this.config.include
-      }
+    var include = false
+    if (this.config && this.config.include) {
+      include = this.config.include
+    }
 
-      if (envVars) {
-        this.serverless.cli.log(
-          'DOTENV: Loading environment variables from ' + envFileName + ':'
-        )
-        if (include) {
-          Object.keys(envVars)
-            .filter(key => !include.includes(key))
-            .forEach(key => {
-              delete envVars[key]
-            })
-        }
-        Object.keys(envVars).forEach(key => {
-          this.serverless.cli.log('\t - ' + key)
-          this.serverless.service.provider.environment[key] = envVars[key]
-        })
-      } else {
-        this.serverless.cli.log('DOTENV: Could not find .env file.')
-      }
-    } catch (e) {
-      console.error(
-        chalk.red(
-          '\n Serverless Plugin Error --------------------------------------\n'
-        )
+    if (envVars) {
+      this.serverless.cli.log(
+        'DOTENV: Loading environment variables from ' + envFileName + ':'
       )
-      console.error(chalk.red('  ' + e.message))
+      if (include) {
+        Object.keys(envVars)
+          .filter(key => !include.includes(key))
+          .forEach(key => {
+            delete envVars[key]
+          })
+      }
+      Object.keys(envVars).forEach(key => {
+        this.serverless.cli.log('\t - ' + key)
+        this.serverless.service.provider.environment[key] = envVars[key]
+      })
+    } else {
+      throw new Error('DOTENV: Could not find .env file.')
     }
   }
 }
