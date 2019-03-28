@@ -7,13 +7,30 @@ const fs = require('fs')
 
 class ServerlessPlugin {
   constructor(serverless, options) {
+    this.options = options
     this.serverless = serverless
     this.serverless.service.provider.environment =
       this.serverless.service.provider.environment || {}
     this.config =
       this.serverless.service.custom && this.serverless.service.custom['dotenv']
 
-    this.loadEnv(this.getEnvironment(options))
+    this.commands = {
+      deploy: {
+        lifecycleEvents: [
+          'package'
+        ]
+      },
+    }
+    this.hooks = {
+      'before:package:initialize': this.beforeDeploy.bind(this)
+    }
+  }
+
+  beforeDeploy() {
+    this.config =
+      this.serverless.service.custom && this.serverless.service.custom['dotenv']
+
+    this.loadEnv(this.getEnvironment(this.options))
   }
 
   getEnvironment(options) {
@@ -61,9 +78,10 @@ class ServerlessPlugin {
         this.serverless.service.provider.environment[key] = envVars[key]
       })
     } else {
-      throw new Error('DOTENV: Could not find .env file.')
+      throw new Error(`DOTENV: Could not find ${envFileName} file.`)
     }
   }
 }
 
 module.exports = ServerlessPlugin
+
