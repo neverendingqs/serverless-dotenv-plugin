@@ -14,13 +14,19 @@ class ServerlessPlugin {
     this.config =
       this.serverless.service.custom && this.serverless.service.custom['dotenv']
 
+    this.commands = {
+      deploy: {
+        lifecycleEvents: [
+          'package'
+        ]
+      },
+    }
     this.hooks = {
-      'before:deploy:initialize': this.beforeInitialize.bind(this),
-      'before:deploy:function:initialize': this.beforeInitialize.bind(this),
+      'before:package:initialize': this.beforeDeploy.bind(this)
     }
   }
 
-  beforeInitialize() {
+  beforeDeploy() {
     this.config =
       this.serverless.service.custom && this.serverless.service.custom['dotenv']
 
@@ -78,5 +84,4 @@ class ServerlessPlugin {
 }
 
 module.exports = ServerlessPlugin
-
 
