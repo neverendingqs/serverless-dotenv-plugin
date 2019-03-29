@@ -61,7 +61,7 @@ class ServerlessPlugin {
         this.serverless.service.provider.environment[key] = envVars[key]
       })
     } else {
-      throw new Error('DOTENV: Could not find .env file.')
+      throw new Error(`DOTENV: Could not find ${envFileName} file.`)
     }
   }
 }
