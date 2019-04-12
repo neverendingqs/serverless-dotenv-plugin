@@ -70,7 +70,7 @@ custom:
 
 > exclude: ...
 
-If you do not want all of them to be injected into your lambda functions, you can blacklist the unnecessary ones them with the `exclude` option.
+If you do not want all of them to be injected into your lambda functions, you can blacklist the unnecessary ones with the `exclude` option.
 
 Example:
 
