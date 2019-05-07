@@ -33,7 +33,13 @@ class ServerlessPlugin {
       return this.config.path
     }
 
-    return fs.existsSync('.env.' + env) ? '.env.' + env : '.env'
+    let basePath =
+      this.config && this.config.basePath ? this.config.basePath : ''
+
+    let defaultPath = basePath + '.env'
+    let path = basePath + '.env.' + env
+
+    return fs.existsSync(path) ? path : defaultPath
   }
 
   loadEnv(env) {

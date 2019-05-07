@@ -62,7 +62,8 @@ Complete example:
 ```
 custom:
   dotenv:
-    path: path/to/my/.env
+    path: path/to/my/.env (default ./.env)
+    basePath: path/to/ (default ./)
     include:
       - AUTH0_CLIENT_ID
       - AUTH0_CLIENT_SECRET
