@@ -17,12 +17,12 @@ class ServerlessPlugin {
   }
 
   getEnvironment(options) {
-    if (process.env.NODE_ENV) {
-      return process.env.NODE_ENV
-    }
-
     if (options.env) {
       return options.env
+    }
+    
+    if (process.env.NODE_ENV) {
+      return process.env.NODE_ENV
     }
 
     return 'development'
