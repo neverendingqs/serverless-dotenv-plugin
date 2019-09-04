@@ -21,6 +21,10 @@ class ServerlessPlugin {
       return options.env
     }
     
+    if (options.stage) {
+      return options.stage
+    }
+    
     if (process.env.NODE_ENV) {
       return process.env.NODE_ENV
     }
