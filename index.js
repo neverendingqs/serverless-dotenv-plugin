@@ -1,7 +1,6 @@
 'use strict'
 
 const dotenv = require('dotenv')
-const dotenvExpand = require('dotenv-expand')
 const chalk = require('chalk')
 const fs = require('fs')
 
@@ -45,7 +44,7 @@ class ServerlessPlugin {
   loadEnv(env) {
     var envFileName = this.resolveEnvFileName(env)
     try {
-      let envVars = dotenvExpand(dotenv.config({ path: envFileName })).parsed
+      let envVars = dotenv.config({ path: envFileName }).parsed
 
       var include = false
       if (this.config && this.config.include) {
