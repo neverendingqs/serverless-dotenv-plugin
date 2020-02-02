@@ -49,8 +49,14 @@ class ServerlessPlugin {
       let envVars = dotenvExpand(dotenv.config({ path: envFileName })).parsed
 
       var include = false
+      var exclude = false
+
       if (this.config && this.config.include) {
         include = this.config.include
+      }
+
+      if (this.config && this.config.exclude && !include) { // Don't allow both include and exclude to be specified
+        exclude = this.config.exclude
       }
 
       if (envVars) {
@@ -66,6 +72,13 @@ class ServerlessPlugin {
               delete envVars[key]
             })
         }
+        if (exclude) {
+          Object.keys(envVars)
+            .filter(key => exclude.includes(key))
+            .forEach(key => {
+              delete envVars[key]
+            })
+        }        
         Object.keys(envVars).forEach(key => {
           if (this.logging) {
             this.serverless.cli.log('\t - ' + key)
