@@ -63,6 +63,12 @@ The problem with setting the `path` option is that you lose environment resoluti
 
 All env vars found in your file will be injected into your lambda functions. If you do not want all of them to be injected into your lambda functions, you can whitelist them with the `include` option. (Note that there is currently no "blacklist" option)
 
+> logging: true|false (default true)
+
+(Added Feb 2, 2020 by @kristopherchun)
+
+By default, there's quite a bit that this plugin logs to the console. You can now quiet this with the new `logging` option. (This defaults to `true` since this was the original behavior)
+
 Complete example:
 
 ```
@@ -70,6 +76,7 @@ custom:
   dotenv:
     path: path/to/my/.env (default ./.env)
     basePath: path/to/ (default ./)
+    logging: false
     include:
       - AUTH0_CLIENT_ID
       - AUTH0_CLIENT_SECRET
