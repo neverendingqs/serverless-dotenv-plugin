@@ -1,6 +1,6 @@
 {
   "name": "serverless-dotenv-plugin",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Preload environment variables with dotenv into serverless.",
   "main": "index.js",
   "scripts": {

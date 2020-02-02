@@ -63,6 +63,21 @@ The problem with setting the `path` option is that you lose environment resoluti
 
 All env vars found in your file will be injected into your lambda functions. If you do not want all of them to be injected into your lambda functions, you can whitelist them with the `include` option.
 
+> exclude: ...
+
+(Added Feb 2, 2020 by @smcelhinney)
+
+If you do not want all of them to be injected into your lambda functions, you can blacklist the unnecessary ones with the `exclude` option. Note, this is only available if the `include` option has not been set.
+
+Example:
+
+```
+custom:
+  dotenv:
+    exclude:
+      - NODE_ENV # E.g for Google Cloud Functions, you cannot pass this env variable.
+```
+
 > logging: true|false (default true)
 
 (Added Feb 2, 2020 by @kristopherchun)
@@ -80,19 +95,6 @@ custom:
     include:
       - AUTH0_CLIENT_ID
       - AUTH0_CLIENT_SECRET
-```
-
-> exclude: ...
-
-If you do not want all of them to be injected into your lambda functions, you can blacklist the unnecessary ones with the `exclude` option.
-
-Example:
-
-```
-custom:
-  dotenv:
-    exclude:
-      - NODE_ENV # E.g for Google Cloud Functions, you cannot pass this env variable.
 ```
 
 ### Usage
