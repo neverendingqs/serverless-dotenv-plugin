@@ -115,6 +115,22 @@ provider:
 
 Again, remember that when you deploy your service, the plugin will inject these environment vars into any lambda functions you have and will therefore allow you to reference them as `process.env.AUTH0_CLIENT_ID` (Nodejs example).
 
+### Adding Dotenv Plugins and Customization
+
+(Added Feb 3, 2020)
+
+I've updated this plugin to allow you to add your own customizations to the dotenv library itself. For instance, there are several plugins that you can use with dotenv. Out of the box, this plugin already supports `dotenv-expand` but what if you wanted to include some other dotenv plugin such as `dotenv-parse-variables`? You can now do this with the help of a config file. In the root of your project, create this file:
+
+dotenv.config.js
+
+```
+const dotenvExpand = require('dotenv-expand')
+
+module.exports = function(dotenvConfig) {
+  return dotenvExpand(dotenvConfig).parsed
+}
+```
+
 ### Examples
 
 You can find example usage in the `examples` folder.

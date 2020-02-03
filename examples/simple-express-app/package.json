@@ -10,10 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.4",
-    "serverless-http": "^1.10.1"
-  },
-  "devDependencies": {
-    "serverless-dotenv-plugin": "^1.1.5"
+    "express": "^4.17.1",
+    "serverless-dotenv-plugin": "^2.3.1",
+    "serverless-http": "^2.3.1"
   }
 }

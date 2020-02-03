@@ -1,9 +1,8 @@
 'use strict'
 
-const dotenv = require('dotenv')
-const dotenvExpand = require('dotenv-expand')
 const chalk = require('chalk')
 const fs = require('fs')
+const path = require('path')
 
 class ServerlessPlugin {
   constructor(serverless, options) {
@@ -12,8 +11,11 @@ class ServerlessPlugin {
       this.serverless.service.provider.environment || {}
     this.config =
       this.serverless.service.custom && this.serverless.service.custom['dotenv']
-    this.logging = this.config && typeof this.config.logging !== 'undefined' ? this.config.logging : true;
-    
+    this.logging =
+      this.config && typeof this.config.logging !== 'undefined'
+        ? this.config.logging
+        : true
+
     this.loadEnv(this.getEnvironment(options))
   }
 
@@ -43,10 +45,21 @@ class ServerlessPlugin {
     return fs.existsSync(path) ? path : defaultPath
   }
 
+  resolvePluginConfigPath() {
+    let pluginConfigName = 'dotenv.config.js'
+    let defaultPluginConfigPath = path.resolve(__dirname, pluginConfigName)
+    let pluginConfigPath = path.resolve(process.cwd(), pluginConfigName)
+    return fs.existsSync(pluginConfigPath)
+      ? pluginConfigPath
+      : defaultPluginConfigPath
+  }
+
   loadEnv(env) {
     var envFileName = this.resolveEnvFileName(env)
+    var pluginConfigPath = this.resolvePluginConfigPath()
+
     try {
-      let envVars = dotenvExpand(dotenv.config({ path: envFileName })).parsed
+      let envVars = require(pluginConfigPath)(envFileName)
 
       var include = false
       var exclude = false
@@ -55,7 +68,8 @@ class ServerlessPlugin {
         include = this.config.include
       }
 
-      if (this.config && this.config.exclude && !include) { // Don't allow both include and exclude to be specified
+      if (this.config && this.config.exclude && !include) {
+        // Don't allow both include and exclude to be specified
         exclude = this.config.exclude
       }
 
@@ -78,7 +92,7 @@ class ServerlessPlugin {
             .forEach(key => {
               delete envVars[key]
             })
-        }        
+        }
         Object.keys(envVars).forEach(key => {
           if (this.logging) {
             this.serverless.cli.log('\t - ' + key)
