@@ -124,10 +124,11 @@ I've updated this plugin to allow you to add your own customizations to the dote
 dotenv.config.js
 
 ```
+const dotenv = require('dotenv')
 const dotenvExpand = require('dotenv-expand')
 
-module.exports = function(dotenvConfig) {
-  return dotenvExpand(dotenvConfig).parsed
+module.exports = function(envFileName) {
+  return dotenvExpand(dotenv.config({ path: envFileName })).parsed
 }
 ```
 
