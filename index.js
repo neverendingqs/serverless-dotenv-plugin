@@ -37,18 +37,21 @@ class ServerlessPlugin {
     }
 
     let basePath =
-      this.config && this.config.basePath ? this.config.basePath : ''
+      this.config && this.config.basePath ? this.config.basePath : process.cwd()
 
-    let defaultPath = basePath + '.env'
-    let path = basePath + '.env.' + env
+    let defaultPath = path.resolve(basePath, '.env')
+    let envPath = path.resolve(basePath, '.env.' + env)
 
-    return fs.existsSync(path) ? path : defaultPath
+    return fs.existsSync(envPath) ? envPath : defaultPath
   }
 
   resolvePluginConfigPath() {
+    let basePath =
+      this.config && this.config.basePath ? this.config.basePath : process.cwd()
     let pluginConfigName = 'dotenv.config.js'
     let defaultPluginConfigPath = path.resolve(__dirname, pluginConfigName)
-    let pluginConfigPath = path.resolve(process.cwd(), pluginConfigName)
+    let pluginConfigPath = path.resolve(basePath, pluginConfigName)
+
     return fs.existsSync(pluginConfigPath)
       ? pluginConfigPath
       : defaultPluginConfigPath
@@ -56,6 +59,7 @@ class ServerlessPlugin {
 
   loadEnv(env) {
     var envFileName = this.resolveEnvFileName(env)
+    console.log(envFileName)
     var pluginConfigPath = this.resolvePluginConfigPath()
 
     try {
