@@ -1,4 +1,4 @@
-# serverless-dotenv-plugin [![npm version](https://img.shields.io/npm/v/serverless-dotenv-plugin.svg?style=flat)](https://www.npmjs.com/package/serverless-dotenv-plugin)
+# serverless-dotenv-plugin [![Financial Contributors on Open Collective](https://opencollective.com/serverless-dotenv-plugin/all/badge.svg?label=financial+contributors)](https://opencollective.com/serverless-dotenv-plugin) [![npm version](https://img.shields.io/npm/v/serverless-dotenv-plugin.svg?style=flat)](https://www.npmjs.com/package/serverless-dotenv-plugin)
 
 Checkout https://colyn.dev/docs for documentation
 
@@ -124,3 +124,33 @@ Because of the highly dependent nature of this plugin (i.e. thousands of develop
 ### Roadmap
 
 See https://colyn.dev/upcoming-changes-to-serverless-dotenv-plugin for upcoming changes.
+
+## Contributors
+
+### Code Contributors
+
+This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+<a href="https://github.com/colynb/serverless-dotenv-plugin/graphs/contributors"><img src="https://opencollective.com/serverless-dotenv-plugin/contributors.svg?width=890&button=false" /></a>
+
+### Financial Contributors
+
+Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/serverless-dotenv-plugin/contribute)]
+
+#### Individuals
+
+<a href="https://opencollective.com/serverless-dotenv-plugin"><img src="https://opencollective.com/serverless-dotenv-plugin/individuals.svg?width=890"></a>
+
+#### Organizations
+
+Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/serverless-dotenv-plugin/contribute)]
+
+<a href="https://opencollective.com/serverless-dotenv-plugin/organization/0/website"><img src="https://opencollective.com/serverless-dotenv-plugin/organization/0/avatar.svg"></a>
+<a href="https://opencollective.com/serverless-dotenv-plugin/organization/1/website"><img src="https://opencollective.com/serverless-dotenv-plugin/organization/1/avatar.svg"></a>
+<a href="https://opencollective.com/serverless-dotenv-plugin/organization/2/website"><img src="https://opencollective.com/serverless-dotenv-plugin/organization/2/avatar.svg"></a>
+<a href="https://opencollective.com/serverless-dotenv-plugin/organization/3/website"><img src="https://opencollective.com/serverless-dotenv-plugin/organization/3/avatar.svg"></a>
+<a href="https://opencollective.com/serverless-dotenv-plugin/organization/4/website"><img src="https://opencollective.com/serverless-dotenv-plugin/organization/4/avatar.svg"></a>
+<a href="https://opencollective.com/serverless-dotenv-plugin/organization/5/website"><img src="https://opencollective.com/serverless-dotenv-plugin/organization/5/avatar.svg"></a>
+<a href="https://opencollective.com/serverless-dotenv-plugin/organization/6/website"><img src="https://opencollective.com/serverless-dotenv-plugin/organization/6/avatar.svg"></a>
+<a href="https://opencollective.com/serverless-dotenv-plugin/organization/7/website"><img src="https://opencollective.com/serverless-dotenv-plugin/organization/7/avatar.svg"></a>
+<a href="https://opencollective.com/serverless-dotenv-plugin/organization/8/website"><img src="https://opencollective.com/serverless-dotenv-plugin/organization/8/avatar.svg"></a>
+<a href="https://opencollective.com/serverless-dotenv-plugin/organization/9/website"><img src="https://opencollective.com/serverless-dotenv-plugin/organization/9/avatar.svg"></a>
