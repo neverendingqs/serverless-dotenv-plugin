@@ -9,5 +9,13 @@ Development
 
 Production
 ```
+> NODE_ENV=production sls deploy
+```
+or
+```
 > sls deploy --env production
+```
+or
+```
+> sls deploy --stage production
 ```
