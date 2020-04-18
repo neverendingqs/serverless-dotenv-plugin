@@ -1,6 +1,6 @@
 # serverless-dotenv-plugin [![Financial Contributors on Open Collective](https://opencollective.com/serverless-dotenv-plugin/all/badge.svg?label=financial+contributors)](https://opencollective.com/serverless-dotenv-plugin) [![npm version](https://img.shields.io/npm/v/serverless-dotenv-plugin.svg?style=flat)](https://www.npmjs.com/package/serverless-dotenv-plugin)
 
-Checkout https://colyn.dev/docs for documentation
+[![npm version](https://img.shields.io/npm/v/serverless-dotenv-plugin.svg?style=flat)](https://www.npmjs.com/package/serverless-dotenv-plugin)
 
 Preload environment variables into serverless. Use this plugin if you have variables stored in a `.env` file that you want loaded into your serverless yaml config. This will allow you to reference them as `${env:VAR_NAME}` inside your config _and_ it will load them into your lambdas.
 
@@ -8,13 +8,13 @@ Preload environment variables into serverless. Use this plugin if you have varia
 
 First, install the plugin:
 
-```
+```bash
 > npm i -D serverless-dotenv-plugin
 ```
 
 Next, add the plugin to your serverless config file:
 
-```
+```bash
 service: myService
 plugins:
   - serverless-dotenv-plugin
@@ -23,7 +23,7 @@ plugins:
 
 Now, just like you would using [dotenv](https://www.npmjs.com/package/dotenv) in any other JS application, create your `.env` file in the root of your app:
 
-```
+```bash
 DYANMODB_TABLE=myTable
 AWS_REGION=us-west-1
 AUTH0_CLIENT_ID=abc12345
@@ -34,18 +34,21 @@ AUTH0_CLIENT_SECRET=12345xyz
 
 By default, the plugin looks for the file: `.env`. In most use cases this is all that is needed. However, there are times where you want different env files based on environment. For instance:
 
-```
+```bash
 .env.development
 .env.production
 ```
 
-When you deploy with `NODE_ENV` set: `NODE_ENV=production sls deploy` the plugin will look for a file named `.env.production`. If it doesn't exist it will default to `.env`. If for some reason you can't set NODE_ENV, you could always just pass it in as an option: `sls deploy --env production`. If `NODE_ENV` or `--env` is not set, it will default to `development`.
+When you deploy with `NODE_ENV` set: `NODE_ENV=production sls deploy` the plugin will look for a file named `.env.production`. If it doesn't exist it will default to `.env`. If for some reason you can't set NODE_ENV, you could always just pass it in as an option: `sls deploy --env production` or `sls deploy --stage production`. If `NODE_ENV`, `--env` or `--stage` is not set, it will default to `development`.
 
-| Valid .env file names | Description                                                                                         |
-| --------------------- | --------------------------------------------------------------------------------------------------- |
-| .env                  | Default file name when no other files are specified or found.                                       |
-| .env.development      | If NODE_ENV or --env **is not set**, will try to load `.env.development`. If not found, load `.env` |
-| .env.{ENV}            | If NODE_ENV or --env **is set**, will try to load `.env.{env}`. If not found, load `.env`           |
+The precedence between the options is the following:
+`NODE_ENV` **>** `--env` **>** `--stage`
+
+| Valid .env file names | Description                                                                                                    |
+| --------------------- | -------------------------------------------------------------------------------------------------------------- |
+| .env                  | Default file name when no other files are specified or found.                                                  |
+| .env.development      | If NODE_ENV or --env or --stage **is not set**, will try to load `.env.development`. If not found, load `.env` |
+| .env.{ENV}            | If NODE_ENV or --env or --stage **is set**, will try to load `.env.{env}`. If not found, load `.env`           |
 
 ### Plugin options
 
@@ -69,7 +72,7 @@ If you do not want all of them to be injected into your lambda functions, you ca
 
 Example:
 
-```
+```bash
 custom:
   dotenv:
     exclude:
@@ -84,7 +87,7 @@ By default, there's quite a bit that this plugin logs to the console. You can no
 
 Complete example:
 
-```
+```bash
 custom:
   dotenv:
     path: path/to/my/.env (default ./.env)
@@ -99,7 +102,7 @@ custom:
 
 Once loaded, you can now access the vars using the standard method for accessing ENV vars in serverless:
 
-```
+```bash
 ...
 provider:
   name: aws
