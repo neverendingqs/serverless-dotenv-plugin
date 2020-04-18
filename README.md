@@ -1,8 +1,4 @@
----
-title: serverless-dotenv-plugin
-name: serverless-dotenv-plugin
-excerpt: Preload Environment Variables Into Serverless
----
+# serverless-dotenv-plugin
 
 [![npm version](https://img.shields.io/npm/v/serverless-dotenv-plugin.svg?style=flat)](https://www.npmjs.com/package/serverless-dotenv-plugin)
 
