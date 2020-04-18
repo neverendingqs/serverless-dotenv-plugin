@@ -39,13 +39,16 @@ By default, the plugin looks for the file: `.env`. In most use cases this is all
 .env.production
 ```
 
-When you deploy with `NODE_ENV` set: `NODE_ENV=production sls deploy` the plugin will look for a file named `.env.production`. If it doesn't exist it will default to `.env`. If for some reason you can't set NODE_ENV, you could always just pass it in as an option: `sls deploy --env production`. If `NODE_ENV` or `--env` is not set, it will default to `development`.
+When you deploy with `NODE_ENV` set: `NODE_ENV=production sls deploy` the plugin will look for a file named `.env.production`. If it doesn't exist it will default to `.env`. If for some reason you can't set NODE_ENV, you could always just pass it in as an option: `sls deploy --env production` or `sls deploy --stage production`. If `NODE_ENV`, `--env` or `--stage` is not set, it will default to `development`.
 
-| Valid .env file names | Description                                                                                         |
-| --------------------- | --------------------------------------------------------------------------------------------------- |
-| .env                  | Default file name when no other files are specified or found.                                       |
-| .env.development      | If NODE_ENV or --env **is not set**, will try to load `.env.development`. If not found, load `.env` |
-| .env.{ENV}            | If NODE_ENV or --env **is set**, will try to load `.env.{env}`. If not found, load `.env`           |
+The precedence between the options is the following:
+`NODE_ENV` **>** `--env` **>** `--stage`
+
+| Valid .env file names | Description                                                                                                  |
+| --------------------- | ------------------------------------------------------------------------------------------------------------ |
+| .env                  | Default file name when no other files are specified or found.                                                |
+| .env.development      | If NODE_ENV or --env or --stage **is not set**, will try to load `.env.development`. If not found, load `.env` |
+| .env.{ENV}            | If NODE_ENV or --env or --stage **is set**, will try to load `.env.{env}`. If not found, load `.env`         |
 
 ### Plugin options
 
