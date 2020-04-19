@@ -52,7 +52,7 @@ The env resolution pattern follows the one used by [Rail's dotenv](https://githu
 | .env.{ENV}            | If NODE_ENV or --env or --stage **is set**, will try to load `.env.{env}`.           |
 | .env.{ENV}.local      | Every env set up in `.env.{ENV}.local` **will override** other envs                  |
 
-Add `.env.*.local` to your .gitignore
+`.env` files **should be** checked into source control (with the exclusion of `.env.*.local`). Add `.env.*.local` to your .gitignore
 
 ### Plugin options
 
