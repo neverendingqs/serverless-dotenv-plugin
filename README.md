@@ -37,22 +37,28 @@ By default, the plugin looks for the file: `.env`. In most use cases this is all
 .env.production
 ```
 
-When you deploy with `NODE_ENV` set: `NODE_ENV=production sls deploy` the plugin will look for a file named `.env.production`. If it doesn't exist it will default to `.env`. If for some reason you can't set NODE_ENV, you could always just pass it in as an option: `sls deploy --env production` or `sls deploy --stage production`. If `NODE_ENV`, `--env` or `--stage` is not set, it will default to `development`.
+When you deploy with `NODE_ENV` set: `NODE_ENV=production sls deploy` the plugin will look for files named `.env`, `.env.production`, `.env.production.local`. If for some reason you can't set NODE_ENV, you could always just pass it in as an option: `sls deploy --env production` or `sls deploy --stage production`. If `NODE_ENV`, `--env` or `--stage` is not set, it will default to `development`.
 
 The precedence between the options is the following:
 `NODE_ENV` **>** `--env` **>** `--stage`
 
-| Valid .env file names | Description                                                                                                    |
-| --------------------- | -------------------------------------------------------------------------------------------------------------- |
-| .env                  | Default file name when no other files are specified or found.                                                  |
-| .env.development      | If NODE_ENV or --env or --stage **is not set**, will try to load `.env.development`. If not found, load `.env` |
-| .env.{ENV}            | If NODE_ENV or --env or --stage **is set**, will try to load `.env.{env}`. If not found, load `.env`           |
+The env resolution pattern follows the one used by [Rail's dotenv](https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use) and [create-react-app](https://create-react-app.dev/docs/adding-custom-environment-variables/#what-other-env-files-can-be-used) (Added Apr 19, 2020 by @danilofuchs):
+
+| Valid .env file names | Description                                                                          |
+| --------------------- | ------------------------------------------------------------------------------------ |
+| .env                  | Default file, always included                                                        |
+| .env.local            | Included in all environments except test                                             |
+| .env.development      | If NODE_ENV or --env or --stage **is not set**, will try to load `.env.development`. |
+| .env.{ENV}            | If NODE_ENV or --env or --stage **is set**, will try to load `.env.{env}`.           |
+| .env.{ENV}.local      | Every env set up in `.env.{ENV}.local` **will override** other envs                  |
+
+Add `.env.*.local` to your .gitignore
 
 ### Plugin options
 
 > path: path/to/my/.env
 
-The plugin will look for your .env file in the same folder where you run the command using the file resolution rules as described above, but these rules can be overridden by setting the `path` option.
+The plugin will look for your .env file in the same folder where you run the command using the file resolution rules as described above, but these rules can be overridden by setting the `path` option. This will **disable** automatic env file resolution
 
 > basePath: path/to/my/
 
