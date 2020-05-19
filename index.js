@@ -42,6 +42,7 @@ class ServerlessPlugin {
 
       var include = false
       var exclude = false
+      var { processEnvOnly: processEnvOnly = false } = this.config
 
       if (this.config && this.config.include) {
         include = this.config.include
@@ -75,7 +76,11 @@ class ServerlessPlugin {
           if (this.logging) {
             this.serverless.cli.log('\t - ' + key)
           }
-          this.serverless.service.provider.environment[key] = envVars[key]
+          if (processEnvOnly) {
+            process.env[key] = envVars[key]
+          } else {
+            this.serverless.service.provider.environment[key] = envVars[key]
+          }
         })
       } else {
         if (this.logging) {
