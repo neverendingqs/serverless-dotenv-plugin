@@ -12,7 +12,7 @@ First, install the plugin:
 
 Next, add the plugin to your serverless config file:
 
-```bash
+```yaml
 service: myService
 plugins:
   - serverless-dotenv-plugin
@@ -22,7 +22,7 @@ plugins:
 Now, just like you would using [dotenv](https://www.npmjs.com/package/dotenv) in any other JS application, create your `.env` file in the root of your app:
 
 ```bash
-DYANMODB_TABLE=myTable
+DYNAMODB_TABLE=myTable
 AWS_REGION=us-west-1
 AUTH0_CLIENT_ID=abc12345
 AUTH0_CLIENT_SECRET=12345xyz
@@ -70,7 +70,7 @@ If you do not want all of them to be injected into your lambda functions, you ca
 
 Example:
 
-```bash
+```yaml
 custom:
   dotenv:
     exclude:
@@ -85,7 +85,7 @@ By default, there's quite a bit that this plugin logs to the console. You can no
 
 Complete example:
 
-```bash
+```yaml
 custom:
   dotenv:
     path: path/to/my/.env (default ./.env)
@@ -100,7 +100,7 @@ custom:
 
 Once loaded, you can now access the vars using the standard method for accessing ENV vars in serverless:
 
-```bash
+```yaml
 ...
 provider:
   name: aws
@@ -113,6 +113,14 @@ provider:
 ### Lambda Environment Variables
 
 Again, remember that when you deploy your service, the plugin will inject these environment vars into any lambda functions you have and will therefore allow you to reference them as `process.env.AUTH0_CLIENT_ID` (Nodejs example).
+
+You can avoid automatically injecting the variables by using the `processEnvOnly` option.
+
+```yaml
+custom:
+  dotenv:
+    processEnvOnly: true
+```
 
 ### Examples
 
