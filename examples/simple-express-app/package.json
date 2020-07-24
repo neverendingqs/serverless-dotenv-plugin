@@ -11,9 +11,9 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.4",
-    "serverless-http": "^1.10.1"
+    "serverless-http": "^2.5.0"
   },
   "devDependencies": {
-    "serverless-dotenv-plugin": "^1.1.5"
+    "serverless-dotenv-plugin": "^2.4.2"
   }
 }

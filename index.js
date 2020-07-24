@@ -8,9 +8,14 @@ const fs = require('fs')
 class ServerlessPlugin {
   constructor(serverless, options) {
     this.serverless = serverless
-    this.serverless.service.provider.environment = this.serverless.service.provider.environment || {}
-    this.config = this.serverless.service.custom && this.serverless.service.custom['dotenv']
-    this.logging = this.config && typeof this.config.logging !== 'undefined' ? this.config.logging : true
+    this.serverless.service.provider.environment =
+      this.serverless.service.provider.environment || {}
+    this.config =
+      this.serverless.service.custom && this.serverless.service.custom['dotenv']
+    this.logging =
+      this.config && typeof this.config.logging !== 'undefined'
+        ? this.config.logging
+        : true
 
     this.loadEnv(this.getEnvironment(options))
   }
@@ -46,11 +51,12 @@ class ServerlessPlugin {
       `.env`,
     ]
 
-    const basePath = this.config && this.config.basePath ? this.config.basePath : ''
+    const basePath =
+      this.config && this.config.basePath ? this.config.basePath : ''
 
-    const filesNames = dotenvFiles.map(file => basePath + file)
+    const filesNames = dotenvFiles.map((file) => basePath + file)
 
-    return filesNames.filter(fileName => fs.existsSync(fileName))
+    return filesNames.filter((fileName) => fs.existsSync(fileName))
   }
 
   /**
@@ -59,9 +65,14 @@ class ServerlessPlugin {
   loadEnv(env) {
     const envFileNames = this.resolveEnvFileNames(env)
     try {
-      const envVarsArray = envFileNames.map(fileName => dotenvExpand(dotenv.config({ path: fileName })).parsed)
+      const envVarsArray = envFileNames.map(
+        (fileName) => dotenvExpand(dotenv.config({ path: fileName })).parsed,
+      )
 
-      const envVars = envVarsArray.reduce((acc, curr) => ({ ...acc, ...curr }), {})
+      const envVars = envVarsArray.reduce(
+        (acc, curr) => ({ ...acc, ...curr }),
+        {},
+      )
 
       let include = false
       let exclude = false
@@ -78,24 +89,26 @@ class ServerlessPlugin {
       if (envVars) {
         if (this.logging) {
           this.serverless.cli.log(
-            'DOTENV: Loading environment variables from ' + envFileNames.reverse().join(', ') + ':'
+            'DOTENV: Loading environment variables from ' +
+              envFileNames.reverse().join(', ') +
+              ':',
           )
         }
         if (include) {
           Object.keys(envVars)
-            .filter(key => !include.includes(key))
-            .forEach(key => {
+            .filter((key) => !include.includes(key))
+            .forEach((key) => {
               delete envVars[key]
             })
         }
         if (exclude) {
           Object.keys(envVars)
-            .filter(key => exclude.includes(key))
-            .forEach(key => {
+            .filter((key) => exclude.includes(key))
+            .forEach((key) => {
               delete envVars[key]
             })
         }
-        Object.keys(envVars).forEach(key => {
+        Object.keys(envVars).forEach((key) => {
           if (this.logging) {
             this.serverless.cli.log('\t - ' + key)
           }
@@ -107,7 +120,11 @@ class ServerlessPlugin {
         }
       }
     } catch (e) {
-      console.error(chalk.red('\n Serverless Plugin Error --------------------------------------\n'))
+      console.error(
+        chalk.red(
+          '\n Serverless Plugin Error --------------------------------------\n',
+        ),
+      )
       console.error(chalk.red('  ' + e.message))
     }
   }
