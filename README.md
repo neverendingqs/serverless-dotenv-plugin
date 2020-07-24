@@ -42,7 +42,9 @@ When you deploy with `NODE_ENV` set: `NODE_ENV=production sls deploy` the plugin
 The precedence between the options is the following:
 `NODE_ENV` **>** `--env` **>** `--stage`
 
-The env resolution pattern follows the one used by [Rail's dotenv](https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use) and [create-react-app](https://create-react-app.dev/docs/adding-custom-environment-variables/#what-other-env-files-can-be-used) (Added Apr 19, 2020 by @danilofuchs):
+### ENV File Resolution (as of verson 3.0+ Thanks to [@danilofuchs](https://github.com/danilofuchs)!)
+
+The env resolution pattern follows the one used by [Rail's dotenv](https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use) and [create-react-app](https://create-react-app.dev/docs/adding-custom-environment-variables/#what-other-env-files-can-be-used)
 
 | Valid .env file names | Description                                                                          |
 | --------------------- | ------------------------------------------------------------------------------------ |
