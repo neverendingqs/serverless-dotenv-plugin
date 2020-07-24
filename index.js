@@ -8,53 +8,77 @@ const fs = require('fs')
 class ServerlessPlugin {
   constructor(serverless, options) {
     this.serverless = serverless
-    this.serverless.service.provider.environment =
-      this.serverless.service.provider.environment || {}
-    this.config =
-      this.serverless.service.custom && this.serverless.service.custom['dotenv']
-    this.logging = this.config && typeof this.config.logging !== 'undefined' ? this.config.logging : true;
-    
+    this.serverless.service.provider.environment = this.serverless.service.provider.environment || {}
+    this.config = this.serverless.service.custom && this.serverless.service.custom['dotenv']
+    this.logging = this.config && typeof this.config.logging !== 'undefined' ? this.config.logging : true
+
     this.loadEnv(this.getEnvironment(options))
   }
 
+  /**
+   * @param {Object} options
+   * @returns {string}
+   */
   getEnvironment(options) {
     return process.env.NODE_ENV || options.env || options.stage || 'development'
   }
 
-  resolveEnvFileName(env) {
+  /**
+   * @param {string} env
+   * @returns {string[]}
+   */
+  resolveEnvFileNames(env) {
     if (this.config && this.config.path) {
-      return this.config.path
+      if (Array.isArray(this.config.path)) {
+        return this.config.path
+      }
+      return [this.config.path]
     }
 
-    let basePath =
-      this.config && this.config.basePath ? this.config.basePath : ''
+    // https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use
+    const dotenvFiles = [
+      `.env.${env}.local`,
+      `.env.${env}`,
+      // Don't include `.env.local` for `test` environment
+      // since normally you expect tests to produce the same
+      // results for everyone
+      env !== 'test' && `.env.local`,
+      `.env`,
+    ]
 
-    let defaultPath = basePath + '.env'
-    let path = basePath + '.env.' + env
+    const basePath = this.config && this.config.basePath ? this.config.basePath : ''
 
-    return fs.existsSync(path) ? path : defaultPath
+    const filesNames = dotenvFiles.map(file => basePath + file)
+
+    return filesNames.filter(fileName => fs.existsSync(fileName))
   }
 
+  /**
+   * @param {string} env
+   */
   loadEnv(env) {
-    var envFileName = this.resolveEnvFileName(env)
+    const envFileNames = this.resolveEnvFileNames(env)
     try {
-      let envVars = dotenvExpand(dotenv.config({ path: envFileName })).parsed
+      const envVarsArray = envFileNames.map(fileName => dotenvExpand(dotenv.config({ path: fileName })).parsed)
 
-      var include = false
-      var exclude = false
+      const envVars = envVarsArray.reduce((acc, curr) => ({ ...acc, ...curr }), {})
+
+      let include = false
+      let exclude = false
 
       if (this.config && this.config.include) {
         include = this.config.include
       }
 
-      if (this.config && this.config.exclude && !include) { // Don't allow both include and exclude to be specified
+      if (this.config && this.config.exclude && !include) {
+        // Don't allow both include and exclude to be specified
         exclude = this.config.exclude
       }
 
       if (envVars) {
         if (this.logging) {
           this.serverless.cli.log(
-            'DOTENV: Loading environment variables from ' + envFileName + ':'
+            'DOTENV: Loading environment variables from ' + envFileNames.reverse().join(', ') + ':'
           )
         }
         if (include) {
@@ -70,7 +94,7 @@ class ServerlessPlugin {
             .forEach(key => {
               delete envVars[key]
             })
-        }        
+        }
         Object.keys(envVars).forEach(key => {
           if (this.logging) {
             this.serverless.cli.log('\t - ' + key)
@@ -83,11 +107,7 @@ class ServerlessPlugin {
         }
       }
     } catch (e) {
-      console.error(
-        chalk.red(
-          '\n Serverless Plugin Error --------------------------------------\n'
-        )
-      )
+      console.error(chalk.red('\n Serverless Plugin Error --------------------------------------\n'))
       console.error(chalk.red('  ' + e.message))
     }
   }
