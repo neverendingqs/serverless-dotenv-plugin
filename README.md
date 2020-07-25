@@ -1,4 +1,6 @@
-# serverless-dotenv-plugin [![npm version](https://img.shields.io/npm/v/serverless-dotenv-plugin.svg?style=flat)](https://www.npmjs.com/package/serverless-dotenv-plugin)
+# serverless-dotenv-plugin
+
+# [![npm version](https://img.shields.io/npm/v/serverless-dotenv-plugin.svg?style=flat)](https://www.npmjs.com/package/serverless-dotenv-plugin)
 
 Preload environment variables into serverless. Use this plugin if you have variables stored in a `.env` file that you want loaded into your serverless yaml config. This will allow you to reference them as `${env:VAR_NAME}` inside your config _and_ it will load them into your lambdas.
 
@@ -128,17 +130,7 @@ You can find example usage in the `examples` folder.
 
 Because of the highly dependent nature of this plugin (i.e. thousands of developers depend on this to deploy their apps to production) I cannot introduce changes that are backwards incompatible. Any feature requests must first consider this as a blocker. If submitting a PR ensure that the change is developer opt-in only meaning it must guarantee that it will not affect existing workflows, it's only available with an opt-in setting. I appreciate your patience on this. Thanks.
 
-### Roadmap
-
-See https://colyn.dev/upcoming-changes-to-serverless-dotenv-plugin for upcoming changes.
-
 ## Contributors
-
-### Code Contributors
 
 This project exists thanks to all the people who contribute.
 <a href="https://github.com/colynb/serverless-dotenv-plugin/graphs/contributors"><img src="https://opencollective.com/serverless-dotenv-plugin/contributors.svg?width=890&button=false" /></a>
-
-#### Individuals
-
-<a href="https://opencollective.com/serverless-dotenv-plugin"><img src="https://opencollective.com/serverless-dotenv-plugin/individuals.svg?width=890"></a>
