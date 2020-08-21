@@ -86,7 +86,7 @@ class ServerlessPlugin {
         exclude = this.config.exclude
       }
 
-      if (envVars) {
+      if (envFileNames.length > 0) {
         if (this.logging) {
           this.serverless.cli.log(
             'DOTENV: Loading environment variables from ' +
