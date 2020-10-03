@@ -6,7 +6,7 @@ const chalk = require('chalk')
 const fs = require('fs')
 
 const errorTypes = {
-  FILE_NOT_FOUND: 'FILE_NOT_FOUND'
+  HALT: 'HALT'
 };
 
 class ServerlessPlugin {
@@ -123,13 +123,13 @@ class ServerlessPlugin {
         const errorMsg = 'DOTENV: Could not find .env file.';
 
         if(this.fileRequired === true) {
-          throw Object.assign(new Error(errorMsg), { type: errorTypes.FILE_NOT_FOUND });
+          throw Object.assign(new Error(errorMsg), { type: errorTypes.HALT });
         } else if (this.logging) {
           this.serverless.cli.log('DOTENV: Could not find .env file.')
         }
       }
     } catch (e) {
-      if(this.fileRequired && e.type === errorTypes.FILE_NOT_FOUND) {
+      if(this.fileRequired && e.type === errorTypes.HALT) {
         throw e;
       }
 
