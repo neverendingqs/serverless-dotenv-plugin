@@ -20,7 +20,7 @@ class ServerlessPlugin {
       this.config && typeof this.config.logging !== 'undefined'
         ? this.config.logging
         : true
-    this.fileRequired = this.config && this.config.required;
+    this.required = (this.config && this.config.required) || {};
 
     this.loadEnv(this.getEnvironment(options))
   }
@@ -122,14 +122,14 @@ class ServerlessPlugin {
       } else {
         const errorMsg = 'DOTENV: Could not find .env file.';
 
-        if(this.fileRequired === true) {
+        if(this.required.file === true) {
           throw Object.assign(new Error(errorMsg), { type: errorTypes.HALT });
         } else if (this.logging) {
           this.serverless.cli.log('DOTENV: Could not find .env file.')
         }
       }
     } catch (e) {
-      if(this.fileRequired && e.type === errorTypes.HALT) {
+      if(e.type === errorTypes.HALT) {
         throw e;
       }
 
