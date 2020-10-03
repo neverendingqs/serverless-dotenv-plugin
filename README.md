@@ -24,7 +24,7 @@ plugins:
 Now, just like you would using [dotenv](https://www.npmjs.com/package/dotenv) in any other JS application, create your `.env` file in the root of your app:
 
 ```bash
-DYANMODB_TABLE=myTable
+DYNAMODB_TABLE=myTable
 AWS_REGION=us-west-1
 AUTH0_CLIENT_ID=abc12345
 AUTH0_CLIENT_SECRET=12345xyz
