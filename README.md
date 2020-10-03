@@ -14,7 +14,7 @@ First, install the plugin:
 
 Next, add the plugin to your serverless config file:
 
-```bash
+```yaml
 service: myService
 plugins:
   - serverless-dotenv-plugin
@@ -78,7 +78,7 @@ If you do not want all of them to be injected into your lambda functions, you ca
 
 Example:
 
-```bash
+```yaml
 custom:
   dotenv:
     exclude:
@@ -93,7 +93,7 @@ By default, there's quite a bit that this plugin logs to the console. You can no
 
 Complete example:
 
-```bash
+```yaml
 custom:
   dotenv:
     path: path/to/my/.env (default ./.env)
@@ -108,7 +108,7 @@ custom:
 
 Once loaded, you can now access the vars using the standard method for accessing ENV vars in serverless:
 
-```bash
+```yaml
 ...
 provider:
   name: aws
