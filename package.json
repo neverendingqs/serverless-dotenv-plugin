@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "prettier": "prettier --write \"**/*.js\"",
-    "test": "nyc mocha"
+    "test": "nyc mocha",
+    "posttest": "prettier --check \"**/*.js\""
   },
   "repository": {
     "type": "git",
