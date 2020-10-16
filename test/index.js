@@ -29,6 +29,9 @@ describe('ServerlessPlugin', function () {
         log: this.sandbox.stub(),
       },
       service: {
+        custom: {
+          dotenv: {},
+        },
         provider: {},
       },
     }
