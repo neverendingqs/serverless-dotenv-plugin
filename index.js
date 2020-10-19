@@ -5,6 +5,10 @@ const dotenvExpand = require('dotenv-expand')
 const chalk = require('chalk')
 const fs = require('fs')
 
+const errorTypes = {
+  HALT: 'HALT'
+};
+
 class ServerlessPlugin {
   constructor(serverless, options) {
     this.serverless = serverless
@@ -16,6 +20,7 @@ class ServerlessPlugin {
       this.config && typeof this.config.logging !== 'undefined'
         ? this.config.logging
         : true
+    this.required = (this.config && this.config.required) || {};
 
     this.loadEnv(this.getEnvironment(options))
   }
@@ -115,11 +120,19 @@ class ServerlessPlugin {
           this.serverless.service.provider.environment[key] = envVars[key]
         })
       } else {
-        if (this.logging) {
+        const errorMsg = 'DOTENV: Could not find .env file.';
+
+        if(this.required.file === true) {
+          throw Object.assign(new Error(errorMsg), { type: errorTypes.HALT });
+        } else if (this.logging) {
           this.serverless.cli.log('DOTENV: Could not find .env file.')
         }
       }
     } catch (e) {
+      if(e.type === errorTypes.HALT) {
+        throw e;
+      }
+
       console.error(
         chalk.red(
           '\n Serverless Plugin Error --------------------------------------\n',

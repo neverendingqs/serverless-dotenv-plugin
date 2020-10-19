@@ -104,6 +104,19 @@ custom:
       - AUTH0_CLIENT_SECRET
 ```
 
+> required.file: true|false (default false)
+
+By default, this plugin will exit gracefully and allow Serverless to continue even if it couldn't find a .env file to use. Set this to `true` to cause Serverless to halt if it could not find a .env file to use.
+
+Complete example:
+
+```yaml
+custom:
+  dotenv:
+    required:
+      file: true
+```
+
 ### Usage
 
 Once loaded, you can now access the vars using the standard method for accessing ENV vars in serverless:
