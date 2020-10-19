@@ -30,7 +30,9 @@ describe('ServerlessPlugin', function () {
       },
       service: {
         custom: {
-          dotenv: {},
+          dotenv: {
+            required: {},
+          },
         },
         provider: {},
       },
@@ -73,5 +75,30 @@ describe('ServerlessPlugin', function () {
 
   describe('resolveEnvFileNames()', function () {})
 
-  describe('loadEnv()', function () {})
+  describe('loadEnv()', function () {
+    beforeEach(function () {
+      this.env = 'unittests'
+      this.resolveEnvFileNames = this.sandbox.stub(
+        this.plugin,
+        'resolveEnvFileNames',
+      )
+    })
+
+    it('logs an error if no .env files are required and none are found', function () {
+      this.resolveEnvFileNames.withArgs(this.env).returns([])
+
+      this.plugin.loadEnv(this.env)
+
+      this.serverless.cli.log.should.have.been.calledWith(
+        'DOTENV: Could not find .env file.',
+      )
+    })
+
+    it('throws an error if no .env files are required but at least one is required', function () {
+      this.serverless.service.custom.dotenv.required.file = true
+      this.resolveEnvFileNames.withArgs(this.env).returns([])
+
+      should.Throw(() => this.plugin.loadEnv(this.env))
+    })
+  })
 })
