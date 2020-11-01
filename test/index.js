@@ -141,5 +141,43 @@ describe('ServerlessPlugin', function () {
 
       should.Throw(() => this.plugin.loadEnv(this.env))
     })
+
+    it('loads variables from all files', function () {
+      const filesAndEnvVars = {
+        file1: {
+          env1: 'env1value',
+          env2: 'env2overwrittenvalue',
+        },
+        file2: {
+          env2: 'env2value',
+          env3: 'env3value',
+        },
+      }
+
+      const files = Object.keys(filesAndEnvVars)
+
+      this.resolveEnvFileNames.withArgs(this.env).returns(files)
+
+      files.forEach((fileName) => {
+        this.requireStubs.dotenv.config
+          .withArgs({ path: fileName })
+          .returns(filesAndEnvVars[fileName])
+
+        this.requireStubs['dotenv-expand']
+          .withArgs(filesAndEnvVars[fileName])
+          .returns({ parsed: filesAndEnvVars[fileName] })
+      })
+
+      this.plugin.loadEnv(this.env)
+
+      const expectedEnvVars = Object.values(filesAndEnvVars).reduce(
+        (acc, envVars) => Object.assign(acc, envVars),
+        {},
+      )
+
+      this.serverless.service.provider.environment.should.deep.equal(
+        expectedEnvVars,
+      )
+    })
   })
 })
