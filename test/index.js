@@ -179,5 +179,83 @@ describe('ServerlessPlugin', function () {
         expectedEnvVars,
       )
     })
+
+    it('removes keys not in config.include', function () {
+      const fileName = '.env'
+      const envVars = {
+        env1: 'env1value',
+        env2: 'env2value',
+        env3: 'env3value',
+      }
+      this.serverless.service.custom.dotenv.include = ['env2']
+
+      this.resolveEnvFileNames.withArgs(this.env).returns([fileName])
+      this.requireStubs.dotenv.config
+        .withArgs({ path: fileName })
+        .returns(envVars)
+
+      this.requireStubs['dotenv-expand']
+        .withArgs(envVars)
+        .returns({ parsed: envVars })
+
+      this.plugin.loadEnv(this.env)
+
+      this.serverless.service.provider.environment.should.deep.equal({
+        env2: envVars.env2,
+      })
+    })
+
+    it('removes keys in config.exclude', function () {
+      const fileName = '.env'
+      const envVars = {
+        env1: 'env1value',
+        env2: 'env2value',
+        env3: 'env3value',
+      }
+      this.serverless.service.custom.dotenv.exclude = ['env2']
+
+      this.resolveEnvFileNames.withArgs(this.env).returns([fileName])
+      this.requireStubs.dotenv.config
+        .withArgs({ path: fileName })
+        .returns(envVars)
+
+      this.requireStubs['dotenv-expand']
+        .withArgs(envVars)
+        .returns({ parsed: envVars })
+
+      this.plugin.loadEnv(this.env)
+
+      this.serverless.service.provider.environment.should.deep.equal({
+        env1: envVars.env1,
+        env3: envVars.env3,
+      })
+    })
+
+    it('ignores config.exclude if config.include is set', function () {
+      const fileName = '.env'
+      const envVars = {
+        env1: 'env1value',
+        env2: 'env2value',
+        env3: 'env3value',
+      }
+      this.serverless.service.custom.dotenv.include = ['env1', 'env2']
+      this.serverless.service.custom.dotenv.exclude = ['env2']
+
+      this.resolveEnvFileNames.withArgs(this.env).returns([fileName])
+      this.requireStubs.dotenv.config
+        .withArgs({ path: fileName })
+        .returns(envVars)
+
+      this.requireStubs['dotenv-expand']
+        .withArgs(envVars)
+        .returns({ parsed: envVars })
+
+      this.plugin.loadEnv(this.env)
+
+      this.serverless.service.provider.environment.should.deep.equal({
+        env1: envVars.env1,
+        env2: envVars.env2,
+      })
+    })
   })
 })
