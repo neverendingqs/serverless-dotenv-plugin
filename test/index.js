@@ -161,10 +161,10 @@ describe('ServerlessPlugin', function () {
       files.forEach((fileName) => {
         this.requireStubs.dotenv.config
           .withArgs({ path: fileName })
-          .returns(filesAndEnvVars[fileName])
+          .returns({ parsed: filesAndEnvVars[fileName] })
 
         this.requireStubs['dotenv-expand']
-          .withArgs(filesAndEnvVars[fileName])
+          .withArgs({ parsed: filesAndEnvVars[fileName] })
           .returns({ parsed: filesAndEnvVars[fileName] })
       })
 
@@ -192,10 +192,10 @@ describe('ServerlessPlugin', function () {
       this.resolveEnvFileNames.withArgs(this.env).returns([fileName])
       this.requireStubs.dotenv.config
         .withArgs({ path: fileName })
-        .returns(envVars)
+        .returns({ parsed: envVars })
 
       this.requireStubs['dotenv-expand']
-        .withArgs(envVars)
+        .withArgs({ parsed: envVars })
         .returns({ parsed: envVars })
 
       this.plugin.loadEnv(this.env)
@@ -217,10 +217,10 @@ describe('ServerlessPlugin', function () {
       this.resolveEnvFileNames.withArgs(this.env).returns([fileName])
       this.requireStubs.dotenv.config
         .withArgs({ path: fileName })
-        .returns(envVars)
+        .returns({ parsed: envVars })
 
       this.requireStubs['dotenv-expand']
-        .withArgs(envVars)
+        .withArgs({ parsed: envVars })
         .returns({ parsed: envVars })
 
       this.plugin.loadEnv(this.env)
@@ -244,10 +244,10 @@ describe('ServerlessPlugin', function () {
       this.resolveEnvFileNames.withArgs(this.env).returns([fileName])
       this.requireStubs.dotenv.config
         .withArgs({ path: fileName })
-        .returns(envVars)
+        .returns({ parsed: envVars })
 
       this.requireStubs['dotenv-expand']
-        .withArgs(envVars)
+        .withArgs({ parsed: envVars })
         .returns({ parsed: envVars })
 
       this.plugin.loadEnv(this.env)
