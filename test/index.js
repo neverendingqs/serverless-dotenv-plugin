@@ -16,7 +16,7 @@ describe('ServerlessPlugin', function () {
       dotenv: {
         config: this.sandbox.stub(),
       },
-      dotenvExpand: this.sandbox.stub(),
+      'dotenv-expand': this.sandbox.stub(),
       fs: {
         existsSync: this.sandbox.stub(),
       },
@@ -81,6 +81,47 @@ describe('ServerlessPlugin', function () {
       this.resolveEnvFileNames = this.sandbox.stub(
         this.plugin,
         'resolveEnvFileNames',
+      )
+    })
+
+    it('throws an error if resolveEnvFileNames() throws an error', function () {
+      const error = new Error('Error in resolveEnvFileNames()')
+      this.resolveEnvFileNames.throws(error)
+
+      should.Throw(() => this.plugin.loadEnv(this.env), error)
+    })
+
+    it('logs an error if dotenv.config() throws an error', function () {
+      const fileName = '.env'
+      this.resolveEnvFileNames.withArgs(this.env).returns([fileName])
+      const error = new Error('Error while calling dotenv.config()')
+      this.requireStubs.dotenv.config.withArgs({ path: fileName }).throws(error)
+
+      this.plugin.loadEnv(this.env)
+
+      this.requireStubs.chalk.red.should.have.been.calledWith(
+        '  ' + error.message,
+      )
+    })
+
+    it('logs an error if dotenvExpand() throws an error', function () {
+      const fileName = '.env'
+      this.resolveEnvFileNames.withArgs(this.env).returns([fileName])
+
+      const dotenvConfigResponse = {}
+      this.requireStubs.dotenv.config
+        .withArgs({ path: fileName })
+        .returns(dotenvConfigResponse)
+
+      const error = new Error('Error while calling dotenvExpand()')
+      this.requireStubs['dotenv-expand']
+        .withArgs(dotenvConfigResponse)
+        .throws(error)
+
+      this.plugin.loadEnv(this.env)
+
+      this.requireStubs.chalk.red.should.have.been.calledWith(
+        '  ' + error.message,
       )
     })
 
