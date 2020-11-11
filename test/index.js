@@ -69,7 +69,30 @@ describe('ServerlessPlugin', function () {
     })
   })
 
-  describe('getEnvironment()', function () {})
+  describe('getEnvironment()', function () {
+    it("set to 'development' when no other options are available", function () {
+      this.plugin.getEnvironment({}).should.equal('development')
+    })
+
+    it('uses option.stage if it is set', function () {
+      this.plugin
+        .getEnvironment({ stage: 'teststage' })
+        .should.equal('teststage')
+    })
+
+    it('prefers option.env if it is set', function () {
+      this.plugin
+        .getEnvironment({ env: 'testenv', stage: 'teststage' })
+        .should.equal('testenv')
+    })
+
+    it('prefers NODE_ENV if it is set', function () {
+      this.sandbox.stub(process, 'env').value({ NODE_ENV: 'TEST_NODE_ENV' })
+      this.plugin
+        .getEnvironment({ env: 'theenv', stage: 'thestage' })
+        .should.equal('TEST_NODE_ENV')
+    })
+  })
 
   describe('resolveEnvFileNames()', function () {})
 
