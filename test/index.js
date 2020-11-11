@@ -94,7 +94,96 @@ describe('ServerlessPlugin', function () {
     })
   })
 
-  describe('resolveEnvFileNames()', function () {})
+  describe('resolveEnvFileNames()', function () {
+    describe('with config.path configured', function () {
+      it('returns singleton array if set to a string value', function () {
+        const path = '.env.unittest'
+        this.serverless.service.custom.dotenv.path = path
+
+        this.plugin.resolveEnvFileNames('env').should.deep.equal([path])
+      })
+
+      it('returns config.path as-is if set to an array value', function () {
+        const path = ['.env.unittest0', '.env.unittest1']
+        this.serverless.service.custom.dotenv.path = path
+
+        this.plugin.resolveEnvFileNames('env').should.deep.equal(path)
+      })
+    })
+
+    describe('with default dotenv paths', function () {
+      ;['staging', 'production', 'dmz'].forEach((env) => {
+        it(`returns all path with any "env" other than "test" (${env})`, function () {
+          const expectedDotenvFiles = [
+            `.env.${env}.local`,
+            `.env.${env}`,
+            '.env.local',
+            '.env',
+          ]
+
+          expectedDotenvFiles.forEach((file) =>
+            this.requireStubs.fs.existsSync.withArgs(file).returns(true),
+          )
+
+          this.plugin
+            .resolveEnvFileNames(env)
+            .should.deep.equal(expectedDotenvFiles)
+        })
+
+        it('filters out files that do not exist', function () {
+          const missingDotEnvFiles = [`.env.${env}`, '.env.local']
+
+          const expectedDotenvFiles = [`.env.${env}.local`, '.env']
+
+          missingDotEnvFiles.forEach((file) =>
+            this.requireStubs.fs.existsSync.withArgs(file).returns(false),
+          )
+
+          expectedDotenvFiles.forEach((file) =>
+            this.requireStubs.fs.existsSync.withArgs(file).returns(true),
+          )
+
+          this.plugin
+            .resolveEnvFileNames(env)
+            .should.deep.equal(expectedDotenvFiles)
+        })
+      })
+
+      it('excludes local env file if "env" is set to "test"', function () {
+        const env = 'test'
+        const expectedDotenvFiles = [`.env.${env}.local`, `.env.${env}`, '.env']
+
+        expectedDotenvFiles.forEach((file) =>
+          this.requireStubs.fs.existsSync.withArgs(file).returns(true),
+        )
+
+        this.plugin
+          .resolveEnvFileNames(env)
+          .should.deep.equal(expectedDotenvFiles)
+      })
+
+      it('uses "basePath" config if set', function () {
+        const basePath = 'unittest/'
+        this.serverless.service.custom.dotenv.basePath = basePath
+
+        const env = 'unittest'
+        const expectedDotenvFiles = [
+          `${basePath}.env.${env}.local`,
+          `${basePath}.env.${env}`,
+          `${basePath}.env.local`,
+          `${basePath}.env`,
+        ]
+
+        expectedDotenvFiles.forEach((file) =>
+          this.requireStubs.fs.existsSync.withArgs(file).returns(true),
+        )
+
+        this.plugin
+          .resolveEnvFileNames(env)
+          .should.deep.equal(expectedDotenvFiles)
+      })
+    })
+  })
 
   describe('loadEnv()', function () {})
 })
