@@ -71,6 +71,35 @@ describe('ServerlessPlugin', function () {
     })
   })
 
+  describe('log()', function () {
+    it('logs by default', function () {
+      const msg = 'msg'
+      this.plugin.log(msg)
+      this.serverless.cli.log.should.be.calledWith(msg)
+    })
+
+    it('does nothing if logging is disabled', function () {
+      const serverless = {
+        cli: {
+          log: this.sandbox.stub(),
+        },
+        service: {
+          custom: {
+            dotenv: {
+              logging: false,
+            },
+          },
+          provider: {},
+        },
+      }
+
+      const plugin = new this.ServerlessPlugin(serverless, this.options)
+      plugin.log('msg')
+
+      serverless.cli.log.should.not.be.called
+    })
+  })
+
   describe('getEnvironment()', function () {
     it("set to 'development' when no other options are available", function () {
       this.plugin.getEnvironment({}).should.equal('development')
@@ -238,13 +267,12 @@ describe('ServerlessPlugin', function () {
     })
 
     it('logs an error if no .env files are required and none are found', function () {
+      const log = this.sandbox.stub(this.plugin, 'log')
       this.resolveEnvFileNames.withArgs(this.env).returns([])
 
       this.plugin.loadEnv(this.env)
 
-      this.serverless.cli.log.should.have.been.calledWith(
-        'DOTENV: Could not find .env file.',
-      )
+      log.should.have.been.calledWith('DOTENV: Could not find .env file.')
     })
 
     it('throws an error if no .env files are required but at least one is required', function () {
