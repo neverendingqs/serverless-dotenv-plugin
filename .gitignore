@@ -1,8 +1,4 @@
+node_modules/
 .nyc_output/
 .serverless/
 .vscode/
-
-coverage/
-node_modules/
-
-package-lock.json
