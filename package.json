@@ -4,9 +4,9 @@
   "description": "Preload environment variables with dotenv into serverless.",
   "main": "index.js",
   "scripts": {
-    "prettier": "prettier --write \"**/*.js\"",
-    "test": "nyc mocha",
-    "posttest": "prettier --check \"**/*.js\""
+    "prettier": "prettier --ignore-path .gitignore --write \"**/*.js\"",
+    "test": "nyc --reporter=lcov mocha",
+    "posttest": "prettier --ignore-path .gitignore --check \"**/*.js\""
   },
   "repository": {
     "type": "git",

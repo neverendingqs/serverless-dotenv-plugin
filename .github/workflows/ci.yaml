@@ -14,3 +14,7 @@ jobs:
           node-version: 12
       - run: yarn install --frozen-lockfile
       - run: yarn test
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
