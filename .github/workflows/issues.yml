@@ -1,4 +1,4 @@
-name: Update issues that have been responded to.
+name: Issues.
 
 on:
   issue_comment:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   remove-label:
-    name: Removes label used for tracking issues that a contributor is awaiting a response.
+    name: Remove labels used for tracking issues that a contributor is awaiting a response.
     runs-on: ubuntu-latest
 
     steps:
@@ -14,22 +14,33 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const label = 'awaiting response';
-            const isContributor = context.payload.sender.login !== 'neverendingqs';
-            const hasLabel = context.payload.issue.labels
-              .map(({ name }) => name)
-              .includes(label);
-            
             console.log(JSON.stringify({
               labels: context.payload.issue.labels,
               login: context.payload.sender.login
             }));
             
-            if(isContributor && hasLabel) {
-              github.issues.removeLabel({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.issue.number,
-                name: label,
-              });
+            if(context.payload.sender.login === 'neverendingqs') {
+              // Do not remove labels if a contributor wrote the comment
+              return;
             }
+            
+            const labels = [
+              'awaiting response',
+              'mre requested'
+            ];
+            
+            labels.forEach(label => {
+              const hasLabel = context.payload.issue.labels
+                .map(({ name }) => name)
+                .includes(label);
+
+              if(hasLabel) {
+                github.issues.removeLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.issue.number,
+                  name: label,
+                });
+              }
+            });
+
