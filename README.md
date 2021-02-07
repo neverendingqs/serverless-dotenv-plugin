@@ -142,6 +142,22 @@ custom:
 You can find example usage in the `examples` folder.
 
 
+## FAQ
+
+### Why doesn't the `basePath` or `path` options support Serverless variables?
+
+This plugin loads the dotenv environment variables inside the plugin constructor. Aside from legacy reasons, this also means all your dotenv environment variables are available to the other plugins being loaded.
+
+However, Serverless variables are **not** resolved in the constructor:
+
+> Variable references in the serverless instance are not resolved before a Plugin's constructor is called, so if you need these, make sure to wait to access those from your hooks.
+> ~https://www.serverless.com/framework/docs/providers/aws/guide/plugins/#plugins/
+
+This means `basePath` and `path` will always be treated like literal strings. The suggested workaround is to store all your dotenv files in one folder, and rely on `NODE_ENV`, `--env`, or `--stage` to resolve to the right file.
+
+There are no plans to support anything other tha literal strings at this time, although you are free to discuss this in [#52](https://github.com/neverendingqs/serverless-dotenv-plugin/issues/52).
+
+
 ## Contributing
 
 Because of the highly dependent nature of this plugin (i.e. thousands of developers depend on this to deploy their apps to production) I cannot introduce changes that are backwards incompatible. Any feature requests must first consider this as a blocker. If submitting a PR ensure that the change is developer opt-in only meaning it must guarantee that it will not affect existing workflows, it's only available with an opt-in setting. I appreciate your patience on this. Thanks.
