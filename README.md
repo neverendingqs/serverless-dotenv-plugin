@@ -173,6 +173,8 @@ provider:
     - DDB_TABLE: ${env:DDB_TABLE}
 ```
 
+More details are available at [#38](https://github.com/neverendingqs/serverless-dotenv-plugin/issues/38).
+
 ## Contributing
 
 Because of the highly dependent nature of this plugin (i.e. thousands of developers depend on this to deploy their apps to production) I cannot introduce changes that are backwards incompatible. Any feature requests must first consider this as a blocker. If submitting a PR ensure that the change is developer opt-in only meaning it must guarantee that it will not affect existing workflows, it's only available with an opt-in setting. I appreciate your patience on this. Thanks.
