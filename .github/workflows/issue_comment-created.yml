@@ -1,4 +1,4 @@
-name: Issues.
+name: Issue Comments (Created).
 
 on:
   issue_comment:
