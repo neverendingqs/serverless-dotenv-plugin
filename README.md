@@ -45,7 +45,7 @@ provider:
 ```
 
 
-## Automatic ENV File Resolution (as of verson 3.0+ Thanks to [@danilofuchs](https://github.com/danilofuchs)!)
+## Automatic ENV File Resolution
 
 By default, the plugin looks for the file: `.env`. In most use cases this is all that is needed. However, there are times where you want different env files based on environment. For instance:
 
@@ -90,12 +90,13 @@ custom:
     # if set, ignores `path` option, and only uses the dotenv file at this location
     # basePath: path/to/my/.env
 
-    # default: adds all environment variables found in your dotenv file(s)
+    # default: adds all env variables found in your dotenv file(s)
     include:
       - DDB_TABLE
       - S3_BUCKET
 
-    # default: does not exclude any environment variables found in your dotenv file(s)
+    # default: does not exclude any env variables found in your dotenv file(s)
+    # does nothing if `include` is set
     exclude:
       - AWS_ACCESS_KEY_ID
       - AWS_SECRET_ACCESS_KEY
@@ -105,39 +106,35 @@ custom:
     # defaults to `false`
     logging: true
 
-    # default: plugin does not cause an error if any file or environment variable is missing
+    # default: plugin does not cause an error if any file or env variable is missing
     required:
       # default: false
       file: true
 ```
 
-### path (string)
+* path (string)
+  * The plugin will look for your .env file in the same folder where you run the command using the file resolution rules as described above, but these rules can be overridden by setting the `path` option.
+  * This will **disable** automatic env file resolution.
 
-The plugin will look for your .env file in the same folder where you run the command using the file resolution rules as described above, but these rules can be overridden by setting the `path` option. This will **disable** automatic env file resolution
+* basePath (string)
+  * The problem with setting the `path` option is that you lose environment resolution on the file names.
+  * If you don't need environment resolution, the `path` option is just fine.
 
-### basePath (string)
+* include (list)
+  * All env vars found in your file will be injected into your lambda functions.
+  * If you do not want all of them to be injected into your lambda functions, you can specify the ones you want with the `include` option.
+  * If set to an empty list (`[]`), no env vars will be injected.
 
-The problem with setting the `path` option is that you lose environment resolution on the file names. If you don't need environment resolution, the path option is just fine. If you do, then use the `basePath` option.
+* exclude (list)
+  * If you do not want all of them to be injected into your lambda functions, you can specify the ones you do not want with the `exclude` option.
+  * Note, this is only available if the `include` option has not been set.
 
-### include (list)
+* logging: true|false
+  * Supresses all logging done by this plugin if no errors are encountered.
 
-All env vars found in your file will be injected into your lambda functions. If you do not want all of them to be injected into your lambda functions, you can whitelist them with the `include` option.
-
-### exclude (list)
-
-(Added Feb 2, 2020 by @smcelhinney)
-
-If you do not want all of them to be injected into your lambda functions, you can blacklist the unnecessary ones with the `exclude` option. Note, this is only available if the `include` option has not been set.
-
-### logging: true|false
-
-(Added Feb 2, 2020 by @kristopherchun)
-
-By default, there's quite a bit that this plugin logs to the console. You can now quiet this with the new `logging` option. (This defaults to `true` since this was the original behavior)
-
-### required.file: true|false (default false)
-
-By default, this plugin will exit gracefully and allow Serverless to continue even if it couldn't find a .env file to use. Set this to `true` to cause Serverless to halt if it could not find a .env file to use.
+* required.file: true|false (default false)
+  * By default, this plugin will exit gracefully and allow Serverless to continue even if it couldn't find a .env file to use.
+  * Set this to `true` to cause Serverless to halt if it could not find a .env file to use.
 
 
 ## Examples
