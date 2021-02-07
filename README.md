@@ -6,7 +6,7 @@
 
 Preload environment variables into serverless. Use this plugin if you have variables stored in a `.env` file that you want loaded into your serverless yaml config. This will allow you to reference them as `${env:VAR_NAME}` inside your config _and_ it will load them into your lambdas.
 
-### Install and Setup
+## Install and Setup
 
 First, install the plugin:
 
@@ -32,7 +32,20 @@ AUTH0_CLIENT_ID=abc12345
 AUTH0_CLIENT_SECRET=12345xyz
 ```
 
-### Automatic ENV File Resolution (as of verson 3.0+ Thanks to [@danilofuchs](https://github.com/danilofuchs)!)
+Once loaded, you can now access the vars using the standard method for accessing ENV vars in serverless:
+
+```yaml
+...
+provider:
+  name: aws
+  runtime: nodejs6.10
+  stage: ${env:STAGE}
+  region: ${env:AWS_REGION}
+...
+```
+
+
+## Automatic ENV File Resolution (as of verson 3.0+ Thanks to [@danilofuchs](https://github.com/danilofuchs)!)
 
 By default, the plugin looks for the file: `.env`. In most use cases this is all that is needed. However, there are times where you want different env files based on environment. For instance:
 
@@ -58,21 +71,27 @@ The env resolution pattern follows the one used by [Rail's dotenv](https://githu
 
 > Note: .env, .env.development, and .env.production files should be included in your repository as they define defaults. .env\*.local should be added to .gitignore, as those files are intended to be ignored. .env.local is where secrets can be stored.
 
-### Plugin options
 
-> path: path/to/my/.env
+## Lambda Environment Variables
+
+Again, remember that when you deploy your service, the plugin will inject these environment vars into every lambda functions you have and will therefore allow you to reference them as `process.env.AUTH0_CLIENT_ID` (Nodejs example).
+
+
+## Plugin options
+
+### path: path/to/my/.env
 
 The plugin will look for your .env file in the same folder where you run the command using the file resolution rules as described above, but these rules can be overridden by setting the `path` option. This will **disable** automatic env file resolution
 
-> basePath: path/to/my/
+### basePath: path/to/my/
 
 The problem with setting the `path` option is that you lose environment resolution on the file names. If you don't need environment resolution, the path option is just fine. If you do, then use the `basePath` option.
 
-> include: ...
+### include: ...
 
 All env vars found in your file will be injected into your lambda functions. If you do not want all of them to be injected into your lambda functions, you can whitelist them with the `include` option.
 
-> exclude: ...
+### exclude: ...
 
 (Added Feb 2, 2020 by @smcelhinney)
 
@@ -87,7 +106,7 @@ custom:
       - NODE_ENV # E.g for Google Cloud Functions, you cannot pass this env variable.
 ```
 
-> logging: true|false (default true)
+### logging: true|false (default true)
 
 (Added Feb 2, 2020 by @kristopherchun)
 
@@ -106,7 +125,8 @@ custom:
       - AUTH0_CLIENT_SECRET
 ```
 
-> required.file: true|false (default false)
+
+### required.file: true|false (default false)
 
 By default, this plugin will exit gracefully and allow Serverless to continue even if it couldn't find a .env file to use. Set this to `true` to cause Serverless to halt if it could not find a .env file to use.
 
@@ -119,28 +139,12 @@ custom:
       file: true
 ```
 
-### Usage
 
-Once loaded, you can now access the vars using the standard method for accessing ENV vars in serverless:
-
-```yaml
-...
-provider:
-  name: aws
-  runtime: nodejs6.10
-  stage: ${env:STAGE}
-  region: ${env:AWS_REGION}
-...
-```
-
-### Lambda Environment Variables
-
-Again, remember that when you deploy your service, the plugin will inject these environment vars into any lambda functions you have and will therefore allow you to reference them as `process.env.AUTH0_CLIENT_ID` (Nodejs example).
-
-### Examples
+## Examples
 
 You can find example usage in the `examples` folder.
 
-### Contributing
+
+## Contributing
 
 Because of the highly dependent nature of this plugin (i.e. thousands of developers depend on this to deploy their apps to production) I cannot introduce changes that are backwards incompatible. Any feature requests must first consider this as a blocker. If submitting a PR ensure that the change is developer opt-in only meaning it must guarantee that it will not affect existing workflows, it's only available with an opt-in setting. I appreciate your patience on this. Thanks.
