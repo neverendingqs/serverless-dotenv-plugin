@@ -6,7 +6,7 @@
 
 Preload environment variables into serverless. Use this plugin if you have variables stored in a `.env` file that you want loaded into your serverless yaml config. This will allow you to reference them as `${env:VAR_NAME}` inside your config _and_ it will load them into your lambdas.
 
-### Install and Setup
+## Install and Setup
 
 First, install the plugin:
 
@@ -32,7 +32,20 @@ AUTH0_CLIENT_ID=abc12345
 AUTH0_CLIENT_SECRET=12345xyz
 ```
 
-### Automatic ENV File Resolution (as of verson 3.0+ Thanks to [@danilofuchs](https://github.com/danilofuchs)!)
+Once loaded, you can now access the vars using the standard method for accessing ENV vars in serverless:
+
+```yaml
+...
+provider:
+  name: aws
+  runtime: nodejs6.10
+  stage: ${env:STAGE}
+  region: ${env:AWS_REGION}
+...
+```
+
+
+## Automatic ENV File Resolution
 
 By default, the plugin looks for the file: `.env`. In most use cases this is all that is needed. However, there are times where you want different env files based on environment. For instance:
 
@@ -58,89 +71,77 @@ The env resolution pattern follows the one used by [Rail's dotenv](https://githu
 
 > Note: .env, .env.development, and .env.production files should be included in your repository as they define defaults. .env\*.local should be added to .gitignore, as those files are intended to be ignored. .env.local is where secrets can be stored.
 
-### Plugin options
 
-> path: path/to/my/.env
+## Lambda Environment Variables
 
-The plugin will look for your .env file in the same folder where you run the command using the file resolution rules as described above, but these rules can be overridden by setting the `path` option. This will **disable** automatic env file resolution
+Again, remember that when you deploy your service, the plugin will inject these environment vars into every lambda functions you have and will therefore allow you to reference them as `process.env.AUTH0_CLIENT_ID` (Nodejs example).
 
-> basePath: path/to/my/
 
-The problem with setting the `path` option is that you lose environment resolution on the file names. If you don't need environment resolution, the path option is just fine. If you do, then use the `basePath` option.
+## Plugin options
 
-> include: ...
-
-All env vars found in your file will be injected into your lambda functions. If you do not want all of them to be injected into your lambda functions, you can whitelist them with the `include` option.
-
-> exclude: ...
-
-(Added Feb 2, 2020 by @smcelhinney)
-
-If you do not want all of them to be injected into your lambda functions, you can blacklist the unnecessary ones with the `exclude` option. Note, this is only available if the `include` option has not been set.
-
-Example:
+All options are optional.
 
 ```yaml
 custom:
   dotenv:
-    exclude:
-      - NODE_ENV # E.g for Google Cloud Functions, you cannot pass this env variable.
-```
+    # default: project root
+    path: path/to/my/dotenvfiles
 
-> logging: true|false (default true)
+    # if set, ignores `path` option, and only uses the dotenv file at this location
+    # basePath: path/to/my/.env
 
-(Added Feb 2, 2020 by @kristopherchun)
-
-By default, there's quite a bit that this plugin logs to the console. You can now quiet this with the new `logging` option. (This defaults to `true` since this was the original behavior)
-
-Complete example:
-
-```yaml
-custom:
-  dotenv:
-    path: path/to/my/.env (default ./.env)
-    basePath: path/to/ (default ./)
-    logging: false
+    # default: adds all env variables found in your dotenv file(s)
     include:
-      - AUTH0_CLIENT_ID
-      - AUTH0_CLIENT_SECRET
-```
+      - DDB_TABLE
+      - S3_BUCKET
 
-> required.file: true|false (default false)
+    # default: does not exclude any env variables found in your dotenv file(s)
+    # does nothing if `include` is set
+    exclude:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_SESSION_TOKEN
+      - NODE_ENV              # Can not be declared for Google Cloud Functions
 
-By default, this plugin will exit gracefully and allow Serverless to continue even if it couldn't find a .env file to use. Set this to `true` to cause Serverless to halt if it could not find a .env file to use.
+    # defaults to `false`
+    logging: true
 
-Complete example:
-
-```yaml
-custom:
-  dotenv:
+    # default: plugin does not cause an error if any file or env variable is missing
     required:
+      # default: false
       file: true
 ```
 
-### Usage
+* path (string)
+  * The plugin will look for your .env file in the same folder where you run the command using the file resolution rules as described above, but these rules can be overridden by setting the `path` option.
+  * This will **disable** automatic env file resolution.
 
-Once loaded, you can now access the vars using the standard method for accessing ENV vars in serverless:
+* basePath (string)
+  * The problem with setting the `path` option is that you lose environment resolution on the file names.
+  * If you don't need environment resolution, the `path` option is just fine.
 
-```yaml
-...
-provider:
-  name: aws
-  runtime: nodejs6.10
-  stage: ${env:STAGE}
-  region: ${env:AWS_REGION}
-...
-```
+* include (list)
+  * All env vars found in your file will be injected into your lambda functions.
+  * If you do not want all of them to be injected into your lambda functions, you can specify the ones you want with the `include` option.
+  * If set to an empty list (`[]`), no env vars will be injected.
 
-### Lambda Environment Variables
+* exclude (list)
+  * If you do not want all of them to be injected into your lambda functions, you can specify the ones you do not want with the `exclude` option.
+  * Note, this is only available if the `include` option has not been set.
 
-Again, remember that when you deploy your service, the plugin will inject these environment vars into any lambda functions you have and will therefore allow you to reference them as `process.env.AUTH0_CLIENT_ID` (Nodejs example).
+* logging: true|false
+  * Supresses all logging done by this plugin if no errors are encountered.
 
-### Examples
+* required.file: true|false (default false)
+  * By default, this plugin will exit gracefully and allow Serverless to continue even if it couldn't find a .env file to use.
+  * Set this to `true` to cause Serverless to halt if it could not find a .env file to use.
+
+
+## Examples
 
 You can find example usage in the `examples` folder.
 
-### Contributing
+
+## Contributing
 
 Because of the highly dependent nature of this plugin (i.e. thousands of developers depend on this to deploy their apps to production) I cannot introduce changes that are backwards incompatible. Any feature requests must first consider this as a blocker. If submitting a PR ensure that the change is developer opt-in only meaning it must guarantee that it will not affect existing workflows, it's only available with an opt-in setting. I appreciate your patience on this. Thanks.
