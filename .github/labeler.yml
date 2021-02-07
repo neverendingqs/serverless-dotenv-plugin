@@ -1,6 +1,6 @@
 chore:
   - .*
-  - github/**/*
+  - .github/**/*
   - LICENSE
   - package.json
 
