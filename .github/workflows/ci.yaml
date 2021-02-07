@@ -7,11 +7,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # Serverless supports Node 10 and onward
+        node: [ '10', '12', '14', '15' ]
+    name: Node v${{ matrix.node }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: ${{ matrix.node }}
       - run: yarn install --frozen-lockfile
       - run: yarn test
       - name: Coveralls
