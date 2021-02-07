@@ -1,0 +1,9 @@
+chore:
+  - .*
+  - github/**/*
+  - LICENSE
+  - package.json
+
+documentation:
+  - examples/**/*
+  - README.md
