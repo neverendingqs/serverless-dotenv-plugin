@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://neverendingqs/serverless-dotenv-plugin.git"
+    "url": "git+https://github.com/colynb/serverless-dotenv-plugin.git"
   },
   "keywords": [
     "serverless",
@@ -18,14 +18,11 @@
     "serverless-plugin"
   ],
   "author": "Colyn Brown <colyn.brown@gmail.com>",
-  "contributors": [
-    "Mark Tse <mark.tse@neverendingqs.com> (https://neverendingqs.com/)"
-  ],
   "license": "MIT",
   "bugs": {
-    "url": "https://neverendingqs/serverless-dotenv-plugin/issues"
+    "url": "https://github.com/colynb/serverless-dotenv-plugin/issues"
   },
-  "homepage": "https://neverendingqs/serverless-dotenv-plugin#readme",
+  "homepage": "https://github.com/colynb/serverless-dotenv-plugin#readme",
   "dependencies": {
     "chalk": "^4.1.0",
     "dotenv": "^8.2.0",
