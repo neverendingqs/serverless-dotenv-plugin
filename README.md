@@ -79,65 +79,65 @@ Again, remember that when you deploy your service, the plugin will inject these 
 
 ## Plugin options
 
-### path: path/to/my/.env
+All options are optional.
+
+```yaml
+custom:
+  dotenv:
+    # default: project root
+    path: path/to/my/dotenvfiles
+
+    # if set, ignores `path` option, and only uses the dotenv file at this location
+    # basePath: path/to/my/.env
+
+    # default: adds all environment variables found in your dotenv file(s)
+    include:
+      - DDB_TABLE
+      - S3_BUCKET
+
+    # default: does not exclude any environment variables found in your dotenv file(s)
+    exclude:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_SESSION_TOKEN
+      - NODE_ENV              # Can not be declared for Google Cloud Functions
+
+    # defaults to `false`
+    logging: true
+
+    # default: plugin does not cause an error if any file or environment variable is missing
+    required:
+      # default: false
+      file: true
+```
+
+### path (string)
 
 The plugin will look for your .env file in the same folder where you run the command using the file resolution rules as described above, but these rules can be overridden by setting the `path` option. This will **disable** automatic env file resolution
 
-### basePath: path/to/my/
+### basePath (string)
 
 The problem with setting the `path` option is that you lose environment resolution on the file names. If you don't need environment resolution, the path option is just fine. If you do, then use the `basePath` option.
 
-### include: ...
+### include (list)
 
 All env vars found in your file will be injected into your lambda functions. If you do not want all of them to be injected into your lambda functions, you can whitelist them with the `include` option.
 
-### exclude: ...
+### exclude (list)
 
 (Added Feb 2, 2020 by @smcelhinney)
 
 If you do not want all of them to be injected into your lambda functions, you can blacklist the unnecessary ones with the `exclude` option. Note, this is only available if the `include` option has not been set.
 
-Example:
-
-```yaml
-custom:
-  dotenv:
-    exclude:
-      - NODE_ENV # E.g for Google Cloud Functions, you cannot pass this env variable.
-```
-
-### logging: true|false (default true)
+### logging: true|false
 
 (Added Feb 2, 2020 by @kristopherchun)
 
 By default, there's quite a bit that this plugin logs to the console. You can now quiet this with the new `logging` option. (This defaults to `true` since this was the original behavior)
 
-Complete example:
-
-```yaml
-custom:
-  dotenv:
-    path: path/to/my/.env (default ./.env)
-    basePath: path/to/ (default ./)
-    logging: false
-    include:
-      - AUTH0_CLIENT_ID
-      - AUTH0_CLIENT_SECRET
-```
-
-
 ### required.file: true|false (default false)
 
 By default, this plugin will exit gracefully and allow Serverless to continue even if it couldn't find a .env file to use. Set this to `true` to cause Serverless to halt if it could not find a .env file to use.
-
-Complete example:
-
-```yaml
-custom:
-  dotenv:
-    required:
-      file: true
-```
 
 
 ## Examples
