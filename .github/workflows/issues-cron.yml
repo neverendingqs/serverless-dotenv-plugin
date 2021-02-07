@@ -1,0 +1,18 @@
+name: Issues (Cron)
+on:
+  schedule:
+    - cron: '0 14 * * *'
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v3
+        with:
+          close-issue-message: Closed due to inactivity. Please reopen when you get a chance to respond.
+          days-before-close: 1
+          days-before-stale: 30
+          days-before-issue-stale: 30
+          days-before-pr-stale: -1
+          only-labels: 'awaiting response'
+          stale-issue-label: stale
