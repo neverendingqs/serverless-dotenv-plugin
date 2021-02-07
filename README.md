@@ -153,7 +153,7 @@ However, Serverless variables are **not** resolved in the constructor:
 > Variable references in the serverless instance are not resolved before a Plugin's constructor is called, so if you need these, make sure to wait to access those from your hooks.
 > ~https://www.serverless.com/framework/docs/providers/aws/guide/plugins/#plugins/
 
-This means `basePath` and `path` will always be treated like literal strings. The suggested workaround is to store all your dotenv files in one folder, and rely on `NODE_ENV`, `--env`, or `--stage` to resolve to the right file.
+This means `basePath` and `path` will always be treated like literal strings. The suggested pattern is to store all your dotenv files in one folder, and rely on `NODE_ENV`, `--env`, or `--stage` to resolve to the right file.
 
 There are no plans to support anything other tha literal strings at this time, although you are free to discuss this in [#52](https://github.com/neverendingqs/serverless-dotenv-plugin/issues/52).
 
