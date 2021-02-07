@@ -91,6 +91,7 @@ custom:
     # basePath: path/to/my/.env
 
     # default: adds all env variables found in your dotenv file(s)
+    # this option must be set to `[]` if `provider.environment` is not a literal string
     include:
       - DDB_TABLE
       - S3_BUCKET
@@ -124,6 +125,7 @@ custom:
   * All env vars found in your file will be injected into your lambda functions.
   * If you do not want all of them to be injected into your lambda functions, you can specify the ones you want with the `include` option.
   * If set to an empty list (`[]`), no env vars will be injected.
+  * This option must be set to `[]` if `provider.environment` is not a literal string (see FAQ for details).
 
 * exclude (list)
   * If you do not want all of them to be injected into your lambda functions, you can specify the ones you do not want with the `exclude` option.
@@ -144,8 +146,6 @@ You can find example usage in the `examples` folder.
 
 ## FAQ
 
-### Why doesn't the `basePath` or `path` options support Serverless variables?
-
 This plugin loads the dotenv environment variables inside the plugin constructor. Aside from legacy reasons, this also means all your dotenv environment variables are available to the other plugins being loaded.
 
 However, Serverless variables are **not** resolved in the constructor:
@@ -153,10 +153,27 @@ However, Serverless variables are **not** resolved in the constructor:
 > Variable references in the serverless instance are not resolved before a Plugin's constructor is called, so if you need these, make sure to wait to access those from your hooks.
 > ~https://www.serverless.com/framework/docs/providers/aws/guide/plugins/#plugins/
 
-This means `basePath` and `path` will always be treated like literal strings. The suggested pattern is to store all your dotenv files in one folder, and rely on `NODE_ENV`, `--env`, or `--stage` to resolve to the right file.
+This is important for several FAQ items below.
 
-There are no plans to support anything other tha literal strings at this time, although you are free to discuss this in [#52](https://github.com/neverendingqs/serverless-dotenv-plugin/issues/52).
+### Why doesn't the `basePath` or `path` options support Serverless variables?
 
+Because Serverless variables have not been interpolated when this plugin runs, `basePath` and `path` will always be treated like literal strings (e.g. `${opt:stage}` would be presented to the plugin, not the passed in via `--stage`). The suggested pattern is to store all your dotenv files in one folder, and rely on `NODE_ENV`, `--env`, or `--stage` to resolve to the right file.
+
+There are no plans to support anything other than literal strings at this time, although you are free to discuss this in [#52](https://github.com/neverendingqs/serverless-dotenv-plugin/issues/52).
+
+### Why doesn't this plugin work when `provider.environment` references another file?
+
+This plugin manipuluates `provider.environment` directly by adding to the list. Because Serverless variables have not been interpolated when this plugin runs, `provider.environment` is presented to this plugin uninterpolated (e.g. `${file(./serverless-env.yml):environment}`), this plugin is unable to manipulate it.
+
+To work around this, you can set the `include` option to `[]` to avoid adding any environment variables to `provider.environment`. However, this means you will have to wire up the environment variables yourself by referencing every single one you need. E.g.
+
+```yaml
+provider:
+  environment:
+    - DDB_TABLE: ${env:DDB_TABLE}
+```
+
+More details are available at [#38](https://github.com/neverendingqs/serverless-dotenv-plugin/issues/38).
 
 ## Contributing
 
