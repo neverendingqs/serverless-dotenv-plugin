@@ -1,6 +1,6 @@
 # serverless-dotenv-plugin
 
-![CI](https://github.com/neverendingqs/serverless-dotenv-plugin/workflows/CI/badge.svg)
+[![CI](https://github.com/neverendingqs/serverless-dotenv-plugin/workflows/CI/badge.svg)](https://github.com/neverendingqs/serverless-dotenv-plugin/actions?query=workflow%3ACI+branch%3Amaster)
 [![Coverage Status](https://coveralls.io/repos/github/neverendingqs/serverless-dotenv-plugin/badge.svg?branch=master)](https://coveralls.io/github/neverendingqs/serverless-dotenv-plugin?branch=master)
 [![npm version](https://img.shields.io/npm/v/serverless-dotenv-plugin.svg?style=flat)](https://www.npmjs.com/package/serverless-dotenv-plugin)
 
