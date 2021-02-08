@@ -10,6 +10,7 @@ Changes not included in this log but can be reviewed on GitHub:
 ## 3.2.0
 
 * refactor: use helper functions to help with readabilty and future changes. ([#112](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/112))
+* Significant changes to documentation structure ([#85..#108 labelled `documentation`](https://github.com/neverendingqs/serverless-dotenv-plugin/pulls?q=is%3Apr+label%3Adocumentation+closed%3A2021-02-06..2021-02-07+))
 
 ## 3.0.0
 
