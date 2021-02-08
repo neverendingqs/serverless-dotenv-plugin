@@ -71,64 +71,82 @@ class ServerlessPlugin {
   }
 
   /**
+   * @param {string[]} envFileNames
+   * @returns {Object}
+   */
+  parseEnvFiles(envFileNames) {
+    const envVarsArray = envFileNames.map(
+      (fileName) => dotenvExpand(dotenv.config({ path: fileName })).parsed,
+    )
+
+    return envVarsArray.reduce((acc, curr) => ({ ...acc, ...curr }), {})
+  }
+
+  /**
+   * @param {Object} envVars
+   */
+  setProviderEnv(envVars) {
+    let include = false
+    let exclude = false
+
+    if (this.config && this.config.include) {
+      include = this.config.include
+    }
+
+    if (this.config && this.config.exclude && !include) {
+      // Don't allow both include and exclude to be specified
+      exclude = this.config.exclude
+    }
+
+    if (include) {
+      Object.keys(envVars)
+        .filter((key) => !include.includes(key))
+        .forEach((key) => {
+          delete envVars[key]
+        })
+    }
+    if (exclude) {
+      Object.keys(envVars)
+        .filter((key) => exclude.includes(key))
+        .forEach((key) => {
+          delete envVars[key]
+        })
+    }
+    Object.keys(envVars).forEach((key) => {
+      this.log('\t - ' + key)
+      this.serverless.service.provider.environment[key] = envVars[key]
+    })
+  }
+
+  /**
+   * @param {string[]} envFileNames
+   */
+  validateEnvFileNames(envFileNames) {
+    if (envFileNames.length > 0) {
+      this.log(
+        'DOTENV: Loading environment variables from ' +
+          envFileNames.reverse().join(', ') +
+          ':',
+      )
+    } else {
+      const errorMsg = 'DOTENV: Could not find .env file.'
+      this.log(errorMsg)
+
+      if (this.required.file === true) {
+        throw Object.assign(new Error(errorMsg), { type: errorTypes.HALT })
+      }
+    }
+  }
+
+  /**
    * @param {string} env
    */
   loadEnv(env) {
     const envFileNames = this.resolveEnvFileNames(env)
     try {
-      const envVarsArray = envFileNames.map(
-        (fileName) => dotenvExpand(dotenv.config({ path: fileName })).parsed,
-      )
-
-      const envVars = envVarsArray.reduce(
-        (acc, curr) => ({ ...acc, ...curr }),
-        {},
-      )
-
-      let include = false
-      let exclude = false
-
-      if (this.config && this.config.include) {
-        include = this.config.include
-      }
-
-      if (this.config && this.config.exclude && !include) {
-        // Don't allow both include and exclude to be specified
-        exclude = this.config.exclude
-      }
-
-      if (envFileNames.length > 0) {
-        this.log(
-          'DOTENV: Loading environment variables from ' +
-            envFileNames.reverse().join(', ') +
-            ':',
-        )
-        if (include) {
-          Object.keys(envVars)
-            .filter((key) => !include.includes(key))
-            .forEach((key) => {
-              delete envVars[key]
-            })
-        }
-        if (exclude) {
-          Object.keys(envVars)
-            .filter((key) => exclude.includes(key))
-            .forEach((key) => {
-              delete envVars[key]
-            })
-        }
-        Object.keys(envVars).forEach((key) => {
-          this.log('\t - ' + key)
-          this.serverless.service.provider.environment[key] = envVars[key]
-        })
-      } else {
-        const errorMsg = 'DOTENV: Could not find .env file.'
-        this.log(errorMsg)
-
-        if (this.required.file === true) {
-          throw Object.assign(new Error(errorMsg), { type: errorTypes.HALT })
-        }
-      }
+      const envVars = this.parseEnvFiles(envFileNames)
+      this.setProviderEnv(envVars)
+      this.validateEnvFileNames(envFileNames)
     } catch (e) {
       if (e.type === errorTypes.HALT) {
         throw e
