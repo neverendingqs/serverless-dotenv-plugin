@@ -7,7 +7,11 @@ Changes not included in this log but can be reviewed on GitHub:
 
 ## Unreleased
 
-## 3.0
+## 3.2.0
+
+* refactor: use helper functions to help with readabilty and future changes. ([#112](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/112))
+
+## 3.0.0
 
 * feat: Load `.env.*.local` envs ([#55](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/55)) ([@danilofuchs](https://github.com/danilofuchs))
 
