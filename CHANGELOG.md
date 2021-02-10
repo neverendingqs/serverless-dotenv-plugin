@@ -7,6 +7,10 @@ Changes not included in this log but can be reviewed on GitHub:
 
 ## Unreleased
 
+## 3.3.0
+
+* feat: adding variableExpansion option to turn off variable expansion. ([#116](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/116))
+
 ## 3.2.0
 
 * refactor: use helper functions to help with readabilty and future changes. ([#112](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/112))

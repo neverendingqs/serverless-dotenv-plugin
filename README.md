@@ -111,6 +111,9 @@ custom:
     required:
       # default: false
       file: true
+
+    # default: true
+    variableExpansion: false
 ```
 
 * path (string)
@@ -137,6 +140,12 @@ custom:
 * required.file: true|false (default false)
   * By default, this plugin will exit gracefully and allow Serverless to continue even if it couldn't find a .env file to use.
   * Set this to `true` to cause Serverless to halt if it could not find a .env file to use.
+
+* variableExpansion: true|false (default true)
+  * By default, variables can reference other variables
+    * E.g. `INNER_ENV=innerenv, OUTER_ENV=hi-$INNER_ENV`, would resolve to `INNER_ENV=innerenv, OUTER_ENV=hi-innerenv`
+  * Setting this to `false` will disable this feature
+    * E.g. `INNER_ENV=innerenv, OUTER_ENV=hi-$INNER_ENV`, would resolve to `INNER_ENV=innerenv, OUTER_ENV=hi-$INNER_ENV`
 
 
 ## Examples
