@@ -21,6 +21,9 @@ class ServerlessPlugin {
         ? this.config.logging
         : true
     this.required = (this.config && this.config.required) || {}
+    this.variableExpansion = !(
+      (this.config && this.config.variableExpansion) === false
+    )
 
     this.loadEnv(this.getEnvironment(options))
   }
@@ -75,9 +78,12 @@ class ServerlessPlugin {
    * @returns {Object}
    */
   parseEnvFiles(envFileNames) {
-    const envVarsArray = envFileNames.map(
-      (fileName) => dotenvExpand(dotenv.config({ path: fileName })).parsed,
-    )
+    const envVarsArray = envFileNames.map((fileName) => {
+      const parsed = dotenv.config({ path: fileName })
+      return this.variableExpansion
+        ? dotenvExpand(parsed).parsed
+        : parsed.parsed
+    })
 
     return envVarsArray.reduce((acc, curr) => ({ ...acc, ...curr }), {})
   }

@@ -397,5 +397,95 @@ describe('ServerlessPlugin', function () {
         env2: envVars.env2,
       })
     })
+
+    it('does not use `dotenv-expand` when `variableExpansion` is set to `false`', function () {
+      const fileName = '.env'
+      const envVars = {
+        env1: 'env1value',
+        env2: 'env2value',
+        env3: 'env3value',
+      }
+
+      const serverless = {
+        cli: {
+          log: this.sandbox.stub(),
+        },
+        service: {
+          custom: {
+            dotenv: {
+              variableExpansion: false,
+            },
+          },
+          provider: {},
+        },
+      }
+
+      const plugin = new this.ServerlessPlugin(serverless, this.options)
+
+      const resolveEnvFileNames = this.sandbox.stub(
+        plugin,
+        'resolveEnvFileNames',
+      )
+
+      resolveEnvFileNames.withArgs(this.env).returns([fileName])
+
+      this.requireStubs.dotenv.config
+        .withArgs({ path: fileName })
+        .returns({ parsed: envVars })
+
+      plugin.loadEnv(this.env)
+
+      serverless.service.provider.environment.should.deep.equal({
+        env1: envVars.env1,
+        env2: envVars.env2,
+        env3: envVars.env3,
+      })
+
+      this.requireStubs['dotenv-expand'].should.not.have.been.called
+    })
+
+    it('runs with defaults when there are no configs', function () {
+      const fileName = '.env'
+      const envVars = {
+        env1: 'env1value',
+        env2: 'env2value',
+        env3: 'env3value',
+      }
+
+      const serverless = {
+        cli: {
+          log: this.sandbox.stub(),
+        },
+        service: {
+          custom: {},
+          provider: {},
+        },
+      }
+
+      const plugin = new this.ServerlessPlugin(serverless, this.options)
+
+      const resolveEnvFileNames = this.sandbox.stub(
+        plugin,
+        'resolveEnvFileNames',
+      )
+
+      resolveEnvFileNames.withArgs(this.env).returns([fileName])
+
+      this.requireStubs.dotenv.config
+        .withArgs({ path: fileName })
+        .returns({ parsed: envVars })
+
+      this.requireStubs['dotenv-expand']
+        .withArgs({ parsed: envVars })
+        .returns({ parsed: envVars })
+
+      plugin.loadEnv(this.env)
+
+      serverless.service.provider.environment.should.deep.equal({
+        env1: envVars.env1,
+        env2: envVars.env2,
+        env3: envVars.env3,
+      })
+    })
   })
 })
