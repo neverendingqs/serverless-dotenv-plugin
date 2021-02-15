@@ -8,6 +8,10 @@ included in this log but can be reviewed on GitHub:
 
 ## Unreleased
 
+## 3.5.x
+
+* feat: now logs when incompatible configs are set. ([#124](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/124))
+
 ## 3.4.x
 
 * feat: new option to expect specific env vars to be set. ([#118](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/118))
