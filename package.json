@@ -18,6 +18,9 @@
     "serverless-plugin"
   ],
   "author": "Colyn Brown <colyn.brown@gmail.com>",
+  "contributors": [
+    "Mark Tse <mark.tse@neverendingqs.com> (https://neverendingqs.com/)"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/neverendingqs/serverless-dotenv-plugin/issues"
