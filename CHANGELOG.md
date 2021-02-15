@@ -1,22 +1,27 @@
 # Changelog
 
-Changes not included in this log but can be reviewed on GitHub:
+Only major and minor version changes are included in this file. Changes not
+included in this log but can be reviewed on GitHub:
 
 * ["Chore"](https://github.com/neverendingqs/serverless-dotenv-plugin/pulls?q=+is%3Apr+label%3Achore+)
 * [Documentation](https://github.com/neverendingqs/serverless-dotenv-plugin/pulls?q=+is%3Apr+label%3Adocumentation)
 
 ## Unreleased
 
-## 3.3.0
+## 3.3.x
+
+* feat: new option to expect specific env vars to be set. ([#118](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/118))
+
+## 3.3.x
 
 * feat: adding variableExpansion option to turn off variable expansion. ([#116](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/116))
 
-## 3.2.0
+## 3.2.x
 
 * refactor: use helper functions to help with readabilty and future changes. ([#112](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/112))
 * Significant changes to documentation structure ([#85..#108 labelled `documentation`](https://github.com/neverendingqs/serverless-dotenv-plugin/pulls?q=is%3Apr+label%3Adocumentation+closed%3A2021-02-06..2021-02-07+))
 
-## 3.0.0
+## 3.0.x
 
 * feat: Load `.env.*.local` envs ([#55](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/55)) ([@danilofuchs](https://github.com/danilofuchs))
 
