@@ -91,7 +91,7 @@ class ServerlessPlugin {
     )
 
     const missingRequiredEnvVars = (this.required.env || []).filter(
-      (envVarName) => !envVars[envVarName],
+      (envVarName) => !envVars[envVarName] && !process.env[envVarName],
     )
 
     if (missingRequiredEnvVars.length > 0) {

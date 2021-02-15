@@ -1,3 +1,5 @@
+process.env.TEST_SLS_DOTENV_PLUGIN_ENV1 = 'env1'
+
 const chai = require('chai')
 const proxyquire = require('proxyquire')
 const should = chai.should()
@@ -328,7 +330,10 @@ describe('ServerlessPlugin', function () {
         },
       }
 
-      this.serverless.service.custom.dotenv.required.env = ['env3']
+      this.serverless.service.custom.dotenv.required.env = [
+        'env3',
+        'TEST_SLS_DOTENV_PLUGIN_ENV1',
+      ]
 
       const files = Object.keys(filesAndEnvVars)
 
