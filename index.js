@@ -119,6 +119,10 @@ class ServerlessPlugin {
     const exclude = (this.config && this.config.exclude) || []
 
     if (include.length > 0) {
+      if (exclude) {
+        this.log('WARNING: if "include" is set, "exclude" is ignored.')
+      }
+
       Object.keys(envVars)
         .filter((key) => !include.includes(key))
         .forEach((key) => {
