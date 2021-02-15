@@ -51,7 +51,7 @@ class ServerlessPlugin {
 
     if (this.config && this.config.path) {
       if (basePath) {
-        this.log('WARNING: if "path" is set, "basePath" is ignored.')
+        this.log('DOTENV (WARNING): if "path" is set, "basePath" is ignored.')
       }
 
       if (Array.isArray(this.config.path)) {
@@ -120,7 +120,7 @@ class ServerlessPlugin {
 
     if (include.length > 0) {
       if (exclude) {
-        this.log('WARNING: if "include" is set, "exclude" is ignored.')
+        this.log('DOTENV (WARNING): if "include" is set, "exclude" is ignored.')
       }
 
       Object.keys(envVars)
