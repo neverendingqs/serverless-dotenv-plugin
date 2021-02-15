@@ -109,6 +109,10 @@ custom:
 
     # default: plugin does not cause an error if any file or env variable is missing
     required:
+      # default: []
+      env:
+        - API_KEY
+
       # default: false
       file: true
 
@@ -137,9 +141,14 @@ custom:
 * logging: true|false
   * Supresses all logging done by this plugin if no errors are encountered.
 
-* required.file: true|false (default false)
-  * By default, this plugin will exit gracefully and allow Serverless to continue even if it couldn't find a .env file to use.
-  * Set this to `true` to cause Serverless to halt if it could not find a .env file to use.
+* required
+  * env: (list)
+    * A set of env var that must be set either in the Serverless environment or via a `dotenv` file.
+    * Throws an error if a required env var is not found.
+    * By default, no env vars are required.
+  * file: true|false (default false)
+    * By default, this plugin will exit gracefully and allow Serverless to continue even if it couldn't find a .env file to use.
+    * Set this to `true` to cause Serverless to halt if it could not find a .env file to use.
 
 * variableExpansion: true|false (default true)
   * By default, variables can reference other variables
