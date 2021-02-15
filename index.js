@@ -47,7 +47,13 @@ class ServerlessPlugin {
    * @returns {string[]}
    */
   resolveEnvFileNames(env) {
+    const basePath = (this.config && this.config.basePath) || ''
+
     if (this.config && this.config.path) {
+      if (basePath) {
+        this.log('WARNING: if "path" is set, "basePath" is ignored.')
+      }
+
       if (Array.isArray(this.config.path)) {
         return this.config.path
       }
@@ -64,9 +70,6 @@ class ServerlessPlugin {
       env !== 'test' && `.env.local`,
       `.env`,
     ]
-
-    const basePath =
-      this.config && this.config.basePath ? this.config.basePath : ''
 
     const filesNames = dotenvFiles.map((file) => basePath + file)
 
