@@ -85,7 +85,27 @@ class ServerlessPlugin {
         : parsed.parsed
     })
 
-    return envVarsArray.reduce((acc, curr) => ({ ...acc, ...curr }), {})
+    const envVars = envVarsArray.reduce(
+      (acc, curr) => ({ ...acc, ...curr }),
+      {},
+    )
+
+    const missingRequiredEnvVars = (this.required.env || []).filter(
+      (envVarName) => !envVars[envVarName],
+    )
+
+    if (missingRequiredEnvVars.length > 0) {
+      throw Object.assign(
+        new Error(
+          `Missing the following required environment variables: ${missingRequiredEnvVars.join(
+            ',',
+          )}`,
+        ),
+        { type: errorTypes.HALT },
+      )
+    }
+
+    return envVars
   }
 
   /**
