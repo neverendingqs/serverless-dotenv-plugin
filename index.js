@@ -112,32 +112,23 @@ class ServerlessPlugin {
    * @param {Object} envVars
    */
   setProviderEnv(envVars) {
-    let include = false
-    let exclude = false
+    const include = (this.config && this.config.include) || []
+    const exclude = (this.config && this.config.exclude) || []
 
-    if (this.config && this.config.include) {
-      include = this.config.include
-    }
-
-    if (this.config && this.config.exclude && !include) {
-      // Don't allow both include and exclude to be specified
-      exclude = this.config.exclude
-    }
-
-    if (include) {
+    if (include.length > 0) {
       Object.keys(envVars)
         .filter((key) => !include.includes(key))
         .forEach((key) => {
           delete envVars[key]
         })
-    }
-    if (exclude) {
+    } else if (exclude.length > 0) {
       Object.keys(envVars)
         .filter((key) => exclude.includes(key))
         .forEach((key) => {
           delete envVars[key]
         })
     }
+
     Object.keys(envVars).forEach((key) => {
       this.log('\t - ' + key)
       this.serverless.service.provider.environment[key] = envVars[key]
