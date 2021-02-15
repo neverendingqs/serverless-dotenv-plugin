@@ -142,6 +142,17 @@ describe('ServerlessPlugin', function () {
 
         this.plugin.resolveEnvFileNames('env').should.deep.equal(path)
       })
+
+      it('logs an error if basePath is also set', function () {
+        const path = '.env.unittest'
+        this.serverless.service.custom.dotenv.basePath = 'base/path/'
+        this.serverless.service.custom.dotenv.path = path
+
+        this.plugin.resolveEnvFileNames('env').should.deep.equal([path])
+        this.serverless.cli.log.should.have.been.calledWith(
+          sinon.match(/basePath/),
+        )
+      })
     })
 
     describe('with default dotenv paths', function () {
@@ -437,6 +448,10 @@ describe('ServerlessPlugin', function () {
         env1: envVars.env1,
         env2: envVars.env2,
       })
+
+      this.serverless.cli.log.should.have.been.calledWith(
+        sinon.match(/exclude/),
+      )
     })
 
     it('does not use `dotenv-expand` when `variableExpansion` is set to `false`', function () {
