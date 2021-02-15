@@ -1,3 +1,5 @@
+process.env.TEST_SLS_DOTENV_PLUGIN_ENV1 = 'env1'
+
 const chai = require('chai')
 const proxyquire = require('proxyquire')
 const should = chai.should()
@@ -282,6 +284,40 @@ describe('ServerlessPlugin', function () {
       should.Throw(() => this.plugin.loadEnv(this.env))
     })
 
+    it('throws an error if a missing env is not set', function () {
+      this.serverless.service.custom.dotenv.required.env = [
+        'NOT_IN_ANY_FILE',
+        'NOT_IN_ANY_FILE2',
+      ]
+
+      const filesAndEnvVars = {
+        file1: {
+          ENV1: 'env1value',
+          ENV2: 'env2overwrittenvalue',
+        },
+        file2: {
+          ENV2: 'env2value',
+          ENV3: 'env3value',
+        },
+      }
+
+      const files = Object.keys(filesAndEnvVars)
+
+      this.resolveEnvFileNames.withArgs(this.env).returns(files)
+
+      files.forEach((fileName) => {
+        this.requireStubs.dotenv.config
+          .withArgs({ path: fileName })
+          .returns({ parsed: filesAndEnvVars[fileName] })
+
+        this.requireStubs['dotenv-expand']
+          .withArgs({ parsed: filesAndEnvVars[fileName] })
+          .returns({ parsed: filesAndEnvVars[fileName] })
+      })
+
+      should.Throw(() => this.plugin.loadEnv(this.env))
+    })
+
     it('loads variables from all files', function () {
       const filesAndEnvVars = {
         file1: {
@@ -293,6 +329,11 @@ describe('ServerlessPlugin', function () {
           env3: 'env3value',
         },
       }
+
+      this.serverless.service.custom.dotenv.required.env = [
+        'env3',
+        'TEST_SLS_DOTENV_PLUGIN_ENV1',
+      ]
 
       const files = Object.keys(filesAndEnvVars)
 
