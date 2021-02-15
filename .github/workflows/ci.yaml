@@ -17,8 +17,8 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node }}
-      - run: yarn install --frozen-lockfile
-      - run: yarn test
+      - run: npm install --frozen-lockfile
+      - run: npm test
       - name: Coveralls
         # Only send coverage details for one version of Node
         if: ${{ matrix.node == 14 }}
