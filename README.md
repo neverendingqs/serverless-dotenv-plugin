@@ -74,7 +74,7 @@ The env resolution pattern follows the one used by [Rail's dotenv](https://githu
 
 ## Lambda Environment Variables
 
-Again, remember that when you deploy your service, the plugin will inject these environment vars into every lambda functions you have and will therefore allow you to reference them as `process.env.AUTH0_CLIENT_ID` (Nodejs example).
+Again, remember that when you deploy your service, the plugin will inject these environment vars into every lambda functions you have and will therefore allow you to reference them as `process.env.AUTH0_CLIENT_ID` (Nodejs example). If this behaviour is not desireable, set `include` to `[]`.
 
 
 ## Plugin options
