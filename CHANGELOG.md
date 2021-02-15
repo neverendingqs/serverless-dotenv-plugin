@@ -8,7 +8,7 @@ included in this log but can be reviewed on GitHub:
 
 ## Unreleased
 
-## 3.3.x
+## 3.4.x
 
 * feat: new option to expect specific env vars to be set. ([#118](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/118))
 
