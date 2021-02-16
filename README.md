@@ -90,6 +90,9 @@ custom:
     # if set, ignores `path` option, and only uses the dotenv file at this location
     # basePath: path/to/my/.env
 
+    # if set, uses provided dotenv parser function instead of built-in function
+    dotenvParser: dotenv.config.js
+
     # default: adds all env variables found in your dotenv file(s)
     # this option must be set to `[]` if `provider.environment` is not a literal string
     include:
@@ -128,6 +131,15 @@ custom:
   * The problem with setting the `path` option is that you lose environment resolution on the file names.
   * If you don't need environment resolution, the `path` option is just fine.
 
+* dotenvParser (string)
+  * Path to a custom dotenv parser, relative to the project root (same level as `serverless.yml`).
+  * This parser is called once for each dotenv file found.
+  * Parameters passed into the function: `{ dotenv, paths }`.
+    * `dotenv`: dotenv library provided for you or you can bring your own
+    * `paths`: all the dotenv files discovered by the plugin, ordered by precedence (see `Automatic ENV File Resolution` above for details)
+  * This function must return a single object, where each key/value pair represents the env var name and value.
+  * By default, this uses the built-in parser, which calls `dotenv` followed by `dotenv-expand`.
+
 * include (list)
   * All env vars found in your file will be injected into your lambda functions.
   * If you do not want all of them to be injected into your lambda functions, you can specify the ones you want with the `include` option.
@@ -156,6 +168,25 @@ custom:
   * Setting this to `false` will disable this feature
     * E.g. `INNER_ENV=innerenv, OUTER_ENV=hi-$INNER_ENV`, would resolve to `INNER_ENV=innerenv, OUTER_ENV=hi-$INNER_ENV`
 
+
+Example `dotenvParser` file:
+
+```js
+// You can bring your own or use the one provided by the plugin
+const dotenv = require('dotenv')
+const dotenvExpand = require('dotenv-expand')
+
+module.exports = function({ dotenv, paths }) {
+  const envVarsArray = [...paths]
+    .reverse()
+    .map(path => {
+      const parsed = dotenv.config({ path })
+      return dotenvExpand(parsed).parsed
+    })
+
+  return envVarsArray.reduce((acc, curr) => ({ ...acc, ...curr }), {})
+}
+```
 
 ## Examples
 
