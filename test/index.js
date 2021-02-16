@@ -1,7 +1,8 @@
 process.env.TEST_SLS_DOTENV_PLUGIN_ENV1 = 'env1'
 
 const chai = require('chai')
-const proxyquire = require('proxyquire')
+// TODO: not great
+const proxyquire = require('proxyquire').noCallThru()
 const should = chai.should()
 const sinon = require('sinon')
 
@@ -527,13 +528,6 @@ describe('ServerlessPlugin', function () {
           },
         }
 
-        this.requireStubs[`${this.dotenvParser.prefix}/${this.dotenvParser.path}`]
-          .withArgs({
-            dotenv: this.requireStubs.dotenv,
-            paths: [fileName]
-          })
-          .returns(undefined)
-
         should.Throw(() => new this.ServerlessPlugin(serverless, this.options))
       })
 
@@ -569,7 +563,14 @@ describe('ServerlessPlugin', function () {
           })
           .returns(envVars)
 
-        new this.ServerlessPlugin(serverless, this.options)
+        const plugin = new this.ServerlessPlugin(serverless, this.options)
+
+        const resolveEnvFileNames = this.sandbox.stub(
+          plugin,
+          'resolveEnvFileNames',
+        )
+
+        resolveEnvFileNames.withArgs(this.env).returns([fileName])
 
         serverless.service.provider.environment.should.deep.equal({
           env1: envVars.env1,
