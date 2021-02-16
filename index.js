@@ -88,27 +88,7 @@ class ServerlessPlugin {
         : parsed.parsed
     })
 
-    const envVars = envVarsArray.reduce(
-      (acc, curr) => ({ ...acc, ...curr }),
-      {},
-    )
-
-    const missingRequiredEnvVars = (this.required.env || []).filter(
-      (envVarName) => !envVars[envVarName] && !process.env[envVarName],
-    )
-
-    if (missingRequiredEnvVars.length > 0) {
-      throw Object.assign(
-        new Error(
-          `Missing the following required environment variables: ${missingRequiredEnvVars.join(
-            ',',
-          )}`,
-        ),
-        { type: errorTypes.HALT },
-      )
-    }
-
-    return envVars
+    return envVarsArray.reduce((acc, curr) => ({ ...acc, ...curr }), {})
   }
 
   /**
@@ -163,12 +143,33 @@ class ServerlessPlugin {
   }
 
   /**
+   * @param {string[]} envFileNames
+   */
+  validateEnvVars(envVars) {
+    const missingRequiredEnvVars = (this.required.env || []).filter(
+      (envVarName) => !envVars[envVarName] && !process.env[envVarName],
+    )
+
+    if (missingRequiredEnvVars.length > 0) {
+      throw Object.assign(
+        new Error(
+          `Missing the following required environment variables: ${missingRequiredEnvVars.join(
+            ',',
+          )}`,
+        ),
+        { type: errorTypes.HALT },
+      )
+    }
+  }
+
+  /**
    * @param {string} env
    */
   loadEnv(env) {
     const envFileNames = this.resolveEnvFileNames(env)
     try {
       const envVars = this.parseEnvFiles(envFileNames)
+      this.validateEnvVars(envVars)
       this.setProviderEnv(envVars)
       this.validateEnvFileNames(envFileNames)
     } catch (e) {
