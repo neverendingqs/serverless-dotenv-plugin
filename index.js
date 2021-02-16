@@ -26,7 +26,6 @@ class ServerlessPlugin {
       (this.config && this.config.variableExpansion) === false
     )
 
-
     if (this.config && this.config.dotenvParser) {
       this.dotenvParserPath = path.join(
         serverless.config.servicePath,
@@ -91,7 +90,7 @@ class ServerlessPlugin {
    */
   callDotenvParser(envFileNames) {
     try {
-    return require(this.dotenvParserPath)({ dotenv, paths: envFileNames })
+      return require(this.dotenvParserPath)({ dotenv, paths: envFileNames })
     } catch (err) {
       throw Object.assign(err, { type: errorTypes.HALT })
     }

@@ -11,6 +11,11 @@ describe('ServerlessPlugin', function () {
   beforeEach(function () {
     this.sandbox = sinon.createSandbox()
 
+    this.dotenvParser = {
+      path: 'dotenvParser.js',
+      prefix: '/tmp'
+    }
+
     this.requireStubs = {
       chalk: {
         red: this.sandbox.stub(),
@@ -22,6 +27,7 @@ describe('ServerlessPlugin', function () {
       fs: {
         existsSync: this.sandbox.stub(),
       },
+      [`${this.dotenvParser.prefix}/${this.dotenvParser.path}`]: this.sandbox.stub()
     }
 
     this.ServerlessPlugin = proxyquire('../', this.requireStubs)
@@ -500,6 +506,79 @@ describe('ServerlessPlugin', function () {
       this.requireStubs['dotenv-expand'].should.not.have.been.called
     })
 
+    describe('dotenvParser', function() {
+      it('throws if custom parser returns undefined', function() {
+        const fileName = '.env'
+
+        const serverless = {
+          config: {
+            servicePath: this.dotenvParser.prefix
+          },
+          cli: {
+            log: this.sandbox.stub(),
+          },
+          service: {
+            custom: {
+              dotenv: {
+                dotenvParser: this.dotenvParser.path
+              }
+            },
+            provider: {},
+          },
+        }
+
+        this.requireStubs[`${this.dotenvParser.prefix}/${this.dotenvParser.path}`]
+          .withArgs({
+            dotenv: this.requireStubs.dotenv,
+            paths: [fileName]
+          })
+          .returns(undefined)
+
+        should.Throw(() => new this.ServerlessPlugin(serverless, this.options))
+      })
+
+      it('uses output of custom parser', function() {
+        const fileName = '.env'
+        const envVars = {
+          env1: 'env1value',
+          env2: 'env2value',
+          env3: 'env3value',
+        }
+
+        const serverless = {
+          config: {
+            servicePath: this.dotenvParser.prefix
+          },
+          cli: {
+            log: this.sandbox.stub(),
+          },
+          service: {
+            custom: {
+              dotenv: {
+                dotenvParser: this.dotenvParser.path
+              }
+            },
+            provider: {},
+          },
+        }
+
+        this.requireStubs[`${this.dotenvParser.prefix}/${this.dotenvParser.path}`]
+          .withArgs({
+            dotenv: this.requireStubs.dotenv,
+            paths: [fileName]
+          })
+          .returns(envVars)
+
+        new this.ServerlessPlugin(serverless, this.options)
+
+        serverless.service.provider.environment.should.deep.equal({
+          env1: envVars.env1,
+          env2: envVars.env2,
+          env3: envVars.env3,
+        })
+      })
+    })
+
     it('runs with defaults when there are no configs', function () {
       const fileName = '.env'
       const envVars = {
@@ -536,6 +615,8 @@ describe('ServerlessPlugin', function () {
         .returns({ parsed: envVars })
 
       plugin.loadEnv(this.env)
+
+      should.not.exist(this.plugin.dotenvParserPath)
 
       serverless.service.provider.environment.should.deep.equal({
         env1: envVars.env1,
