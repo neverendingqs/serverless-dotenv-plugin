@@ -129,7 +129,7 @@ class ServerlessPlugin {
     if (envFileNames.length > 0) {
       this.log(
         'DOTENV: Loading environment variables from ' +
-          envFileNames.reverse().join(', ') +
+          [...envFileNames].reverse().join(', ') +
           ':',
       )
     } else {
@@ -168,10 +168,10 @@ class ServerlessPlugin {
   loadEnv(env) {
     const envFileNames = this.resolveEnvFileNames(env)
     try {
+      this.validateEnvFileNames(envFileNames)
       const envVars = this.parseEnvFiles(envFileNames)
       this.validateEnvVars(envVars)
       this.setProviderEnv(envVars)
-      this.validateEnvFileNames(envFileNames)
     } catch (e) {
       if (e.type === errorTypes.HALT) {
         throw e
