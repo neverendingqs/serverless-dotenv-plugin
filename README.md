@@ -133,12 +133,11 @@ custom:
 
 * dotenvParser (string)
   * Path to a custom dotenv parser, relative to the project root (same level as `serverless.yml`).
-  * This parser is called once for each dotenv file found.
   * Parameters passed into the function: `{ dotenv, paths }`.
     * `dotenv`: dotenv library provided for you or you can bring your own
     * `paths`: all the dotenv files discovered by the plugin, ordered by precedence (see `Automatic ENV File Resolution` above for details)
   * This function must return a single object, where each key/value pair represents the env var name and value.
-  * By default, this uses the built-in parser, which calls `dotenv` followed by `dotenv-expand`.
+  * By default, this uses the built-in parser, which calls `dotenv` followed by `dotenv-expand` for each file.
 
 * include (list)
   * All env vars found in your file will be injected into your lambda functions.
