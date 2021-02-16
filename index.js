@@ -12,7 +12,6 @@ const errorTypes = {
 
 class ServerlessPlugin {
   constructor(serverless, options) {
-    //console.log(serverless.config.servicePath)
     this.serverless = serverless
     this.serverless.service.provider.environment =
       this.serverless.service.provider.environment || {}
