@@ -24,6 +24,7 @@ describe('ServerlessPlugin', function () {
       },
     }
 
+    // TODO: remove
     this.ServerlessPlugin = proxyquire('../', this.requireStubs)
 
     this.serverless = {
@@ -31,16 +32,14 @@ describe('ServerlessPlugin', function () {
         log: this.sandbox.stub(),
       },
       service: {
-        custom: {
-          dotenv: {
-            required: {},
-          },
-        },
         provider: {},
       },
     }
     this.options = {}
 
+    this.createPlugin = () => new this.ServerlessPlugin(this.serverless, this.options)
+
+    // TODO: remove
     this.plugin = new this.ServerlessPlugin(this.serverless, this.options)
   })
 
@@ -131,24 +130,32 @@ describe('ServerlessPlugin', function () {
     describe('with config.path configured', function () {
       it('returns singleton array if set to a string value', function () {
         const path = '.env.unittest'
-        this.serverless.service.custom.dotenv.path = path
+        this.serverless.service.custom = {
+          dotenv: { path }
+        }
 
-        this.plugin.resolveEnvFileNames('env').should.deep.equal([path])
+        this.createPlugin().resolveEnvFileNames('env').should.deep.equal([path])
       })
 
       it('returns config.path as-is if set to an array value', function () {
         const path = ['.env.unittest0', '.env.unittest1']
-        this.serverless.service.custom.dotenv.path = path
+        this.serverless.service.custom = {
+          dotenv: { path }
+        }
 
-        this.plugin.resolveEnvFileNames('env').should.deep.equal(path)
+        this.createPlugin().resolveEnvFileNames('env').should.deep.equal(path)
       })
 
       it('logs an error if basePath is also set', function () {
         const path = '.env.unittest'
-        this.serverless.service.custom.dotenv.basePath = 'base/path/'
-        this.serverless.service.custom.dotenv.path = path
+        this.serverless.service.custom = {
+          dotenv: {
+            basePath: 'base/path/',
+            path
+          }
+        }
 
-        this.plugin.resolveEnvFileNames('env').should.deep.equal([path])
+        this.createPlugin().resolveEnvFileNames('env').should.deep.equal([path])
         this.serverless.cli.log.should.have.been.calledWith(
           sinon.match(/basePath/),
         )
@@ -208,7 +215,9 @@ describe('ServerlessPlugin', function () {
 
       it('uses "basePath" config if set', function () {
         const basePath = 'unittest/'
-        this.serverless.service.custom.dotenv.basePath = basePath
+        this.serverless.service.custom = {
+          dotenv: { basePath }
+        }
 
         const env = 'unittest'
         const expectedDotenvFiles = [
@@ -222,7 +231,7 @@ describe('ServerlessPlugin', function () {
           this.requireStubs.fs.existsSync.withArgs(file).returns(true),
         )
 
-        this.plugin
+        this.createPlugin()
           .resolveEnvFileNames(env)
           .should.deep.equal(expectedDotenvFiles)
       })
@@ -232,6 +241,8 @@ describe('ServerlessPlugin', function () {
   describe('loadEnv()', function () {
     beforeEach(function () {
       this.env = 'unittests'
+
+      this.plugin = this.createPlugin()
       this.resolveEnvFileNames = this.sandbox.stub(
         this.plugin,
         'resolveEnvFileNames',
@@ -289,17 +300,30 @@ describe('ServerlessPlugin', function () {
     })
 
     it('throws an error if no .env files are required but at least one is required', function () {
-      this.serverless.service.custom.dotenv.required.file = true
+      this.serverless.service.custom = {
+        dotenv: {
+          required: {
+            file: true
+          }
+        }
+      }
+
       this.resolveEnvFileNames.withArgs(this.env).returns([])
 
-      should.Throw(() => this.plugin.loadEnv(this.env))
+      should.Throw(() => this.createPlugin())
     })
 
     it('throws an error if a missing env is not set', function () {
-      this.serverless.service.custom.dotenv.required.env = [
-        'NOT_IN_ANY_FILE',
-        'NOT_IN_ANY_FILE2',
-      ]
+      this.serverless.service.custom = {
+        dotenv: {
+          required: {
+            env:[
+              'NOT_IN_ANY_FILE',
+              'NOT_IN_ANY_FILE2',
+            ]
+          }
+        }
+      }
 
       const filesAndEnvVars = {
         file1: {
@@ -326,7 +350,7 @@ describe('ServerlessPlugin', function () {
           .returns({ parsed: filesAndEnvVars[fileName] })
       })
 
-      should.Throw(() => this.plugin.loadEnv(this.env))
+      should.Throw(() => this.createPlugin().loadEnv(this.env))
     })
 
     it('loads variables from all files', function () {
@@ -341,10 +365,16 @@ describe('ServerlessPlugin', function () {
         },
       }
 
-      this.serverless.service.custom.dotenv.required.env = [
-        'env3',
-        'TEST_SLS_DOTENV_PLUGIN_ENV1',
-      ]
+      this.serverless.service.custom = {
+        dotenv: {
+          required: {
+            env: [
+              'env3',
+              'TEST_SLS_DOTENV_PLUGIN_ENV1',
+            ]
+          }
+        }
+      }
 
       const files = Object.keys(filesAndEnvVars)
 
@@ -379,7 +409,12 @@ describe('ServerlessPlugin', function () {
         env2: 'env2value',
         env3: 'env3value',
       }
-      this.serverless.service.custom.dotenv.include = ['env2']
+
+      this.serverless.service.custom = {
+        dotenv: {
+          include: ['env2']
+        }
+      }
 
       this.resolveEnvFileNames.withArgs(this.env).returns([fileName])
       this.requireStubs.dotenv.config
@@ -404,7 +439,11 @@ describe('ServerlessPlugin', function () {
         env2: 'env2value',
         env3: 'env3value',
       }
-      this.serverless.service.custom.dotenv.exclude = ['env2']
+      this.serverless.service.custom = {
+        dotenv: {
+          exclude: ['env2']
+        }
+      }
 
       this.resolveEnvFileNames.withArgs(this.env).returns([fileName])
       this.requireStubs.dotenv.config
@@ -430,8 +469,13 @@ describe('ServerlessPlugin', function () {
         env2: 'env2value',
         env3: 'env3value',
       }
-      this.serverless.service.custom.dotenv.include = ['env1', 'env2']
-      this.serverless.service.custom.dotenv.exclude = ['env2']
+
+      this.serverless.service.custom = {
+        dotenv: {
+          include: ['env1', 'env2'],
+          exclude: ['env2']
+        }
+      }
 
       this.resolveEnvFileNames.withArgs(this.env).returns([fileName])
       this.requireStubs.dotenv.config
@@ -508,17 +552,7 @@ describe('ServerlessPlugin', function () {
         env3: 'env3value',
       }
 
-      const serverless = {
-        cli: {
-          log: this.sandbox.stub(),
-        },
-        service: {
-          custom: {},
-          provider: {},
-        },
-      }
-
-      const plugin = new this.ServerlessPlugin(serverless, this.options)
+      const plugin = this.createPlugin()
 
       const resolveEnvFileNames = this.sandbox.stub(
         plugin,
@@ -537,7 +571,7 @@ describe('ServerlessPlugin', function () {
 
       plugin.loadEnv(this.env)
 
-      serverless.service.provider.environment.should.deep.equal({
+      this.serverless.service.provider.environment.should.deep.equal({
         env1: envVars.env1,
         env2: envVars.env2,
         env3: envVars.env3,
