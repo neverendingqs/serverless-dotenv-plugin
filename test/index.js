@@ -24,7 +24,6 @@ describe('ServerlessPlugin', function () {
       },
     }
 
-    // TODO: remove
     this.ServerlessPlugin = proxyquire('../', this.requireStubs)
 
     this.serverless = {
@@ -311,8 +310,19 @@ describe('ServerlessPlugin', function () {
       log.should.have.been.calledWith('DOTENV: Could not find .env file.')
     })
 
-    // N.B. this test is not properly isolated as it actually checks for dotenv files
     it('throws an error if no .env files are found but at least one is required', function () {
+      const getEnvironment = this.sandbox.stub(
+        this.ServerlessPlugin.prototype,
+        'getEnvironment',
+      )
+      getEnvironment.withArgs(this.options).returns(this.env)
+
+      const resolveEnvFileNames = this.sandbox.stub(
+        this.ServerlessPlugin.prototype,
+        'resolveEnvFileNames',
+      )
+      resolveEnvFileNames.withArgs(this.env).returns([])
+
       this.serverless.service.custom = {
         dotenv: {
           required: {
@@ -324,8 +334,42 @@ describe('ServerlessPlugin', function () {
       should.Throw(() => this.createPlugin())
     })
 
-    // N.B. this test is not properly isolated as it actually checks for dotenv files
     it('throws an error if a missing env is not set', function () {
+      const getEnvironment = this.sandbox.stub(
+        this.ServerlessPlugin.prototype,
+        'getEnvironment',
+      )
+      getEnvironment.withArgs(this.options).returns(this.env)
+
+      const resolveEnvFileNames = this.sandbox.stub(
+        this.ServerlessPlugin.prototype,
+        'resolveEnvFileNames',
+      )
+      const filesAndEnvVars = {
+        file1: {
+          ENV1: 'env1value',
+          ENV2: 'env2overwrittenvalue',
+        },
+        file2: {
+          ENV2: 'env2value',
+          ENV3: 'env3value',
+        },
+      }
+
+      const files = Object.keys(filesAndEnvVars)
+
+      resolveEnvFileNames.withArgs(this.env).returns(files)
+
+      files.forEach((fileName) => {
+        this.requireStubs.dotenv.config
+          .withArgs({ path: fileName })
+          .returns({ parsed: filesAndEnvVars[fileName] })
+
+        this.requireStubs['dotenv-expand']
+          .withArgs({ parsed: filesAndEnvVars[fileName] })
+          .returns({ parsed: filesAndEnvVars[fileName] })
+      })
+
       this.serverless.service.custom = {
         dotenv: {
           required: {
