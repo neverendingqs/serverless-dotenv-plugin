@@ -11,21 +11,40 @@ const errorTypes = {
 
 class ServerlessPlugin {
   constructor(serverless, options) {
+    const {
+      environment,
+      config,
+      logging,
+      required,
+      variableExpansion,
+    } = this.parseConfig(serverless)
+
     this.serverless = serverless
-    this.serverless.service.provider.environment =
-      this.serverless.service.provider.environment || {}
-    this.config =
-      this.serverless.service.custom && this.serverless.service.custom['dotenv']
-    this.logging =
-      this.config && typeof this.config.logging !== 'undefined'
-        ? this.config.logging
-        : true
-    this.required = (this.config && this.config.required) || {}
-    this.variableExpansion = !(
-      (this.config && this.config.variableExpansion) === false
-    )
+    this.serverless.service.provider.environment = environment
+    this.config = config
+    this.logging = logging
+    this.required = required
+    this.variableExpansion = variableExpansion
 
     this.loadEnv(this.getEnvironment(options))
+  }
+
+  parseConfig(serverless) {
+    const environment = serverless.service.provider.environment || {}
+    const config =
+      serverless.service.custom && serverless.service.custom['dotenv']
+    const logging =
+      config && typeof config.logging !== 'undefined' ? config.logging : true
+    const required = (config && config.required) || {}
+    const variableExpansion = !((config && config.variableExpansion) === false)
+
+    return {
+      environment,
+      config,
+      logging,
+      required,
+      variableExpansion,
+    }
   }
 
   log(...args) {
