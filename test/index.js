@@ -1,7 +1,8 @@
 process.env.TEST_SLS_DOTENV_PLUGIN_ENV1 = 'env1'
 
 const chai = require('chai')
-const proxyquire = require('proxyquire')
+const path = require('path')
+const proxyquire = require('proxyquire').noCallThru()
 const should = chai.should()
 const sinon = require('sinon')
 
@@ -10,6 +11,16 @@ chai.use(require('sinon-chai'))
 describe('ServerlessPlugin', function () {
   beforeEach(function () {
     this.sandbox = sinon.createSandbox()
+
+    this.dotenvParser = {
+      path: 'dotenvParser.js',
+      prefix: '/tmp',
+    }
+
+    this.dotenvParser.fullPath = path.join(
+      this.dotenvParser.prefix,
+      this.dotenvParser.path,
+    )
 
     this.requireStubs = {
       chalk: {
@@ -22,6 +33,7 @@ describe('ServerlessPlugin', function () {
       fs: {
         existsSync: this.sandbox.stub(),
       },
+      [this.dotenvParser.fullPath]: this.sandbox.stub(),
     }
 
     this.ServerlessPlugin = proxyquire('../', this.requireStubs)
@@ -545,6 +557,58 @@ describe('ServerlessPlugin', function () {
       })
 
       this.requireStubs['dotenv-expand'].should.not.have.been.called
+    })
+
+    describe('dotenvParser', function () {
+      beforeEach(function () {
+        this.serverless.config = {
+          servicePath: this.dotenvParser.prefix,
+        }
+
+        this.serverless.service.custom = {
+          dotenv: {
+            dotenvParser: this.dotenvParser.path,
+          },
+        }
+      })
+
+      it('throws if importing custom parser causes an error', function () {
+        const error = new Error()
+        this.requireStubs[this.dotenvParser.fullPath].throws(error)
+
+        should.Throw(() => this.createPlugin(), error)
+      })
+
+      it('throws if custom parser returns undefined', function () {
+        should.Throw(() => this.createPlugin())
+      })
+
+      it('uses output of custom parser', function () {
+        const fileName = '.env'
+        const envVars = {
+          env1: 'env1value',
+          env2: 'env2value',
+          env3: 'env3value',
+        }
+
+        const resolveEnvFileNames = this.setupResolveEnvFileNames()
+        resolveEnvFileNames.withArgs(this.env).returns([fileName])
+
+        this.requireStubs[this.dotenvParser.fullPath]
+          .withArgs({
+            dotenv: this.requireStubs.dotenv,
+            paths: [fileName],
+          })
+          .returns(envVars)
+
+        this.createPlugin()
+
+        this.serverless.service.provider.environment.should.deep.equal({
+          env1: envVars.env1,
+          env2: envVars.env2,
+          env3: envVars.env3,
+        })
+      })
     })
 
     it('runs with defaults when there are no configs', function () {

@@ -4,6 +4,7 @@ const dotenv = require('dotenv')
 const dotenvExpand = require('dotenv-expand')
 const chalk = require('chalk')
 const fs = require('fs')
+const path = require('path')
 
 const errorTypes = {
   HALT: 'HALT',
@@ -24,6 +25,13 @@ class ServerlessPlugin {
     this.variableExpansion = !(
       (this.config && this.config.variableExpansion) === false
     )
+
+    if (this.config && this.config.dotenvParser) {
+      this.dotenvParserPath = path.join(
+        serverless.config.servicePath,
+        this.config.dotenvParser,
+      )
+    }
 
     this.loadEnv(this.getEnvironment(options))
   }
@@ -74,6 +82,18 @@ class ServerlessPlugin {
     const filesNames = dotenvFiles.map((file) => basePath + file)
 
     return filesNames.filter((fileName) => fs.existsSync(fileName))
+  }
+
+  /**
+   * @param {string[]} envFileNames
+   * @returns {Object}
+   */
+  callDotenvParser(envFileNames) {
+    try {
+      return require(this.dotenvParserPath)({ dotenv, paths: envFileNames })
+    } catch (err) {
+      throw Object.assign(err, { type: errorTypes.HALT })
+    }
   }
 
   /**
@@ -146,6 +166,15 @@ class ServerlessPlugin {
    * @param {string[]} envFileNames
    */
   validateEnvVars(envVars) {
+    if (!envVars) {
+      throw Object.assign(
+        new Error(
+          'Unexpected env var object (expected an object but is falsy). Did you forget to return an object in your dotenv parser?',
+        ),
+        { type: errorTypes.HALT },
+      )
+    }
+
     const missingRequiredEnvVars = (this.required.env || []).filter(
       (envVarName) => !envVars[envVarName] && !process.env[envVarName],
     )
@@ -169,7 +198,11 @@ class ServerlessPlugin {
     const envFileNames = this.resolveEnvFileNames(env)
     try {
       this.validateEnvFileNames(envFileNames)
-      const envVars = this.parseEnvFiles(envFileNames)
+
+      const envVars = this.dotenvParserPath
+        ? this.callDotenvParser(envFileNames)
+        : this.parseEnvFiles(envFileNames)
+
       this.validateEnvVars(envVars)
       this.setProviderEnv(envVars)
     } catch (e) {

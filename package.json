@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "prettier": "prettier --ignore-path .gitignore --write \"**/*.js\"",
-    "test": "nyc --reporter=lcov mocha",
+    "test": "nyc --reporter=lcov --reporter=text mocha",
     "posttest": "prettier --ignore-path .gitignore --check \"**/*.js\""
   },
   "repository": {

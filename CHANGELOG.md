@@ -9,6 +9,10 @@ included in this log but can be reviewed on GitHub:
 
 ## Unreleased
 
+## 3.6.x
+
+* feat: adding support for custom dotenv parser. ([#127](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/127))
+
 ## 3.5.x
 
 * feat: now logs when incompatible configs are set. ([#124](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/124))
