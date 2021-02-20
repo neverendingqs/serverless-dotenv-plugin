@@ -39,9 +39,6 @@ describe('ServerlessPlugin', function () {
 
     this.createPlugin = () =>
       new this.ServerlessPlugin(this.serverless, this.options)
-
-    // TODO: remove
-    this.plugin = new this.ServerlessPlugin(this.serverless, this.options)
   })
 
   afterEach(function () {
@@ -50,7 +47,7 @@ describe('ServerlessPlugin', function () {
 
   describe('constructor()', function () {
     it('does not err out on minimal configuration', function () {
-      should.exist(this.plugin)
+      should.exist(this.createPlugin())
     })
 
     it('loads environment variables as expected', function () {
@@ -76,7 +73,7 @@ describe('ServerlessPlugin', function () {
   describe('log()', function () {
     it('logs by default', function () {
       const msg = 'msg'
-      this.plugin.log(msg)
+      this.createPlugin().log(msg)
       this.serverless.cli.log.should.be.calledWith(msg)
     })
 
@@ -104,24 +101,24 @@ describe('ServerlessPlugin', function () {
 
   describe('getEnvironment()', function () {
     it("set to 'development' when no other options are available", function () {
-      this.plugin.getEnvironment({}).should.equal('development')
+      this.createPlugin().getEnvironment({}).should.equal('development')
     })
 
     it('uses option.stage if it is set', function () {
-      this.plugin
+      this.createPlugin()
         .getEnvironment({ stage: 'teststage' })
         .should.equal('teststage')
     })
 
     it('prefers option.env if it is set', function () {
-      this.plugin
+      this.createPlugin()
         .getEnvironment({ env: 'testenv', stage: 'teststage' })
         .should.equal('testenv')
     })
 
     it('prefers NODE_ENV if it is set', function () {
       this.sandbox.stub(process, 'env').value({ NODE_ENV: 'TEST_NODE_ENV' })
-      this.plugin
+      this.createPlugin()
         .getEnvironment({ env: 'theenv', stage: 'thestage' })
         .should.equal('TEST_NODE_ENV')
     })
@@ -177,7 +174,7 @@ describe('ServerlessPlugin', function () {
             this.requireStubs.fs.existsSync.withArgs(file).returns(true),
           )
 
-          this.plugin
+          this.createPlugin()
             .resolveEnvFileNames(env)
             .should.deep.equal(expectedDotenvFiles)
         })
@@ -195,7 +192,7 @@ describe('ServerlessPlugin', function () {
             this.requireStubs.fs.existsSync.withArgs(file).returns(true),
           )
 
-          this.plugin
+          this.createPlugin()
             .resolveEnvFileNames(env)
             .should.deep.equal(expectedDotenvFiles)
         })
@@ -209,7 +206,7 @@ describe('ServerlessPlugin', function () {
           this.requireStubs.fs.existsSync.withArgs(file).returns(true),
         )
 
-        this.plugin
+        this.createPlugin()
           .resolveEnvFileNames(env)
           .should.deep.equal(expectedDotenvFiles)
       })
