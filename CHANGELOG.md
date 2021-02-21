@@ -7,7 +7,13 @@ included in this log but can be reviewed on GitHub:
 * [Documentation](https://github.com/neverendingqs/serverless-dotenv-plugin/pulls?q=+is%3Apr+label%3Adocumentation)
 * [Refactor](https://github.com/neverendingqs/serverless-dotenv-plugin/pulls?q=label%3Arefactor+is%3Apr)
 
-## Unreleased
+## 4.0.x
+
+Breaking changes are introduced when going from version 3.x.x to 4.x.x.
+
+## 3.8.x
+
+* feat: adding an option toggle breaking changes. ([#138](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/138))
 
 ## 3.7.x
 

@@ -625,7 +625,12 @@ describe('ServerlessPlugin', function () {
         .withArgs({ parsed: envVars })
         .returns({ parsed: envVars })
 
-      this.createPlugin()
+      const plugin = this.createPlugin()
+
+      plugin.config.logging.should.be.true
+      plugin.config.required.should.deep.equal({})
+      plugin.config.v4BreakingChanges.should.be.false
+      plugin.config.variableExpansion.should.be.true
 
       this.serverless.service.provider.environment.should.deep.equal({
         env1: envVars.env1,
