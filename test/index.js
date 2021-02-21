@@ -330,23 +330,17 @@ describe('ServerlessPlugin', function () {
             );
           }
         });
-
-        it(`${this.action} an error if no .env files are required and none are found`, function () {
-          const log = this.sandbox.stub(this.ServerlessPlugin.prototype, 'log');
-
-          const resolveEnvFileNames = this.setupResolveEnvFileNames();
-          resolveEnvFileNames.withArgs(this.env).returns([]);
-
-          if (v4BreakingChanges) {
-            should.Throw(() => this.createPlugin());
-          } else {
-            this.createPlugin();
-            log.should.have.been.calledWith(
-              'DOTENV: Could not find .env file.',
-            );
-          }
-        });
       });
+    });
+
+    it('logs an error if no .env files are required and none are found', function () {
+      const log = this.sandbox.stub(this.ServerlessPlugin.prototype, 'log');
+
+      const resolveEnvFileNames = this.setupResolveEnvFileNames();
+      resolveEnvFileNames.withArgs(this.env).returns([]);
+
+      this.createPlugin();
+      log.should.have.been.calledWith('DOTENV: Could not find .env file.');
     });
 
     it('throws an error if no .env files are found but at least one is required', function () {
