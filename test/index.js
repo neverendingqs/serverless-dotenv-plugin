@@ -36,7 +36,7 @@ describe('ServerlessPlugin', function () {
       [this.dotenvParser.fullPath]: this.sandbox.stub(),
     }
 
-    this.ServerlessPlugin = proxyquire('../', this.requireStubs)
+    this.ServerlessPlugin = proxyquire('../src', this.requireStubs)
 
     this.serverless = {
       cli: {
