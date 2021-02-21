@@ -9,7 +9,10 @@ included in this log but can be reviewed on GitHub:
 
 ## 4.0.x
 
-Breaking changes are introduced when going from version 3.x.x to 4.x.x.
+Breaking changes are introduced when going from version 3.x.x to 4.x.x:
+
+* feat: now halts on all errors. ([#139](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/139))
+  * Previously, some errors did not cause the plugin to halt, which may silently cause environment variables to not be set
 
 ## 3.8.x
 
