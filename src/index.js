@@ -15,19 +15,20 @@ class ServerlessPlugin {
     this.serverless = serverless
     this.serverless.service.provider.environment =
       this.serverless.service.provider.environment || {}
-    this.config =
-      this.serverless.service.custom && this.serverless.service.custom['dotenv']
-    this.logging =
-      this.config && typeof this.config.logging !== 'undefined'
-        ? this.config.logging
-        : true
-    this.required = (this.config && this.config.required) || {}
-    this.variableExpansion = !(
-      (this.config && this.config.variableExpansion) === false
+
+    this.config = Object.assign(
+      {
+        logging: true,
+        required: {},
+        variableExpansion: true,
+      },
+      (this.serverless.service.custom &&
+        this.serverless.service.custom['dotenv']) ||
+        {},
     )
 
-    if (this.config && this.config.dotenvParser) {
-      this.dotenvParserPath = path.join(
+    if (this.config.dotenvParser) {
+      this.config.dotenvParserPath = path.join(
         serverless.config.servicePath,
         this.config.dotenvParser,
       )
@@ -37,7 +38,7 @@ class ServerlessPlugin {
   }
 
   log(...args) {
-    if (this.logging) {
+    if (this.config.logging) {
       this.serverless.cli.log(...args)
     }
   }
@@ -90,7 +91,10 @@ class ServerlessPlugin {
    */
   callDotenvParser(envFileNames) {
     try {
-      return require(this.dotenvParserPath)({ dotenv, paths: envFileNames })
+      return require(this.config.dotenvParserPath)({
+        dotenv,
+        paths: envFileNames,
+      })
     } catch (err) {
       throw Object.assign(err, { type: errorTypes.HALT })
     }
@@ -103,7 +107,7 @@ class ServerlessPlugin {
   parseEnvFiles(envFileNames) {
     const envVarsArray = envFileNames.map((fileName) => {
       const parsed = dotenv.config({ path: fileName })
-      return this.variableExpansion
+      return this.config.variableExpansion
         ? dotenvExpand(parsed).parsed
         : parsed.parsed
     })
@@ -156,7 +160,7 @@ class ServerlessPlugin {
       const errorMsg = 'DOTENV: Could not find .env file.'
       this.log(errorMsg)
 
-      if (this.required.file === true) {
+      if (this.config.required.file === true) {
         throw Object.assign(new Error(errorMsg), { type: errorTypes.HALT })
       }
     }
@@ -175,7 +179,7 @@ class ServerlessPlugin {
       )
     }
 
-    const missingRequiredEnvVars = (this.required.env || []).filter(
+    const missingRequiredEnvVars = (this.config.required.env || []).filter(
       (envVarName) => !envVars[envVarName] && !process.env[envVarName],
     )
 
@@ -199,7 +203,7 @@ class ServerlessPlugin {
     try {
       this.validateEnvFileNames(envFileNames)
 
-      const envVars = this.dotenvParserPath
+      const envVars = this.config.dotenvParserPath
         ? this.callDotenvParser(envFileNames)
         : this.parseEnvFiles(envFileNames)
 
