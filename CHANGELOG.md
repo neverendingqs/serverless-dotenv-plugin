@@ -13,7 +13,7 @@ Breaking changes are introduced when going from version 3.x.x to 4.x.x.
 
 ## 3.8.x
 
-* TODO
+* feat: adding an option toggle breaking changes. ([#138](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/138))
 
 ## 3.7.x
 
