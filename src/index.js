@@ -21,6 +21,7 @@ class ServerlessPlugin {
         logging: true,
         required: {},
         variableExpansion: true,
+        v4BreakingChanges: false,
       },
       (this.serverless.service.custom &&
         this.serverless.service.custom['dotenv']) ||

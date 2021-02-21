@@ -161,6 +161,9 @@ custom:
     * By default, this plugin will exit gracefully and allow Serverless to continue even if it couldn't find a .env file to use.
     * Set this to `true` to cause Serverless to halt if it could not find a .env file to use.
 
+* v4BreakingChanges: true|false (default false)
+  * Set this to `true` to introduce v3.x.x => v4.x.x breaking changes now
+
 * variableExpansion: true|false (default true)
   * By default, variables can reference other variables
     * E.g. `INNER_ENV=innerenv, OUTER_ENV=hi-$INNER_ENV`, would resolve to `INNER_ENV=innerenv, OUTER_ENV=hi-innerenv`
@@ -191,6 +194,9 @@ module.exports = function({ dotenv, paths }) {
 
 You can find example usage in the `examples` folder.
 
+## Changelog
+
+The changelog is available in the `CHANGELOG.md` file in the package or [on GitHub](https://github.com/neverendingqs/serverless-dotenv-plugin/blob/master/CHANGELOG.md).
 
 ## FAQ
 
