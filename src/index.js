@@ -119,7 +119,7 @@ class ServerlessPlugin {
     const exclude = (this.config && this.config.exclude) || []
 
     if (include.length > 0) {
-      if (exclude) {
+      if (exclude.length > 0) {
         this.log('DOTENV (WARNING): if "include" is set, "exclude" is ignored.')
       }
 

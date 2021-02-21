@@ -455,6 +455,10 @@ describe('ServerlessPlugin', function () {
       this.serverless.service.provider.environment.should.deep.equal({
         env2: envVars.env2,
       })
+
+      this.serverless.cli.log.should.have.not.been.calledWith(
+        sinon.match(/exclude/),
+      )
     })
 
     it('removes keys in config.exclude', function () {
