@@ -75,7 +75,7 @@ describe('ServerlessPlugin', function () {
         'loadEnv',
       )
 
-      new this.ServerlessPlugin(this.serverless, this.options)
+      this.createPlugin()
 
       loadEnv.should.have.been.calledWith(env)
     })
@@ -89,24 +89,15 @@ describe('ServerlessPlugin', function () {
     })
 
     it('does nothing if logging is disabled', function () {
-      const serverless = {
-        cli: {
-          log: this.sandbox.stub(),
-        },
-        service: {
-          custom: {
-            dotenv: {
-              logging: false,
-            },
-          },
-          provider: {},
+      this.serverless.service.custom = {
+        dotenv: {
+          logging: false,
         },
       }
 
-      const plugin = new this.ServerlessPlugin(serverless, this.options)
-      plugin.log('msg')
+      this.createPlugin().log('msg')
 
-      serverless.cli.log.should.not.be.called
+      this.serverless.cli.log.should.not.be.called
     })
   })
 
