@@ -1,20 +1,20 @@
-'use strict'
+'use strict';
 
-const dotenv = require('dotenv')
-const dotenvExpand = require('dotenv-expand')
-const chalk = require('chalk')
-const fs = require('fs')
-const path = require('path')
+const dotenv = require('dotenv');
+const dotenvExpand = require('dotenv-expand');
+const chalk = require('chalk');
+const fs = require('fs');
+const path = require('path');
 
 const errorTypes = {
   HALT: 'HALT',
-}
+};
 
 class ServerlessPlugin {
   constructor(serverless, options) {
-    this.serverless = serverless
+    this.serverless = serverless;
     this.serverless.service.provider.environment =
-      this.serverless.service.provider.environment || {}
+      this.serverless.service.provider.environment || {};
 
     this.config = Object.assign(
       {
@@ -26,21 +26,21 @@ class ServerlessPlugin {
       (this.serverless.service.custom &&
         this.serverless.service.custom['dotenv']) ||
         {},
-    )
+    );
 
     if (this.config.dotenvParser) {
       this.config.dotenvParserPath = path.join(
         serverless.config.servicePath,
         this.config.dotenvParser,
-      )
+      );
     }
 
-    this.loadEnv(this.getEnvironment(options))
+    this.loadEnv(this.getEnvironment(options));
   }
 
   log(...args) {
     if (this.config.logging) {
-      this.serverless.cli.log(...args)
+      this.serverless.cli.log(...args);
     }
   }
 
@@ -49,7 +49,9 @@ class ServerlessPlugin {
    * @returns {string}
    */
   getEnvironment(options) {
-    return process.env.NODE_ENV || options.env || options.stage || 'development'
+    return (
+      process.env.NODE_ENV || options.env || options.stage || 'development'
+    );
   }
 
   /**
@@ -57,17 +59,17 @@ class ServerlessPlugin {
    * @returns {string[]}
    */
   resolveEnvFileNames(env) {
-    const basePath = (this.config && this.config.basePath) || ''
+    const basePath = (this.config && this.config.basePath) || '';
 
     if (this.config && this.config.path) {
       if (basePath) {
-        this.log('DOTENV (WARNING): if "path" is set, "basePath" is ignored.')
+        this.log('DOTENV (WARNING): if "path" is set, "basePath" is ignored.');
       }
 
       if (Array.isArray(this.config.path)) {
-        return this.config.path
+        return this.config.path;
       }
-      return [this.config.path]
+      return [this.config.path];
     }
 
     // https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use
@@ -79,11 +81,11 @@ class ServerlessPlugin {
       // results for everyone
       env !== 'test' && `.env.local`,
       `.env`,
-    ]
+    ];
 
-    const filesNames = dotenvFiles.map((file) => basePath + file)
+    const filesNames = dotenvFiles.map((file) => basePath + file);
 
-    return filesNames.filter((fileName) => fs.existsSync(fileName))
+    return filesNames.filter((fileName) => fs.existsSync(fileName));
   }
 
   /**
@@ -95,9 +97,9 @@ class ServerlessPlugin {
       return require(this.config.dotenvParserPath)({
         dotenv,
         paths: envFileNames,
-      })
+      });
     } catch (err) {
-      throw Object.assign(err, { type: errorTypes.HALT })
+      throw Object.assign(err, { type: errorTypes.HALT });
     }
   }
 
@@ -107,44 +109,46 @@ class ServerlessPlugin {
    */
   parseEnvFiles(envFileNames) {
     const envVarsArray = envFileNames.map((fileName) => {
-      const parsed = dotenv.config({ path: fileName })
+      const parsed = dotenv.config({ path: fileName });
       return this.config.variableExpansion
         ? dotenvExpand(parsed).parsed
-        : parsed.parsed
-    })
+        : parsed.parsed;
+    });
 
-    return envVarsArray.reduce((acc, curr) => ({ ...acc, ...curr }), {})
+    return envVarsArray.reduce((acc, curr) => ({ ...acc, ...curr }), {});
   }
 
   /**
    * @param {Object} envVars
    */
   setProviderEnv(envVars) {
-    const include = (this.config && this.config.include) || []
-    const exclude = (this.config && this.config.exclude) || []
+    const include = (this.config && this.config.include) || [];
+    const exclude = (this.config && this.config.exclude) || [];
 
     if (include.length > 0) {
       if (exclude.length > 0) {
-        this.log('DOTENV (WARNING): if "include" is set, "exclude" is ignored.')
+        this.log(
+          'DOTENV (WARNING): if "include" is set, "exclude" is ignored.',
+        );
       }
 
       Object.keys(envVars)
         .filter((key) => !include.includes(key))
         .forEach((key) => {
-          delete envVars[key]
-        })
+          delete envVars[key];
+        });
     } else if (exclude.length > 0) {
       Object.keys(envVars)
         .filter((key) => exclude.includes(key))
         .forEach((key) => {
-          delete envVars[key]
-        })
+          delete envVars[key];
+        });
     }
 
     Object.keys(envVars).forEach((key) => {
-      this.log('\t - ' + key)
-      this.serverless.service.provider.environment[key] = envVars[key]
-    })
+      this.log('\t - ' + key);
+      this.serverless.service.provider.environment[key] = envVars[key];
+    });
   }
 
   /**
@@ -156,13 +160,13 @@ class ServerlessPlugin {
         'DOTENV: Loading environment variables from ' +
           [...envFileNames].reverse().join(', ') +
           ':',
-      )
+      );
     } else {
-      const errorMsg = 'DOTENV: Could not find .env file.'
-      this.log(errorMsg)
+      const errorMsg = 'DOTENV: Could not find .env file.';
+      this.log(errorMsg);
 
       if (this.config.required.file === true) {
-        throw Object.assign(new Error(errorMsg), { type: errorTypes.HALT })
+        throw Object.assign(new Error(errorMsg), { type: errorTypes.HALT });
       }
     }
   }
@@ -177,12 +181,12 @@ class ServerlessPlugin {
           'Unexpected env var object (expected an object but is falsy). Did you forget to return an object in your dotenv parser?',
         ),
         { type: errorTypes.HALT },
-      )
+      );
     }
 
     const missingRequiredEnvVars = (this.config.required.env || []).filter(
       (envVarName) => !envVars[envVarName] && !process.env[envVarName],
-    )
+    );
 
     if (missingRequiredEnvVars.length > 0) {
       throw Object.assign(
@@ -192,7 +196,7 @@ class ServerlessPlugin {
           )}`,
         ),
         { type: errorTypes.HALT },
-      )
+      );
     }
   }
 
@@ -200,29 +204,29 @@ class ServerlessPlugin {
    * @param {string} env
    */
   loadEnv(env) {
-    const envFileNames = this.resolveEnvFileNames(env)
+    const envFileNames = this.resolveEnvFileNames(env);
     try {
-      this.validateEnvFileNames(envFileNames)
+      this.validateEnvFileNames(envFileNames);
 
       const envVars = this.config.dotenvParserPath
         ? this.callDotenvParser(envFileNames)
-        : this.parseEnvFiles(envFileNames)
+        : this.parseEnvFiles(envFileNames);
 
-      this.validateEnvVars(envVars)
-      this.setProviderEnv(envVars)
+      this.validateEnvVars(envVars);
+      this.setProviderEnv(envVars);
     } catch (e) {
       if (e.type === errorTypes.HALT) {
-        throw e
+        throw e;
       }
 
       console.error(
         chalk.red(
           '\n Serverless Plugin Error --------------------------------------\n',
         ),
-      )
-      console.error(chalk.red('  ' + e.message))
+      );
+      console.error(chalk.red('  ' + e.message));
     }
   }
 }
 
-module.exports = ServerlessPlugin
+module.exports = ServerlessPlugin;
