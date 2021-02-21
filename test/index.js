@@ -273,57 +273,80 @@ describe('ServerlessPlugin', function () {
 
       should.Throw(() => this.createPlugin(), error);
     });
+    [true, false].forEach((v4BreakingChanges) => {
+      describe(`${JSON.stringify({ v4BreakingChanges })}`, function () {
+        beforeEach(function () {
+          this.action = v4BreakingChanges ? 'throws' : 'logs';
+          this.serverless.service.custom = {
+            dotenv: { v4BreakingChanges },
+          };
+        });
 
-    it('logs an error if dotenv.config() throws an error', function () {
-      const fileName = '.env';
+        it(`${this.action} an error if dotenv.config() throws an error`, function () {
+          const fileName = '.env';
 
-      const resolveEnvFileNames = this.setupResolveEnvFileNames();
-      resolveEnvFileNames.withArgs(this.env).returns([fileName]);
+          const resolveEnvFileNames = this.setupResolveEnvFileNames();
+          resolveEnvFileNames.withArgs(this.env).returns([fileName]);
 
-      const error = new Error('Error while calling dotenv.config()');
-      this.requireStubs.dotenv.config
-        .withArgs({ path: fileName })
-        .throws(error);
+          const error = new Error('Error while calling dotenv.config()');
+          this.requireStubs.dotenv.config
+            .withArgs({ path: fileName })
+            .throws(error);
 
-      this.createPlugin();
+          if (v4BreakingChanges) {
+            should.Throw(() => this.createPlugin(), error);
+          } else {
+            this.createPlugin();
 
-      this.requireStubs.chalk.red.should.have.been.calledWith(
-        '  ' + error.message,
-      );
-    });
+            this.requireStubs.chalk.red.should.have.been.calledWith(
+              '  ' + error.message,
+            );
+          }
+        });
 
-    it('logs an error if dotenvExpand() throws an error', function () {
-      const fileName = '.env';
+        it(`${this.action} an error if dotenvExpand() throws an error`, function () {
+          const fileName = '.env';
 
-      const resolveEnvFileNames = this.setupResolveEnvFileNames();
-      resolveEnvFileNames.withArgs(this.env).returns([fileName]);
+          const resolveEnvFileNames = this.setupResolveEnvFileNames();
+          resolveEnvFileNames.withArgs(this.env).returns([fileName]);
 
-      const dotenvConfigResponse = {};
-      this.requireStubs.dotenv.config
-        .withArgs({ path: fileName })
-        .returns(dotenvConfigResponse);
+          const dotenvConfigResponse = {};
+          this.requireStubs.dotenv.config
+            .withArgs({ path: fileName })
+            .returns(dotenvConfigResponse);
 
-      const error = new Error('Error while calling dotenvExpand()');
-      this.requireStubs['dotenv-expand']
-        .withArgs(dotenvConfigResponse)
-        .throws(error);
+          const error = new Error('Error while calling dotenvExpand()');
+          this.requireStubs['dotenv-expand']
+            .withArgs(dotenvConfigResponse)
+            .throws(error);
 
-      this.createPlugin();
+          if (v4BreakingChanges) {
+            should.Throw(() => this.createPlugin(), error);
+          } else {
+            this.createPlugin();
 
-      this.requireStubs.chalk.red.should.have.been.calledWith(
-        '  ' + error.message,
-      );
-    });
+            this.requireStubs.chalk.red.should.have.been.calledWith(
+              '  ' + error.message,
+            );
+          }
+        });
 
-    it('logs an error if no .env files are required and none are found', function () {
-      const log = this.sandbox.stub(this.ServerlessPlugin.prototype, 'log');
+        it(`${this.action} an error if no .env files are required and none are found`, function () {
+          const log = this.sandbox.stub(this.ServerlessPlugin.prototype, 'log');
 
-      const resolveEnvFileNames = this.setupResolveEnvFileNames();
-      resolveEnvFileNames.withArgs(this.env).returns([]);
+          const resolveEnvFileNames = this.setupResolveEnvFileNames();
+          resolveEnvFileNames.withArgs(this.env).returns([]);
 
-      this.createPlugin();
-
-      log.should.have.been.calledWith('DOTENV: Could not find .env file.');
+          if (v4BreakingChanges) {
+            should.Throw(() => this.createPlugin());
+          } else {
+            this.createPlugin();
+            log.should.have.been.calledWith(
+              'DOTENV: Could not find .env file.',
+            );
+          }
+        });
+      });
     });
 
     it('throws an error if no .env files are found but at least one is required', function () {

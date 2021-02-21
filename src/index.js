@@ -165,7 +165,10 @@ class ServerlessPlugin {
       const errorMsg = 'DOTENV: Could not find .env file.';
       this.log(errorMsg);
 
-      if (this.config.required.file === true) {
+      if (
+        this.config.required.file === true ||
+        this.config.v4BreakingChanges === true
+      ) {
         throw Object.assign(new Error(errorMsg), { type: errorTypes.HALT });
       }
     }
@@ -215,7 +218,10 @@ class ServerlessPlugin {
       this.validateEnvVars(envVars);
       this.setProviderEnv(envVars);
     } catch (e) {
-      if (e.type === errorTypes.HALT) {
+      if (
+        e.type === errorTypes.HALT ||
+        this.config.v4BreakingChanges === true
+      ) {
         throw e;
       }
 
