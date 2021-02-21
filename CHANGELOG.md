@@ -9,6 +9,10 @@ included in this log but can be reviewed on GitHub:
 
 ## Unreleased
 
+## 3.7.x
+
+* fix: only package required files. ([#134](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/134))
+
 ## 3.6.x
 
 * feat: adding support for custom dotenv parser. ([#127](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/127))
