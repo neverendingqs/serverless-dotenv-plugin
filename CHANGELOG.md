@@ -7,7 +7,7 @@ included in this log but can be reviewed on GitHub:
 * [Documentation](https://github.com/neverendingqs/serverless-dotenv-plugin/pulls?q=+is%3Apr+label%3Adocumentation)
 * [Refactor](https://github.com/neverendingqs/serverless-dotenv-plugin/pulls?q=label%3Arefactor+is%3Apr)
 
-## 4.0.x
+## 4.0.x (Unreleased)
 
 Breaking changes are introduced when going from version 3.x.x to 4.x.x:
 
