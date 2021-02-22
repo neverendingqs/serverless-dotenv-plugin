@@ -107,8 +107,8 @@ custom:
       - AWS_SESSION_TOKEN
       - NODE_ENV              # Can not be declared for Google Cloud Functions
 
-    # defaults to `false`
-    logging: true
+    # defaults to `true`
+    logging: false
 
     # default: plugin does not cause an error if any file or env variable is missing
     required:
