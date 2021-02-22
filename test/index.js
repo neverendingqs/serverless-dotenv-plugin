@@ -273,46 +273,65 @@ describe('ServerlessPlugin', function () {
 
       should.Throw(() => this.createPlugin(), error);
     });
+    [true, false].forEach((v4BreakingChanges) => {
+      describe(`${JSON.stringify({ v4BreakingChanges })}`, function () {
+        const action = v4BreakingChanges ? 'throws' : 'logs';
 
-    it('logs an error if dotenv.config() throws an error', function () {
-      const fileName = '.env';
+        beforeEach(function () {
+          this.serverless.service.custom = {
+            dotenv: { v4BreakingChanges },
+          };
+        });
 
-      const resolveEnvFileNames = this.setupResolveEnvFileNames();
-      resolveEnvFileNames.withArgs(this.env).returns([fileName]);
+        it(`${action} an error if dotenv.config() throws an error`, function () {
+          const fileName = '.env';
 
-      const error = new Error('Error while calling dotenv.config()');
-      this.requireStubs.dotenv.config
-        .withArgs({ path: fileName })
-        .throws(error);
+          const resolveEnvFileNames = this.setupResolveEnvFileNames();
+          resolveEnvFileNames.withArgs(this.env).returns([fileName]);
 
-      this.createPlugin();
+          const error = new Error('Error while calling dotenv.config()');
+          this.requireStubs.dotenv.config
+            .withArgs({ path: fileName })
+            .throws(error);
 
-      this.requireStubs.chalk.red.should.have.been.calledWith(
-        '  ' + error.message,
-      );
-    });
+          if (v4BreakingChanges) {
+            should.Throw(() => this.createPlugin(), error);
+          } else {
+            this.createPlugin();
 
-    it('logs an error if dotenvExpand() throws an error', function () {
-      const fileName = '.env';
+            this.requireStubs.chalk.red.should.have.been.calledWith(
+              '  ' + error.message,
+            );
+          }
+        });
 
-      const resolveEnvFileNames = this.setupResolveEnvFileNames();
-      resolveEnvFileNames.withArgs(this.env).returns([fileName]);
+        it(`${action} an error if dotenvExpand() throws an error`, function () {
+          const fileName = '.env';
 
-      const dotenvConfigResponse = {};
-      this.requireStubs.dotenv.config
-        .withArgs({ path: fileName })
-        .returns(dotenvConfigResponse);
+          const resolveEnvFileNames = this.setupResolveEnvFileNames();
+          resolveEnvFileNames.withArgs(this.env).returns([fileName]);
 
-      const error = new Error('Error while calling dotenvExpand()');
-      this.requireStubs['dotenv-expand']
-        .withArgs(dotenvConfigResponse)
-        .throws(error);
+          const dotenvConfigResponse = {};
+          this.requireStubs.dotenv.config
+            .withArgs({ path: fileName })
+            .returns(dotenvConfigResponse);
 
-      this.createPlugin();
+          const error = new Error('Error while calling dotenvExpand()');
+          this.requireStubs['dotenv-expand']
+            .withArgs(dotenvConfigResponse)
+            .throws(error);
 
-      this.requireStubs.chalk.red.should.have.been.calledWith(
-        '  ' + error.message,
-      );
+          if (v4BreakingChanges) {
+            should.Throw(() => this.createPlugin(), error);
+          } else {
+            this.createPlugin();
+
+            this.requireStubs.chalk.red.should.have.been.calledWith(
+              '  ' + error.message,
+            );
+          }
+        });
+      });
     });
 
     it('logs an error if no .env files are required and none are found', function () {
@@ -322,7 +341,6 @@ describe('ServerlessPlugin', function () {
       resolveEnvFileNames.withArgs(this.env).returns([]);
 
       this.createPlugin();
-
       log.should.have.been.calledWith('DOTENV: Could not find .env file.');
     });
 

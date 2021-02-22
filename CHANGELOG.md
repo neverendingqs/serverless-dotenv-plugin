@@ -9,7 +9,13 @@ included in this log but can be reviewed on GitHub:
 
 ## 4.0.x
 
-Breaking changes are introduced when going from version 3.x.x to 4.x.x.
+Breaking changes are introduced when going from version 3.x.x to 4.x.x:
+
+* feat: now halts on all errors. ([#139](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/139))
+  * Previously, some errors did not cause the plugin to halt, which may silently cause environment variables to not be set.
+  * Note: `required.file` continues to default to `false`.
+    * This is because your environment variables might not be stored in dotenv files in all environments.
+    * Setting `required.file` to `true` will continue to cause the plugin to halt if no dotenv files are found.
 
 ## 3.8.x
 

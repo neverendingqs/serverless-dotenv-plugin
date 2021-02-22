@@ -215,7 +215,10 @@ class ServerlessPlugin {
       this.validateEnvVars(envVars);
       this.setProviderEnv(envVars);
     } catch (e) {
-      if (e.type === errorTypes.HALT) {
+      if (
+        e.type === errorTypes.HALT ||
+        this.config.v4BreakingChanges === true
+      ) {
         throw e;
       }
 
