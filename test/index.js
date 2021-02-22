@@ -275,14 +275,15 @@ describe('ServerlessPlugin', function () {
     });
     [true, false].forEach((v4BreakingChanges) => {
       describe(`${JSON.stringify({ v4BreakingChanges })}`, function () {
+        const action = v4BreakingChanges ? 'throws' : 'logs';
+
         beforeEach(function () {
-          this.action = v4BreakingChanges ? 'throws' : 'logs';
           this.serverless.service.custom = {
             dotenv: { v4BreakingChanges },
           };
         });
 
-        it(`${this.action} an error if dotenv.config() throws an error`, function () {
+        it(`${action} an error if dotenv.config() throws an error`, function () {
           const fileName = '.env';
 
           const resolveEnvFileNames = this.setupResolveEnvFileNames();
@@ -304,7 +305,7 @@ describe('ServerlessPlugin', function () {
           }
         });
 
-        it(`${this.action} an error if dotenvExpand() throws an error`, function () {
+        it(`${action} an error if dotenvExpand() throws an error`, function () {
           const fileName = '.env';
 
           const resolveEnvFileNames = this.setupResolveEnvFileNames();
