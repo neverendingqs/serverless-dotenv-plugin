@@ -444,6 +444,40 @@ describe('ServerlessPlugin', function () {
       );
     });
 
+    it('removes all keys if config.include is set to "[]"', function () {
+      const fileName = '.env';
+      const envVars = {
+        env1: 'env1value',
+        env2: 'env2value',
+        env3: 'env3value',
+      };
+
+      this.serverless.service.custom = {
+        dotenv: {
+          include: [],
+        },
+      };
+
+      const resolveEnvFileNames = this.setupResolveEnvFileNames();
+      resolveEnvFileNames.withArgs(this.env).returns([fileName]);
+
+      this.requireStubs.dotenv.config
+        .withArgs({ path: fileName })
+        .returns({ parsed: envVars });
+
+      this.requireStubs['dotenv-expand']
+        .withArgs({ parsed: envVars })
+        .returns({ parsed: envVars });
+
+      this.createPlugin();
+
+      this.serverless.service.provider.environment.should.deep.equal({});
+
+      this.serverless.cli.log.should.have.not.been.calledWith(
+        sinon.match(/exclude/),
+      );
+    });
+
     it('removes keys not in config.include', function () {
       const fileName = '.env';
       const envVars = {
