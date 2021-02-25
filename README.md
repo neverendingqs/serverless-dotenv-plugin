@@ -139,9 +139,10 @@ custom:
   * This function must return a single object, where each key/value pair represents the env var name and value.
   * By default, this uses the built-in parser, which calls `dotenv` followed by `dotenv-expand` for each file.
 
-* include (list)
+* include (list or `'*'`) (default: `'*'`)
   * All env vars found in your file will be injected into your lambda functions.
   * If you do not want all of them to be injected into your lambda functions, you can specify the ones you want with the `include` option.
+  * If set to `'*'`, all env vars in all dotenv files will be injected.
   * If set to an empty list (`[]`), no env vars will be injected.
   * This option must be set to `[]` if `provider.environment` is not a literal string (see FAQ for details).
 

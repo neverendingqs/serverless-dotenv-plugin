@@ -397,7 +397,7 @@ describe('ServerlessPlugin', function () {
       should.Throw(() => this.createPlugin());
     });
 
-    it('loads variables from all files', function () {
+    it('loads variables from all files when config.include is "*"', function () {
       const filesAndEnvVars = {
         file1: {
           env1: 'env1value',
@@ -411,7 +411,9 @@ describe('ServerlessPlugin', function () {
 
       this.serverless.service.custom = {
         dotenv: {
+          include: '*',
           required: {
+            // TODO: testing that `required.env` works as expected should be its own test
             env: ['env3', 'TEST_SLS_DOTENV_PLUGIN_ENV1'],
           },
         },
