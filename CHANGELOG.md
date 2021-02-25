@@ -17,7 +17,11 @@ Breaking changes are introduced when going from version 3.x.x to 4.x.x:
     * This is because your environment variables might not be stored in dotenv files in all environments.
     * Setting `required.file` to `true` will continue to cause the plugin to halt if no dotenv files are found.
 
-## 3.8.x
+## 3.8.1
+
+* fix: undo behaviour around include = []. ([#145](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/145))
+
+## 3.8.0
 
 * feat: adding an option to toggle breaking changes. ([#138](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/138))
 
