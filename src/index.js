@@ -18,6 +18,8 @@ class ServerlessPlugin {
 
     this.config = Object.assign(
       {
+        exclude: [],
+        include: '*',
         logging: true,
         required: {},
         variableExpansion: true,
