@@ -210,6 +210,14 @@ However, Serverless variables are **not** resolved in the constructor:
 
 This is important for several FAQ items below.
 
+### How has changes to the Serverless Framework over time changed the behaviour of this plugin?
+
+#### `serverless>=2.26.0`
+
+[serverless/serverless#8987](https://github.com/serverless/serverless/pull/8987) changed the order of when plugins are initialized in relationship to variable resolution as part of a larger initiative outlined in [serverless/serverless#8364](https://github.com/serverless/serverless/issues/8364). Because of this, any env var references inside JavaScript files will now get evaluated too early in the process.
+
+It may be that eventually, any env var references that depend on this plugin may not get resolved because `env` variables get resolved before this plugin is intialized. There is an ongoing discussion at [serverless/serverless#8364 (comment)](https://github.com/serverless/serverless/issues/8364#issuecomment-787178132) about this.
+
 ### Why doesn't the `basePath` or `path` options support Serverless variables?
 
 Because Serverless variables have not been interpolated when this plugin runs, `basePath` and `path` will always be treated like literal strings (e.g. `${opt:stage}` would be presented to the plugin, not the passed in via `--stage`). The suggested pattern is to store all your dotenv files in one folder, and rely on `NODE_ENV`, `--env`, or `--stage` to resolve to the right file.
