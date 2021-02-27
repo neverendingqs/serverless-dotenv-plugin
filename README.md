@@ -218,7 +218,9 @@ There are no plans to support anything other than literal strings at this time, 
 
 ### Why doesn't this plugin work when `provider.environment` references another file?
 
-This plugin manipuluates `provider.environment` directly by adding to the list. Because Serverless variables have not been interpolated when this plugin runs, `provider.environment` is presented to this plugin uninterpolated (e.g. `${file(./serverless-env.yml):environment}`), this plugin is unable to manipulate it.
+Upgrade to `serverless>=2.26.0`. The new variables engine introduced in the Serverless Framework in v2.26.0 now resolves `file` variables first before loading initializing any plugins.
+
+Before v2.26.0, Serverless variables do not get interpolated before this plugin gets initialized, causing `provider.environment` to be presented to this plugin uninterpolated (e.g. `${file(./serverless-env.yml):environment}`). Because of this, the plugin tries to append items to a string instead of a list.
 
 To work around this, you can set the `include` option to `[]` to avoid adding any environment variables to `provider.environment`. However, this means you will have to wire up the environment variables yourself by referencing every single one you need. E.g.
 
