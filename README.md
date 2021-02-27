@@ -210,6 +210,14 @@ However, Serverless variables are **not** resolved in the constructor:
 
 This is important for several FAQ items below.
 
+### How has changes to the Serverless Framework over time changed the behaviour of this plugin?
+
+#### `serverless>=2.26.0`
+
+[serverless/serverless#8987](https://github.com/serverless/serverless/pull/8987) changed the order of when plugins are initialized in relationship to variable resolution as part of a larger initiative outlined in [serverless/serverless#8364](https://github.com/serverless/serverless/issues/8364). Because of this, any env var references inside JavaScript files will now get evaluated too early in the process.
+
+It may be that eventually, any env var references that depend on this plugin may not get resolved because `env` variables get resolved before this plugin is intialized. There is an ongoing discussion at [serverless/serverless#8364 (comment)](https://github.com/serverless/serverless/issues/8364#issuecomment-787178132) about this.
+
 ### Why doesn't the `basePath` or `path` options support Serverless variables?
 
 Because Serverless variables have not been interpolated when this plugin runs, `basePath` and `path` will always be treated like literal strings (e.g. `${opt:stage}` would be presented to the plugin, not the passed in via `--stage`). The suggested pattern is to store all your dotenv files in one folder, and rely on `NODE_ENV`, `--env`, or `--stage` to resolve to the right file.
@@ -218,7 +226,9 @@ There are no plans to support anything other than literal strings at this time, 
 
 ### Why doesn't this plugin work when `provider.environment` references another file?
 
-This plugin manipuluates `provider.environment` directly by adding to the list. Because Serverless variables have not been interpolated when this plugin runs, `provider.environment` is presented to this plugin uninterpolated (e.g. `${file(./serverless-env.yml):environment}`), this plugin is unable to manipulate it.
+Upgrade to `serverless>=2.26.0`. The new variables engine introduced in the Serverless Framework in v2.26.0 now resolves `file` variables first before loading initializing any plugins.
+
+Before v2.26.0, Serverless variables do not get interpolated before this plugin gets initialized, causing `provider.environment` to be presented to this plugin uninterpolated (e.g. `${file(./serverless-env.yml):environment}`). Because of this, the plugin tries to append items to a string instead of a list.
 
 To work around this, you can set the `include` option to `[]` to avoid adding any environment variables to `provider.environment`. However, this means you will have to wire up the environment variables yourself by referencing every single one you need. E.g.
 
