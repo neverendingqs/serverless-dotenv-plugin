@@ -143,6 +143,9 @@ custom:
   * This function must return a single object, where each key/value pair represents the env var name and value.
   * By default, this uses the built-in parser, which calls `dotenv` followed by `dotenv-expand` for each file.
 
+* ignoreNodeEnv true|false
+  * Allows us to ignore NODE_ENV environment variable in .env files resolution. This is desired when `--stage` represent more the deployment settings and NODE_ENV is used to set kind of optimisation settings, so combination of both are required for the setup. 
+
 * include (list or `'*'`) (default: `'*'`)
   * All env vars found in your file will be injected into your lambda functions.
   * If you do not want all of them to be injected into your lambda functions, you can specify the ones you want with the `include` option.
