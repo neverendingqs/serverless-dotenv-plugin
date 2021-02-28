@@ -20,6 +20,7 @@ Breaking changes are introduced when going from version 3.x.x to 4.x.x:
 ## 3.9.x
 
 * feat: support "*" for include config. ([#146](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/146))
+* feat: allows to ignore NODE_ENV variable in .env files resolution. ([#151](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/151))
 
 ## 3.8.1
 
