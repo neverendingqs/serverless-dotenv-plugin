@@ -95,7 +95,7 @@ custom:
 
     # default: false
     # this option allows ignore NODE_ENV variable in .env files resolution and leaves fallback to `--env`, or `--stage`
-    ignore_node_env: true
+    ignoreNodeEnv: true
 
     # default: adds all env variables found in your dotenv file(s)
     # this option must be set to `[]` if `provider.environment` is not a literal string
