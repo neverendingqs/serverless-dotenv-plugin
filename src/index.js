@@ -18,6 +18,7 @@ class ServerlessPlugin {
 
     this.config = Object.assign(
       {
+        ignoreNodeEnv: false,
         exclude: [],
         include: '*',
         logging: true,
@@ -52,7 +53,7 @@ class ServerlessPlugin {
    */
   getEnvironment(options) {
     return (
-      process.env.NODE_ENV || options.env || options.stage || 'development'
+      !this.config.ignoreNodeEnv && process.env.NODE_ENV || options.env || options.stage || 'development'
     );
   }
 
