@@ -53,7 +53,10 @@ class ServerlessPlugin {
    */
   getEnvironment(options) {
     return (
-      !this.config.ignoreNodeEnv && process.env.NODE_ENV || options.env || options.stage || 'development'
+      (!this.config.ignoreNodeEnv && process.env.NODE_ENV) ||
+      options.env ||
+      options.stage ||
+      'development'
     );
   }
 
