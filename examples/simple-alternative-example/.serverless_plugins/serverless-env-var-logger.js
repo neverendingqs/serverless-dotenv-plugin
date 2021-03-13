@@ -14,4 +14,4 @@ module.exports = class ServerlessEnvVarLogger {
   log() {
     console.log({ FOO: process.env.FOO });
   }
-}
+};
