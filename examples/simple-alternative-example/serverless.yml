@@ -7,6 +7,7 @@ variablesResolutionMode: 20210219
 
 custom:
   # Do this if you only want to load env vars into the Serverless environment
+  # This will make env vars available here and in any Serverless plugins
   envVars: ${file(configs.js)}
 
 plugins:
