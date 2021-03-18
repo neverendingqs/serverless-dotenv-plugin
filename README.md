@@ -218,6 +218,13 @@ This is important for several FAQ items below.
 
 It may be that eventually, any env var references that depend on this plugin may not get resolved because `env` variables get resolved before this plugin is intialized. There is an ongoing discussion at [serverless/serverless#8364 (comment)](https://github.com/serverless/serverless/issues/8364#issuecomment-787178132) about this.
 
+### Why do env vars already defined by the system take higher precedence?
+
+The [Serverless Framework has basic `dotenv` support built-in](https://www.serverless.com/framework/docs/environment-variables/). If you are loading variables from `.env` at the project root, it is possible the Serverless Framework preloads that env var before this plugin does.
+
+As well, because of the variables engine changed in `serverless>=2.26.0` (see above), `env` variables can also be resolved before this plugin runs, which means Serverless could take the values already defined in the system before the plugin loads env vars via `dotenv`.
+
+
 ### Why doesn't the `basePath` or `path` options support Serverless variables?
 
 Because Serverless variables have not been interpolated when this plugin runs, `basePath` and `path` will always be treated like literal strings (e.g. `${opt:stage}` would be presented to the plugin, not the passed in via `--stage`). The suggested pattern is to store all your dotenv files in one folder, and rely on `NODE_ENV`, `--env`, or `--stage` to resolve to the right file.
