@@ -10,7 +10,7 @@ Preload environment variables into serverless. Use this plugin if you have varia
 
 ## Do you need this plugin?
 
-`serverless>=3.0.0` greatly limits what this plugin can do. Please see [`serverless-dotenv-example`](https://github.com/neverendingqs/serverless-dotenv-example) before considering this plugin, as it is relatively straight-forward to set up `dotenv` yourself.
+Changes in `serverless>=3.0.0` means this plugin can no longer preload environment variables into Serverless. For an alternative, please see [`serverless-dotenv-example`](https://github.com/neverendingqs/serverless-dotenv-example).
 
 ## Install and Setup
 
@@ -227,6 +227,8 @@ This is important for several FAQ items below.
 `env` variables will get resolved before this plugin is initialized. This means `env` variables inside `serverless.yml` can **no longer** rely on this plugin to load them from dotenv files. See [serverless/serverless#8364](https://github.com/serverless/serverless/issues/8364) for more details on the changes made to the Serverless Framework variables engine.
 
 The [Serverless Framework has basic `dotenv` support built-in](https://www.serverless.com/framework/docs/environment-variables/). For support with more complicated workflows with `dotenv`, see [`serverless-dotenv-example`](https://github.com/neverendingqs/serverless-dotenv-example) for details.
+
+You can continue to use this plugin to automatically load environment variables into all your functions using `dotenv`.
 
 ### Why doesn't the `basePath` or `path` options support Serverless variables?
 
