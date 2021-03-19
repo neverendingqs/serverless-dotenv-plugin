@@ -6,11 +6,11 @@
 
 Preload environment variables into serverless. Use this plugin if you have variables stored in a `.env` file that you want loaded into your serverless yaml config. This will allow you to reference them as `${env:VAR_NAME}` inside your config _and_ it will load them into your lambdas.
 
-**See FAQ below for details on the impact of how env vars are loaded with `serverless>=2.26.0` and `serverless>=3.0.0`.**
+**`serverless>=3.0.0` introduces changes that significantly impacts this plugin. I would love your feedback about this on the [discussion thread](https://github.com/neverendingqs/serverless-dotenv-plugin/discussions/155). See the discussion thread or the FAQ below for details on the impact of how env vars are loaded with `serverless>=2.26.0` and `serverless>=3.0.0`.**
 
 ## Do you need this plugin?
 
-Changes in `serverless>=3.0.0` means this plugin can no longer preload environment variables into Serverless. For an alternative, please see [`serverless-dotenv-example`](https://github.com/neverendingqs/serverless-dotenv-example).
+Changes in `serverless>=3.0.0` means this plugin can no longer preload environment variables into Serverless. You may want to consider an alternative, such as the one outlined in [`serverless-dotenv-example`](https://github.com/neverendingqs/serverless-dotenv-example).
 
 ## Install and Setup
 
