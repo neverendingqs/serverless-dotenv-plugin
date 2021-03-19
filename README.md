@@ -224,7 +224,7 @@ This is important for several FAQ items below.
 
 #### `serverless>=3.0.0`
 
-`env` variables will get resolved before this plugin is initialized. This means `env` variables inside `serverless.yml` can **no longer** rely on this plugin to load them from dotenv files. See [serverless/serverless#8364](https://github.com/serverless/serverless/issues/8364) for more details on the changes made to the Serverless Framework variables engine.
+`env` variables will get resolved before this plugin is initialized. This means `env` variables inside `serverless.yml` can **no longer** rely on this plugin to load them from `dotenv` files. See [serverless/serverless#8364](https://github.com/serverless/serverless/issues/8364) for more details on the changes made to the Serverless Framework variables engine.
 
 The [Serverless Framework has basic `dotenv` support built-in](https://www.serverless.com/framework/docs/environment-variables/). For support with more complicated workflows with `dotenv`, see [`serverless-dotenv-example`](https://github.com/neverendingqs/serverless-dotenv-example) for details.
 
