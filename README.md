@@ -6,6 +6,12 @@
 
 Preload environment variables into serverless. Use this plugin if you have variables stored in a `.env` file that you want loaded into your serverless yaml config. This will allow you to reference them as `${env:VAR_NAME}` inside your config _and_ it will load them into your lambdas.
 
+**`serverless>=3.0.0` introduces changes that significantly impacts this plugin. I would love your feedback about this on the [discussion thread](https://github.com/neverendingqs/serverless-dotenv-plugin/discussions/155). See the discussion thread or the FAQ below for details on the impact of how env vars are loaded with `serverless>=2.26.0` and `serverless>=3.0.0`.**
+
+## Do you need this plugin?
+
+Changes in `serverless>=3.0.0` means this plugin can no longer preload environment variables into Serverless. You may want to consider an alternative, such as the one outlined in [`serverless-dotenv-example`](https://github.com/neverendingqs/serverless-dotenv-example).
+
 ## Install and Setup
 
 First, install the plugin:
@@ -216,7 +222,13 @@ This is important for several FAQ items below.
 
 [serverless/serverless#8987](https://github.com/serverless/serverless/pull/8987) changed the order of when plugins are initialized in relationship to variable resolution as part of a larger initiative outlined in [serverless/serverless#8364](https://github.com/serverless/serverless/issues/8364). Because of this, any env var references inside JavaScript files will now get evaluated too early in the process.
 
-It may be that eventually, any env var references that depend on this plugin may not get resolved because `env` variables get resolved before this plugin is intialized. There is an ongoing discussion at [serverless/serverless#8364 (comment)](https://github.com/serverless/serverless/issues/8364#issuecomment-787178132) about this.
+#### `serverless>=3.0.0`
+
+`env` variables will get resolved before this plugin is initialized. This means `env` variables inside `serverless.yml` can **no longer** rely on this plugin to load them from `dotenv` files. See [serverless/serverless#8364](https://github.com/serverless/serverless/issues/8364) for more details on the changes made to the Serverless Framework variables engine.
+
+The [Serverless Framework has basic `dotenv` support built-in](https://www.serverless.com/framework/docs/environment-variables/). For support with more complicated workflows with `dotenv`, see [`serverless-dotenv-example`](https://github.com/neverendingqs/serverless-dotenv-example) for details.
+
+You can continue to use this plugin to automatically load environment variables into all your functions using `dotenv`.
 
 ### Why do env vars already defined by the system take higher precedence?
 
