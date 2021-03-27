@@ -16,4 +16,4 @@ jobs:
           only-labels: 'awaiting response'
           skip-stale-issue-message: true
           skip-stale-pr-message: true
-          stale-issue-message: ''  # Required even if 'skip-stale-issue-message' is true
+          stale-issue-message: 'Marking issue as stale.'  # Required even if 'skip-stale-issue-message' is true
