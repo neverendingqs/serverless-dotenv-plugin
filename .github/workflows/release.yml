@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       release-type:
-        description: Type of release based om semver (e.g. patch, minor, major)
+        description: Type of release based on semver (e.g. patch, minor, major)
         required: true
         default: minor
 
