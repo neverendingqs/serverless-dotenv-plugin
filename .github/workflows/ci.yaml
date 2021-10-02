@@ -14,7 +14,7 @@ jobs:
         # Serverless supports Node 10 and onward
         serverless: ['1', '2']
         node: [ '10', '12', '14', '15', '16' ]
-    name: Node v${{ matrix.node }}
+    name: CI (Node v${{ matrix.node }}, serverless@${{ matrix.serverless }})
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
