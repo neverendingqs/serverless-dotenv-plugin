@@ -25,7 +25,7 @@ jobs:
       - name: publish
         # Only publish (maybe) for one version of Node, and only on 'master'
         if: ${{ matrix.node == 14 && github.ref == 'refs/heads/master' }}
-        run: npm deploy
+        run: npm run deploy
       - name: Coveralls
         # Only send coverage details for one version of Node
         if: ${{ matrix.node == 14 }}
