@@ -15,19 +15,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
-        with:
-          always-auth: true
-          node-version: 14.x
-          registry-url: https://registry.npmjs.org
       - name: Setup Git
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-      - run: npm version ${{github.event.inputs.release-type}}
-      - name: Push commit and tag
-        run: |
-          git push
-          git push --follow-tags
-      - run: npm publish
+      - run: npm version --no-git-tag-version ${{github.event.inputs.release-type}}
+      - run: git push
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.REPO_GITHUB_TOKEN }}
+      # Rely on `ci` workflow to publish new version.

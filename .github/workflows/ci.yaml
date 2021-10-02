@@ -1,8 +1,11 @@
 name: CI
 
 on:
-  - pull_request
-  - push
+  pull_request:
+  push:
+    branches:
+      - master
+
 
 jobs:
   build:
@@ -17,8 +20,12 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node }}
-      - run: npm install --frozen-lockfile
+      - run: npm ci
       - run: npm test
+      - name: publish
+        # Only publish (maybe) for one version of Node, and only on 'master'
+        if: ${{ matrix.node == 14 && github.ref == 'refs/heads/master' }}
+        run: npm run deploy
       - name: Coveralls
         # Only send coverage details for one version of Node
         if: ${{ matrix.node == 14 }}
