@@ -15,5 +15,8 @@
   },
   "devDependencies": {
     "serverless-dotenv-plugin": "^2.4.2"
+  },
+  "peerDependencies": {
+    "serverless": "1 || 2"
   }
 }
