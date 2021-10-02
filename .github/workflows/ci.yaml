@@ -12,6 +12,7 @@ jobs:
     strategy:
       matrix:
         # Serverless supports Node 10 and onward
+        serverless: ['1', '2']
         node: [ '10', '12', '14', '15', '16' ]
     name: Node v${{ matrix.node }}
     steps:
@@ -23,12 +24,22 @@ jobs:
           registry-url: https://registry.npmjs.org
       - run: npm ci
       - run: npm test
+      - name: Integration Tests
+        run: |
+          npm ci
+          npx serverless@${{ matrix.serverless }} package --env production
+
+          # Must match value of `TEST_VAR` in `.env.production`
+          cat .serverless/cloudformation-template-update-stack.json | grep cf5bb467-9052-4a34-b318-f6df31644229
+        working-directory: examples/simple-express-app
+
       - name: publish
         # Only publish (maybe) for one version of Node, and only on 'master'
         if: ${{ matrix.node == 14 && github.ref == 'refs/heads/master' }}
         run: npm run deploy
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+
       - name: Coveralls
         # Only send coverage details for one version of Node
         if: ${{ matrix.node == 14 }}
