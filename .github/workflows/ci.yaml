@@ -16,15 +16,19 @@ jobs:
     name: Node v${{ matrix.node }}
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
         with:
+          always-auth: true
           node-version: ${{ matrix.node }}
+          registry-url: https://registry.npmjs.org
       - run: npm ci
       - run: npm test
       - name: publish
         # Only publish (maybe) for one version of Node, and only on 'master'
         if: ${{ matrix.node == 14 && github.ref == 'refs/heads/master' }}
         run: npm run deploy
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
       - name: Coveralls
         # Only send coverage details for one version of Node
         if: ${{ matrix.node == 14 }}
