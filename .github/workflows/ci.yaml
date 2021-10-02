@@ -1,8 +1,10 @@
 name: CI
 
 on:
-  - pull_request
-  - push
+  pull_request:
+  push:
+    branches:
+      - master
 
 jobs:
   build:
@@ -10,15 +12,23 @@ jobs:
     strategy:
       matrix:
         # Serverless supports Node 10 and onward
-        node: [ '10', '12', '14', '15' ]
+        node: [ '10', '12', '14', '15', '16' ]
     name: Node v${{ matrix.node }}
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
         with:
+          always-auth: true
           node-version: ${{ matrix.node }}
-      - run: npm install --frozen-lockfile
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
       - run: npm test
+      - name: publish
+        # Only publish (maybe) for one version of Node, and only on 'master'
+        if: ${{ matrix.node == 14 && github.ref == 'refs/heads/master' }}
+        run: npm run deploy
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
       - name: Coveralls
         # Only send coverage details for one version of Node
         if: ${{ matrix.node == 14 }}

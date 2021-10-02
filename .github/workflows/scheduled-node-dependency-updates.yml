@@ -1,0 +1,17 @@
+name: Scheduled Node Dependencies Update (npm)
+on:
+  schedule:
+    - cron:  '0 15 1 * *'
+  workflow_dispatch:
+jobs:
+  update-deps:
+    name: Update Node dependencies using npm
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: neverendingqs/gh-action-node-update-deps@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_GITHUB_TOKEN }}
+        with:
+          bump-version: patch
