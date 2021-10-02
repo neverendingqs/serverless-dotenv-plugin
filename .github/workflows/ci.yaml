@@ -30,7 +30,7 @@ jobs:
           npx serverless@${{ matrix.serverless }} package --env production
 
           # Must match value of `TEST_VAR` in `.env.production`
-          cat .serverless/cloudformation-template-update-stack.json | grep cf5bb467-9052-4a34-b318-f6df31644229
+          cat .serverless/cloudformation-template-update-stack.json | grep cf5bb467-9052-4a34-bd318-f6df31644229
         working-directory: examples/simple-express-app
 
       - name: publish
