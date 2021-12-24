@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         # Serverless supports Node 10 and onward
-        serverless: ['1', '2', '3']
+        serverless: ['1', '2', 'pre-3']
         node: [ '10', '12', '14', '15', '16' ]
     name: CI (Node v${{ matrix.node }}, serverless@${{ matrix.serverless }})
     steps:
