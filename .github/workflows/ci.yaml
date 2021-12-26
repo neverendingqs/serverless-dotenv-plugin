@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         # Serverless supports Node 10 and onward
-        serverless: ['1', '2']
+        serverless: ['1', '2', 'pre-3']
         node: [ '10', '12', '14', '15', '16' ]
     name: CI (Node v${{ matrix.node }}, serverless@${{ matrix.serverless }})
     steps:
@@ -27,10 +27,12 @@ jobs:
       - name: Integration Tests
         run: |
           npm ci
-          npx serverless@${{ matrix.serverless }} package --env production
+          npx serverless@${{ matrix.serverless }} package
 
           # Must match value of `TEST_VAR` in `.env.production`
           cat .serverless/cloudformation-template-update-stack.json | grep cf5bb467-9052-4a34-b318-f6df31644229
+        env:
+          STAGE: production
         working-directory: examples/simple-express-app
 
       - name: publish
