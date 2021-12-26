@@ -7,13 +7,15 @@ plugins:
 
 provider:
   name: aws
-  runtime: nodejs6.10
-  region: ${env:REGION}
-  stage: ${env:STAGE}
+  runtime: nodejs14.x
 
 functions:
   app:
     handler: index.handler
     events:
-      - http: ANY /
-      - http: "ANY {proxy+}"
+      - http:
+          path: / # this matches the base path
+          method: ANY
+      - http:
+          path: /{any+} # this matches any path, the token 'any' doesn't mean anything special
+          method: ANY
