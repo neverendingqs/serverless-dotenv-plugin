@@ -25,6 +25,7 @@ jobs:
       - run: npm ci
       - run: npm test
       - name: Integration Tests
+        if: ${{ !(matrix.node == 10 && matrix.serverless == 'pre-3') }}
         run: |
           npm ci
           npx serverless@${{ matrix.serverless }} package
