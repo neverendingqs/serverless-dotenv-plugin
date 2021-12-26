@@ -28,6 +28,7 @@ jobs:
         if: ${{ !(matrix.node == 10 && matrix.serverless == 'pre-3') }}
         run: |
           npm ci
+          npx serverless@${{ matrix.serverless }} slstats --disable
           npx serverless@${{ matrix.serverless }} --stage production package
 
           # Must match value of `TEST_VAR` in `.env.production`
