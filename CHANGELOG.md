@@ -17,9 +17,14 @@ Breaking changes are introduced when going from version 3.x.x to 4.x.x:
     * This is because your environment variables might not be stored in dotenv files in all environments.
     * Setting `required.file` to `true` will continue to cause the plugin to halt if no dotenv files are found.
 
-## 3.11.x
+## 3.12.x
 
 * feat: Adapt to `serverless@3` logging interface ([#174](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/174))
+
+## 3.11.x
+
+* feat: add support for `serverless@3`. ([#178](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/178))
+* docs(README): add details around UNSUPPORTED_CLI_OPTIONS. ([#177](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/177))
 
 ## 3.10.x
 
