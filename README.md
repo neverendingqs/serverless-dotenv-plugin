@@ -62,6 +62,9 @@ By default, the plugin looks for the file: `.env`. In most use cases this is all
 
 When you deploy with `NODE_ENV` set: `NODE_ENV=production sls deploy` the plugin will look for files named `.env`, `.env.production`, `.env.production.local`. If for some reason you can't set NODE_ENV, you could always just pass it in as an option: `sls deploy --env production` or `sls deploy --stage production`. If `NODE_ENV`, `--env` or `--stage` is not set, it will default to `development`.
 
+**DEPRECATION WARNING**: as of `serverless>=3.0.0`, `--env` will not be supported due to changes to the Serverless Framework.
+See FAQ for details.
+
 The precedence between the options is the following:
 `NODE_ENV` **>** `--env` **>** `--stage`
 
@@ -216,7 +219,7 @@ However, Serverless variables are **not** resolved in the constructor:
 
 This is important for several FAQ items below.
 
-### How has changes to the Serverless Framework over time changed the behaviour of this plugin?
+### How has changes to the Serverless Framework affected when environment variables are loaded?
 
 #### `serverless>=2.26.0`
 
@@ -229,6 +232,30 @@ This is important for several FAQ items below.
 The [Serverless Framework has basic `dotenv` support built-in](https://www.serverless.com/framework/docs/environment-variables/). For support with more complicated workflows with `dotenv`, see [`serverless-dotenv-example`](https://github.com/neverendingqs/serverless-dotenv-example) for details.
 
 You can continue to use this plugin to automatically load environment variables into all your functions using `dotenv`.
+
+### How has changes to the Serverless Framework affected configuration options?
+
+See [deprecation code `UNSUPPORTED_CLI_OPTIONS` for more details](https://www.serverless.com/framework/docs/deprecations/#UNSUPPORTED_CLI_OPTIONS).
+This was introduced in [serverless/serverless#9171](https://github.com/serverless/serverless/pull/9171).
+
+#### `serverless>=2.32.0`
+
+Using the `--env` CLI option will now result in the following warning:
+
+```
+Detected unrecognized CLI options: "--env".
+Starting with the next major, Serverless Framework will report them with a thrown error
+More Info: https://www.serverless.com/framework/docs/deprecations/#UNSUPPORTED_CLI_OPTIONS
+```
+
+#### `serverless>=3.0.0`
+
+Using the `--env` CLI option will now result in the following error:
+
+```
+Error:
+Detected unrecognized CLI options: "--env".
+```
 
 ### Why do env vars already defined by the system take higher precedence?
 
