@@ -1,6 +1,6 @@
 {
   "name": "serverless-dotenv-plugin",
-  "version": "3.10.0",
+  "version": "3.11.0",
   "description": "Preload environment variables with dotenv into serverless.",
   "main": "src/index.js",
   "files": [
@@ -46,6 +46,6 @@
     "sinon-chai": "^3.7.0"
   },
   "peerDependencies": {
-    "serverless": "1 || 2"
+    "serverless": "1 || 2 || 3"
   }
 }
