@@ -38,6 +38,7 @@ class ServerlessPlugin {
     }
 
     this.v3Utils = v3Utils;
+    console.log('v3Utils exists:', !!v3Utils);
     this.loadEnv(this.getEnvironment(options));
   }
 
