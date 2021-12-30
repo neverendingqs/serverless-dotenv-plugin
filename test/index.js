@@ -8,6 +8,11 @@ const sinon = require('sinon');
 
 chai.use(require('sinon-chai'));
 
+const logLevels = {
+  NOTICE: 'NOTICE',
+  WARNING: 'WARNING',
+};
+
 describe('ServerlessPlugin', function () {
   beforeEach(function () {
     this.sandbox = sinon.createSandbox();
@@ -111,9 +116,9 @@ describe('ServerlessPlugin', function () {
           }
         });
 
-        it('logs by default and uses warning method if needed', function () {
+        it('logs when log level is set to WARNING', function () {
           const msg = 'WARNING: msg';
-          this.createPlugin({ withV3Utils }).log(msg);
+          this.createPlugin({ withV3Utils }).log(msg, logLevels.WARNING);
 
           if (withV3Utils) {
             this.serverless.cli.log.should.not.be.called;
