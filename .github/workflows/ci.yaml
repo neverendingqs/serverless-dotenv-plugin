@@ -29,7 +29,12 @@ jobs:
         if: ${{ !(matrix.node == 10 && matrix.serverless == 'pre-3') }}
         run: |
           npm ci
-          npx serverless@${{ matrix.serverless }} package --stage production
+
+          # Some versions of npm install peer dependencies
+          npm i serverless@${{ matrix.serverless }}
+          npx serverless --version
+
+          npx serverless package --stage production
 
           # Must match value of `TEST_VAR` in `.env.production`
           cat .serverless/cloudformation-template-update-stack.json | grep cf5bb467-9052-4a34-b318-f6df31644229
