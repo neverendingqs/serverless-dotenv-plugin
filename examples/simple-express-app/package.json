@@ -17,6 +17,6 @@
     "serverless-dotenv-plugin": "^2.4.2"
   },
   "peerDependencies": {
-    "serverless": "1 || 2"
+    "serverless": "1 || 2 || pre-3 || 3"
   }
 }
