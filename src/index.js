@@ -10,6 +10,11 @@ const errorTypes = {
   HALT: 'HALT',
 };
 
+const logLevels = {
+  NOTICE: 'NOTICE',
+  WARNING: 'WARNING',
+};
+
 class ServerlessPlugin {
   constructor(serverless, options, v3Utils) {
     this.serverless = serverless;
@@ -41,17 +46,29 @@ class ServerlessPlugin {
     this.loadEnv(this.getEnvironment(options));
   }
 
-  log(msg) {
-    if (this.config.logging) {
-      if (this.v3Utils) {
-        if (msg.includes('WARNING')) {
-          this.v3Utils.log.warning(msg);
-        } else {
-          this.v3Utils.log.notice(msg);
-        }
-      } else {
-        this.serverless.cli.log(msg);
-      }
+  log(msg, level = logLevels.NOTICE) {
+    if (!this.config.logging) {
+      return;
+    }
+
+    if (!this.v3Utils) {
+      this.serverless.cli.log(msg);
+      return;
+    }
+
+    // Add logging methods as needed
+    // https://www.serverless.com/framework/docs/guides/plugins/cli-output#writing-to-the-output
+    switch (level) {
+      case logLevels.NOTICE:
+        this.v3Utils.log.notice(msg);
+        break;
+
+      case logLevels.WARNING:
+        this.v3Utils.log.warning(msg);
+        break;
+
+      default:
+        throw new Error(`Unsupported log level '${level}'. Message: '${msg}'`);
     }
   }
 
@@ -74,7 +91,10 @@ class ServerlessPlugin {
 
     if (this.config && this.config.path) {
       if (basePath) {
-        this.log('DOTENV (WARNING): if "path" is set, "basePath" is ignored.');
+        this.log(
+          'DOTENV (WARNING): if "path" is set, "basePath" is ignored.',
+          logLevels.WARNING,
+        );
       }
 
       if (Array.isArray(this.config.path)) {
@@ -140,6 +160,7 @@ class ServerlessPlugin {
       if (exclude.length > 0) {
         this.log(
           'DOTENV (WARNING): if "include" is set, "exclude" is ignored.',
+          logLevels.WARNING,
         );
       }
 
