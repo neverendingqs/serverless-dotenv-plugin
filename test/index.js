@@ -47,9 +47,24 @@ describe('ServerlessPlugin', function () {
       },
     };
     this.options = {};
+    this.v3Utils = {
+      log: {
+        notice: this.sandbox.stub(),
+        warning: this.sandbox.stub(),
+      },
+    };
 
-    this.createPlugin = () =>
-      new this.ServerlessPlugin(this.serverless, this.options);
+    this.createPlugin = ({ withV3Utils } = {}) => {
+      if (withV3Utils) {
+        return new this.ServerlessPlugin(
+          this.serverless,
+          this.options,
+          this.v3Utils,
+        );
+      } else {
+        return new this.ServerlessPlugin(this.serverless, this.options);
+      }
+    };
   });
 
   afterEach(function () {
@@ -82,22 +97,45 @@ describe('ServerlessPlugin', function () {
   });
 
   describe('log()', function () {
-    it('logs by default', function () {
-      const msg = 'msg';
-      this.createPlugin().log(msg);
-      this.serverless.cli.log.should.be.calledWith(msg);
-    });
+    [true, false].forEach((withV3Utils) => {
+      describe(JSON.stringify({ withV3Utils }), function () {
+        it('logs by default', function () {
+          const msg = 'msg';
+          this.createPlugin({ withV3Utils }).log(msg);
+          if (withV3Utils) {
+            this.serverless.cli.log.should.not.be.called;
+            this.v3Utils.log.notice.should.be.calledWith(msg);
+          } else {
+            this.serverless.cli.log.should.be.calledWith(msg);
+            this.v3Utils.log.notice.should.not.be.called;
+          }
+        });
 
-    it('does nothing if logging is disabled', function () {
-      this.serverless.service.custom = {
-        dotenv: {
-          logging: false,
-        },
-      };
+        it('logs by default and uses warning method if needed', function () {
+          const msg = 'WARNING: msg';
+          this.createPlugin({ withV3Utils }).log(msg);
 
-      this.createPlugin().log('msg');
+          if (withV3Utils) {
+            this.serverless.cli.log.should.not.be.called;
+            this.v3Utils.log.warning.should.be.calledWith(msg);
+          } else {
+            this.serverless.cli.log.should.be.calledWith(msg);
+            this.v3Utils.log.notice.should.not.be.called;
+          }
+        });
 
-      this.serverless.cli.log.should.not.be.called;
+        it('does nothing if logging is disabled', function () {
+          this.serverless.service.custom = {
+            dotenv: {
+              logging: false,
+            },
+          };
+
+          this.createPlugin({ withV3Utils }).log('msg');
+          this.serverless.cli.log.should.not.be.called;
+          this.v3Utils.log.notice.should.not.be.called;
+        });
+      });
     });
   });
 
@@ -148,21 +186,32 @@ describe('ServerlessPlugin', function () {
         this.createPlugin().resolveEnvFileNames('env').should.deep.equal(path);
       });
 
-      it('logs an error if basePath is also set', function () {
-        const path = '.env.unittest';
-        this.serverless.service.custom = {
-          dotenv: {
-            basePath: 'base/path/',
-            path,
-          },
-        };
+      [true, false].forEach((withV3Utils) => {
+        describe(JSON.stringify({ withV3Utils }), function () {
+          it('logs an error if basePath is also set', function () {
+            const path = '.env.unittest';
+            this.serverless.service.custom = {
+              dotenv: {
+                basePath: 'base/path/',
+                path,
+              },
+            };
 
-        this.createPlugin()
-          .resolveEnvFileNames('env')
-          .should.deep.equal([path]);
-        this.serverless.cli.log.should.have.been.calledWith(
-          sinon.match(/basePath/),
-        );
+            this.createPlugin({ withV3Utils })
+              .resolveEnvFileNames('env')
+              .should.deep.equal([path]);
+
+            if (withV3Utils) {
+              this.v3Utils.log.warning.should.have.been.calledWith(
+                sinon.match(/basePath/),
+              );
+            } else {
+              this.serverless.cli.log.should.have.been.calledWith(
+                sinon.match(/basePath/),
+              );
+            }
+          });
+        });
       });
     });
 
@@ -334,14 +383,31 @@ describe('ServerlessPlugin', function () {
       });
     });
 
-    it('logs an error if no .env files are required and none are found', function () {
-      const log = this.sandbox.stub(this.ServerlessPlugin.prototype, 'log');
+    [true, false].forEach((withV3Utils) => {
+      describe(JSON.stringify({ withV3Utils }), function () {
+        it('logs an error if no .env files are required and none are found', function () {
+          const resolveEnvFileNames = this.setupResolveEnvFileNames();
+          resolveEnvFileNames.withArgs(this.env).returns([]);
 
+          this.createPlugin({ withV3Utils });
+
+          const expectedMsg = 'DOTENV: Could not find .env file.';
+          if (withV3Utils) {
+            this.v3Utils.log.notice.should.have.been.calledWith(expectedMsg);
+          } else {
+            this.serverless.cli.log.should.have.been.calledWith(expectedMsg);
+          }
+        });
+      });
+    });
+    it('logs an error with V3Utils if no .env files are required and none are found', function () {
       const resolveEnvFileNames = this.setupResolveEnvFileNames();
       resolveEnvFileNames.withArgs(this.env).returns([]);
 
-      this.createPlugin();
-      log.should.have.been.calledWith('DOTENV: Could not find .env file.');
+      this.createPlugin({ withV3Utils: true });
+      this.v3Utils.log.notice.should.have.been.calledWith(
+        'DOTENV: Could not find .env file.',
+      );
     });
 
     it('throws an error if no .env files are found but at least one is required', function () {

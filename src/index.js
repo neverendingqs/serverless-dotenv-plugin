@@ -11,7 +11,7 @@ const errorTypes = {
 };
 
 class ServerlessPlugin {
-  constructor(serverless, options) {
+  constructor(serverless, options, v3Utils) {
     this.serverless = serverless;
     this.serverless.service.provider.environment =
       this.serverless.service.provider.environment || {};
@@ -37,12 +37,21 @@ class ServerlessPlugin {
       );
     }
 
+    this.v3Utils = v3Utils;
     this.loadEnv(this.getEnvironment(options));
   }
 
-  log(...args) {
+  log(msg) {
     if (this.config.logging) {
-      this.serverless.cli.log(...args);
+      if (this.v3Utils) {
+        if (msg.includes('WARNING')) {
+          this.v3Utils.log.warning(msg);
+        } else {
+          this.v3Utils.log.notice(msg);
+        }
+      } else {
+        this.serverless.cli.log(msg);
+      }
     }
   }
 
