@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:
+      fail-fast: false
       matrix:
         # Serverless supports Node 10 and onward
         serverless: ['1', '2', 'pre-3']
