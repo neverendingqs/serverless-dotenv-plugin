@@ -142,7 +142,7 @@ class ServerlessPlugin {
     const envVarsArray = envFileNames.map((fileName) => {
       const parsed = dotenv.config({ path: fileName });
       return this.config.variableExpansion
-        ? dotenvExpand(parsed).parsed
+        ? dotenvExpand.expand(parsed).parsed
         : parsed.parsed;
     });
 
