@@ -34,7 +34,9 @@ describe('ServerlessPlugin', function () {
       dotenv: {
         config: this.sandbox.stub(),
       },
-      'dotenv-expand': this.sandbox.stub(),
+      'dotenv-expand': {
+        expand: this.sandbox.stub(),
+      },
       fs: {
         existsSync: this.sandbox.stub(),
       },
@@ -371,7 +373,7 @@ describe('ServerlessPlugin', function () {
             .returns(dotenvConfigResponse);
 
           const error = new Error('Error while calling dotenvExpand()');
-          this.requireStubs['dotenv-expand']
+          this.requireStubs['dotenv-expand'].expand
             .withArgs(dotenvConfigResponse)
             .throws(error);
 
@@ -452,7 +454,7 @@ describe('ServerlessPlugin', function () {
           .withArgs({ path: fileName })
           .returns({ parsed: filesAndEnvVars[fileName] });
 
-        this.requireStubs['dotenv-expand']
+        this.requireStubs['dotenv-expand'].expand
           .withArgs({ parsed: filesAndEnvVars[fileName] })
           .returns({ parsed: filesAndEnvVars[fileName] });
       });
@@ -500,7 +502,7 @@ describe('ServerlessPlugin', function () {
           .withArgs({ path: fileName })
           .returns({ parsed: filesAndEnvVars[fileName] });
 
-        this.requireStubs['dotenv-expand']
+        this.requireStubs['dotenv-expand'].expand
           .withArgs({ parsed: filesAndEnvVars[fileName] })
           .returns({ parsed: filesAndEnvVars[fileName] });
       });
@@ -538,7 +540,7 @@ describe('ServerlessPlugin', function () {
         .withArgs({ path: fileName })
         .returns({ parsed: envVars });
 
-      this.requireStubs['dotenv-expand']
+      this.requireStubs['dotenv-expand'].expand
         .withArgs({ parsed: envVars })
         .returns({ parsed: envVars });
 
@@ -572,7 +574,7 @@ describe('ServerlessPlugin', function () {
         .withArgs({ path: fileName })
         .returns({ parsed: envVars });
 
-      this.requireStubs['dotenv-expand']
+      this.requireStubs['dotenv-expand'].expand
         .withArgs({ parsed: envVars })
         .returns({ parsed: envVars });
 
@@ -607,7 +609,7 @@ describe('ServerlessPlugin', function () {
         .withArgs({ path: fileName })
         .returns({ parsed: envVars });
 
-      this.requireStubs['dotenv-expand']
+      this.requireStubs['dotenv-expand'].expand
         .withArgs({ parsed: envVars })
         .returns({ parsed: envVars });
 
@@ -641,7 +643,7 @@ describe('ServerlessPlugin', function () {
         .withArgs({ path: fileName })
         .returns({ parsed: envVars });
 
-      this.requireStubs['dotenv-expand']
+      this.requireStubs['dotenv-expand'].expand
         .withArgs({ parsed: envVars })
         .returns({ parsed: envVars });
 
@@ -686,7 +688,7 @@ describe('ServerlessPlugin', function () {
         env3: envVars.env3,
       });
 
-      this.requireStubs['dotenv-expand'].should.not.have.been.called;
+      this.requireStubs['dotenv-expand'].expand.should.not.have.been.called;
     });
 
     describe('dotenvParser', function () {
@@ -756,7 +758,7 @@ describe('ServerlessPlugin', function () {
         .withArgs({ path: fileName })
         .returns({ parsed: envVars });
 
-      this.requireStubs['dotenv-expand']
+      this.requireStubs['dotenv-expand'].expand
         .withArgs({ parsed: envVars })
         .returns({ parsed: envVars });
 
