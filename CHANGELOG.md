@@ -21,8 +21,8 @@ Breaking changes are introduced when going from version 3.x.x to 4.x.x:
 
 * chore: update deps (2022-04-17) ([#195](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/195))
   * The following packages were upgraded to the latest major version, which introduced changes to how `dotenv` files are parsed:
-    * `dotenv`
-    * `dotenv-expand`
+    * `dotenv` (`^10.0.0` to `^16.0.0`)
+    * `dotenv-expand` (`^5.1.0` to `^8.0.3`)
 
 ## 3.12.x
 
