@@ -43,7 +43,7 @@ jobs:
 
       - name: publish
         # Only publish (maybe) for one version of Node, and only on 'master'
-        if: ${{ matrix.node == 14 && github.ref == 'refs/heads/master' }}
+        if: ${{ matrix.node == 14 && matrix.serverless == '3' && github.ref == 'refs/heads/master' }}
         run: npm run deploy
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
