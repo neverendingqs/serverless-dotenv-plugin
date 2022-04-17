@@ -7,7 +7,7 @@ included in this log but can be reviewed on GitHub:
 * [Documentation](https://github.com/neverendingqs/serverless-dotenv-plugin/pulls?q=+is%3Apr+label%3Adocumentation)
 * [Refactor](https://github.com/neverendingqs/serverless-dotenv-plugin/pulls?q=label%3Arefactor+is%3Apr)
 
-## 4.0.x (Unreleased)
+## 5.0.x (Unreleased)
 
 Breaking changes are introduced when going from version 3.x.x to 4.x.x:
 
@@ -16,6 +16,13 @@ Breaking changes are introduced when going from version 3.x.x to 4.x.x:
   * Note: `required.file` continues to default to `false`.
     * This is because your environment variables might not be stored in dotenv files in all environments.
     * Setting `required.file` to `true` will continue to cause the plugin to halt if no dotenv files are found.
+
+## 4.0.x
+
+* chore: update deps (2022-04-17) ([#195](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/195))
+  * The following packages were upgraded to the latest major version, which introduced changes to how `dotenv` files are parsed:
+    * `dotenv` (`^10.0.0` to `^16.0.0`)
+    * `dotenv-expand` (`^5.1.0` to `^8.0.3`)
 
 ## 3.12.x
 
