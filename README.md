@@ -55,7 +55,7 @@ AUTH0_CLIENT_ID=abc12345
 AUTH0_CLIENT_SECRET=12345xyz
 ```
 
-When deploying, all the variables listed in `.env` will automatically be available in the deployed Lambda functions.
+When deploying, all the variables listed in `.env` will automatically be available in the deployed functions.
 
 ## Automatic ENV File Resolution
 
