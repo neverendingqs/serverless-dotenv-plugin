@@ -4,7 +4,10 @@
 [![Coverage Status](https://coveralls.io/repos/github/neverendingqs/serverless-dotenv-plugin/badge.svg?branch=master)](https://coveralls.io/github/neverendingqs/serverless-dotenv-plugin?branch=master)
 [![npm version](https://img.shields.io/npm/v/serverless-dotenv-plugin.svg?style=flat)](https://www.npmjs.com/package/serverless-dotenv-plugin)
 
-Preload environment variables into serverless. Use this plugin if you have variables stored in a `.env` file that you want loaded into your Lambda functions.
+Preload function environment variables into Serverless. Use this plugin if you have variables stored in a `.env` file that you want loaded into your functions.
+
+This used to also preload environment variables into your `serverless.yml` config, but no longer does with `serverless>=2.26.0.
+See [this discussion thread](https://github.com/neverendingqs/serverless-dotenv-plugin/discussions/155) or the FAQ below for details on the impact of how environment variables are loaded with `serverless>=2.26.0` and `serverless>=3.0.0`.**
 
 ## Do you need this plugin?
 
