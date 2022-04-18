@@ -21,7 +21,9 @@ provider:
     FOO: ${env:FOO}
 ```
 
-This plugin is still useful if you want to automatically import **all** variables from `.env` into functions:
+For more complex situations, you will need to [wire up `dotenv` yourself](https://github.com/neverendingqs/serverless-dotenv-example).
+
+This plugin is only useful if you want to automatically import **all** variables from `.env` into functions:
 
 ```yaml
 plugins:
