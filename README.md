@@ -4,13 +4,35 @@
 [![Coverage Status](https://coveralls.io/repos/github/neverendingqs/serverless-dotenv-plugin/badge.svg?branch=master)](https://coveralls.io/github/neverendingqs/serverless-dotenv-plugin?branch=master)
 [![npm version](https://img.shields.io/npm/v/serverless-dotenv-plugin.svg?style=flat)](https://www.npmjs.com/package/serverless-dotenv-plugin)
 
-Preload environment variables into serverless. Use this plugin if you have variables stored in a `.env` file that you want loaded into your serverless yaml config. This will allow you to reference them as `${env:VAR_NAME}` inside your config _and_ it will load them into your lambdas.
+Preload function environment variables into Serverless. Use this plugin if you have variables stored in a `.env` file that you want loaded into your functions.
 
-**`serverless>=3.0.0` introduces changes that significantly impacts this plugin. I would love your feedback about this on the [discussion thread](https://github.com/neverendingqs/serverless-dotenv-plugin/discussions/155). See the discussion thread or the FAQ below for details on the impact of how env vars are loaded with `serverless>=2.26.0` and `serverless>=3.0.0`.**
+This used to also preload environment variables into your `serverless.yml` config, but no longer does with `serverless>=2.26.0.
+See [this discussion thread](https://github.com/neverendingqs/serverless-dotenv-plugin/discussions/155) or the FAQ below for details on the impact of how environment variables are loaded with `serverless>=2.26.0` and `serverless>=3.0.0`.**
 
 ## Do you need this plugin?
 
-Changes in `serverless>=3.0.0` means this plugin can no longer preload environment variables into Serverless. You may want to consider an alternative, such as the one outlined in [`serverless-dotenv-example`](https://github.com/neverendingqs/serverless-dotenv-example).
+Serverless Framework can now natively resolve `${env:xxx}` variables from `.env` files by setting [`useDotenv: true` in the configuration](https://www.serverless.com/framework/docs/environment-variables):
+
+```yaml
+useDotenv: true
+
+provider:
+  environment:
+    FOO: ${env:FOO}
+```
+
+For more complex situations, you will need to [wire up `dotenv` yourself](https://github.com/neverendingqs/serverless-dotenv-example).
+
+This plugin is only useful if you want to automatically import **all** variables from `.env` into functions:
+
+```yaml
+plugins:
+  - serverless-dotenv-plugin
+
+provider:
+  environment:
+    # With the plugin enabled, all variables in .env are automatically imported
+```
 
 ## Install and Setup
 
@@ -38,18 +60,7 @@ AUTH0_CLIENT_ID=abc12345
 AUTH0_CLIENT_SECRET=12345xyz
 ```
 
-Once loaded, you can now access the vars using the standard method for accessing ENV vars in serverless:
-
-```yaml
-...
-provider:
-  name: aws
-  runtime: nodejs6.10
-  stage: ${env:STAGE}
-  region: ${env:AWS_REGION}
-...
-```
-
+When deploying, all the variables listed in `.env` will automatically be available in the deployed functions.
 
 ## Automatic ENV File Resolution
 
