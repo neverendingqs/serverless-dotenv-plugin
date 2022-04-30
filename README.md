@@ -6,7 +6,7 @@
 
 Preload function environment variables into Serverless. Use this plugin if you have variables stored in a `.env` file that you want loaded into your functions.
 
-This used to also preload environment variables into your `serverless.yml` config, but no longer does with `serverless>=2.26.0.
+This used to also preload environment variables into your `serverless.yml` config, but no longer does with `serverless>=2.26.0`.
 See [this discussion thread](https://github.com/neverendingqs/serverless-dotenv-plugin/discussions/155) or the FAQ below for details on the impact of how environment variables are loaded with `serverless>=2.26.0` and `serverless>=3.0.0`.**
 
 ## Do you need this plugin?
