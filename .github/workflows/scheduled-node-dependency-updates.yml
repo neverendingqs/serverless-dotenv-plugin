@@ -16,3 +16,4 @@ jobs:
       - uses: neverendingqs/gh-action-node-update-deps@v2
         with:
           bump-version: patch
+          github-token: ${{ secrets.REPO_GITHUB_TOKEN }}
