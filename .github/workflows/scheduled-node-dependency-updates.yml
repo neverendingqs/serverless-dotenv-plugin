@@ -10,8 +10,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: neverendingqs/gh-action-node-update-deps@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.REPO_GITHUB_TOKEN }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - uses: neverendingqs/gh-action-node-update-deps@v2
         with:
           bump-version: patch
+          github-token: ${{ secrets.REPO_GITHUB_TOKEN }}
