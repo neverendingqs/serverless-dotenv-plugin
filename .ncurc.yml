@@ -2,3 +2,5 @@ reject:
   # `serverless@2` still supports Node 10, so we can't switch to ESM
   # https://github.com/chalk/chalk/releases/tag/v5.0.0
   - chalk
+  # `mocha>=10.0.0` doesn't support Node 10 or Node 12
+  - mocha
