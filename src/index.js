@@ -29,6 +29,7 @@ class ServerlessPlugin {
         required: {},
         variableExpansion: true,
         v4BreakingChanges: false,
+        envFileOnly: false,
       },
       (this.serverless.service.custom &&
         this.serverless.service.custom['dotenv']) ||
@@ -140,7 +141,10 @@ class ServerlessPlugin {
    */
   parseEnvFiles(envFileNames) {
     const envVarsArray = envFileNames.map((fileName) => {
-      const parsed = dotenv.config({ path: fileName });
+      const parsed = dotenv.config({
+        path: fileName,
+        override: this.config.envFileOnly,
+      });
       return this.config.variableExpansion
         ? dotenvExpand.expand(parsed).parsed
         : parsed.parsed;
