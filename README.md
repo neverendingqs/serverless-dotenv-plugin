@@ -141,6 +141,10 @@ custom:
 
     # default: true
     variableExpansion: false
+
+    # default: false, includes env vars from the .env files and overrides them with any env-var set in the local environment
+    # when set to true it uses vars from the .env files only, not exposing your local vars to serverless.
+    envFileOnly: false
 ```
 
 * path (string)
@@ -190,6 +194,28 @@ custom:
     * E.g. `INNER_ENV=innerenv, OUTER_ENV=hi-$INNER_ENV`, would resolve to `INNER_ENV=innerenv, OUTER_ENV=hi-innerenv`
   * Setting this to `false` will disable this feature
     * E.g. `INNER_ENV=innerenv, OUTER_ENV=hi-$INNER_ENV`, would resolve to `INNER_ENV=innerenv, OUTER_ENV=hi-$INNER_ENV`
+
+* envFileOnly: true|false (default false)
+  * By default, local environment variables are included in Serverless and functions
+  * Setting this to `false` will cause local environment variables to *not* be included in the resulting variables.
+  * E.g.,
+
+  ````
+  .env:
+    MY_COLOR=red
+
+
+  # With envFileOnly: false (default)
+    MY_COLOR=green sls deploy
+
+    Lambda MY_COLOR Env var will be green
+
+  # With envFileOnly: true
+    MY_COLOR=green sls deploy
+
+    Lambda MY_COLOR Env var will be red, because only the .env files are used.
+
+  ````
 
 
 Example `dotenvParser` file:
