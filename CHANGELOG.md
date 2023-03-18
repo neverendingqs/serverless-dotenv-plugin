@@ -7,15 +7,19 @@ included in this log but can be reviewed on GitHub:
 * [Documentation](https://github.com/neverendingqs/serverless-dotenv-plugin/pulls?q=+is%3Apr+label%3Adocumentation)
 * [Refactor](https://github.com/neverendingqs/serverless-dotenv-plugin/pulls?q=label%3Arefactor+is%3Apr)
 
-## 5.0.x (Unreleased)
+## Unreleased
 
-Breaking changes are introduced when going from version 3.x.x to 4.x.x:
+Breaking changes introduced:
 
 * feat: now halts on all errors. ([#139](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/139))
   * Previously, some errors did not cause the plugin to halt, which may silently cause environment variables to not be set.
   * Note: `required.file` continues to default to `false`.
     * This is because your environment variables might not be stored in dotenv files in all environments.
     * Setting `required.file` to `true` will continue to cause the plugin to halt if no dotenv files are found.
+
+## 5.0.x
+
+* chore: remove support for Node.js 10 and Node.js 12 (TODO)
 
 ## 4.0.x
 
