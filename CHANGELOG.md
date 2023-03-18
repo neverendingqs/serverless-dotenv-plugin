@@ -19,7 +19,7 @@ Breaking changes introduced:
 
 ## 5.0.x
 
-* chore: remove support for Node.js 10 and Node.js 12 (TODO)
+* chore: remove support for Node.js 10 and Node.js 12 ([#236](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/236))
 
 ## 4.0.x
 
