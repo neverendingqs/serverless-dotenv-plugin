@@ -13,7 +13,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Serverless supports Node 10 and onward
         serverless: ['1', '2', '3']
         node: [ '14', '15', '16', '18', '19' ]
     name: CI (Node v${{ matrix.node }}, serverless@${{ matrix.serverless }})
@@ -27,7 +26,6 @@ jobs:
       - run: npm ci
       - run: npm test
       - name: Integration Tests
-        if: ${{ !(matrix.node == 10 && matrix.serverless == '3') }}
         run: |
           npm ci
 
