@@ -10,11 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.4",
-    "serverless-http": "^2.5.0"
+    "express": "^4.18.2",
+    "serverless-http": "^3.2.0"
   },
   "devDependencies": {
-    "serverless-dotenv-plugin": "^2.4.2"
+    "serverless-dotenv-plugin": "^6.0.0"
   },
   "peerDependencies": {
     "serverless": "1 || 2 || pre-3 || 3"
