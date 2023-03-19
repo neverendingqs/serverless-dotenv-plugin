@@ -17,6 +17,12 @@ Breaking changes introduced:
     * This is because your environment variables might not be stored in dotenv files in all environments.
     * Setting `required.file` to `true` will continue to cause the plugin to halt if no dotenv files are found.
 
+## 6.0.x
+
+* chore: update deps (2023-03-18) ([#237](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/237))
+  * The following packages were upgraded to the latest major version, which introduced changes to how `dotenv` files are parsed:
+    * `dotenv-expand` (`^8.0.3` to `^10.0.0`)
+
 ## 5.0.x
 
 * chore: remove support for Node.js 10 and Node.js 12 ([#236](https://github.com/neverendingqs/serverless-dotenv-plugin/pull/236))
