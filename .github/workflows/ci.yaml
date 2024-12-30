@@ -32,7 +32,7 @@ jobs:
           # Some versions of npm install peer dependencies
           npm i serverless@${{ matrix.serverless }}
           npx serverless --version
-          npm link ../
+          npm link ../../
 
           npx serverless package --stage production
 
