@@ -1,12 +1,10 @@
 chore:
-  - changed-files:
-    - .*
-    - .github/**/*
-    - LICENSE
-    - package.json
+  - .*
+  - .github/**/*
+  - LICENSE
+  - package.json
 
 documentation:
-  - changed-files:
-    - CHANGELOG.md
-    - examples/**/*
-    - README.md
+  - CHANGELOG.md
+  - examples/**/*
+  - README.md
