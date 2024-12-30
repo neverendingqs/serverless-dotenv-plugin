@@ -2,6 +2,10 @@
 
 service: my-express-application
 
+package:
+  patterns:
+    - '!node_modules/serverless-dotenv-plugin/**'
+
 plugins:
   - ../../
 
