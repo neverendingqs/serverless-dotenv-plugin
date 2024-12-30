@@ -42,14 +42,14 @@ jobs:
 
       - name: publish
         # Only publish (maybe) for one version of Node, and only on 'master'
-        if: ${{ matrix.node == 14 && matrix.serverless == '3' && github.ref == 'refs/heads/master' }}
+        if: ${{ matrix.node == 22 && matrix.serverless == '3' && github.ref == 'refs/heads/master' }}
         run: npm run deploy
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
 
       - name: Coveralls
         # Only send coverage details for one version of Node
-        if: ${{ matrix.node == 14 }}
+        if: ${{ matrix.node == 22 }}
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
