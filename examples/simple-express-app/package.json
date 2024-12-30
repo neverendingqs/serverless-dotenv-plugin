@@ -13,9 +13,6 @@
     "express": "^4.18.2",
     "serverless-http": "^3.2.0"
   },
-  "devDependencies": {
-    "serverless-dotenv-plugin": "^6.0.0"
-  },
   "peerDependencies": {
     "serverless": "1 || 2 || pre-3 || 3 || 4"
   }
