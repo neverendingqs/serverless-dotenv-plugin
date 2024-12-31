@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        serverless: ['1', '2', '3', '4']
+        serverless: ['2', '3', '4']
         node: [ '18', '20', '22' ]
     name: CI (Node v${{ matrix.node }}, serverless@${{ matrix.serverless }})
     steps:
