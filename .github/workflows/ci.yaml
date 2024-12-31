@@ -13,8 +13,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        serverless: ['1', '2', '3']
-        node: [ '14', '15', '16', '18', '19', '20', '21' ]
+        serverless: ['2', '3', '4']
+        node: [ '18', '20', '22' ]
     name: CI (Node v${{ matrix.node }}, serverless@${{ matrix.serverless }})
     steps:
       - uses: actions/checkout@v2
@@ -32,23 +32,26 @@ jobs:
           # Some versions of npm install peer dependencies
           npm i serverless@${{ matrix.serverless }}
           npx serverless --version
+          npm link ../../
 
           npx serverless package --stage production
 
           # Must match value of `TEST_VAR` in `.env.production`
           cat .serverless/cloudformation-template-update-stack.json | grep cf5bb467-9052-4a34-b318-f6df31644229
         working-directory: examples/simple-express-app
+        env:
+          SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
 
       - name: publish
         # Only publish (maybe) for one version of Node, and only on 'master'
-        if: ${{ matrix.node == 14 && matrix.serverless == '3' && github.ref == 'refs/heads/master' }}
+        if: ${{ matrix.node == 22 && matrix.serverless == '3' && github.ref == 'refs/heads/master' }}
         run: npm run deploy
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
 
       - name: Coveralls
         # Only send coverage details for one version of Node
-        if: ${{ matrix.node == 14 }}
+        if: ${{ matrix.node == 22 }}
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
